@@ -1,0 +1,44 @@
+{
+  "name": "Turning",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "season": {
+      "type": "string",
+      "enum": [
+        "spring",
+        "summer",
+        "fall",
+        "winter"
+      ]
+    },
+    "year": {
+      "type": "number"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "dek": {
+      "type": "string"
+    },
+    "body": {
+      "type": "string"
+    },
+    "publishedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "isFeatured": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "title",
+    "season",
+    "year",
+    "slug"
+  ]
+}
