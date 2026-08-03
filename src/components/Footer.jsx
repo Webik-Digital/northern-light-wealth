@@ -6,7 +6,7 @@ export default function Footer() {
     <footer className="nlw-footer">
       <div className="nlw-foot-in">
         <div className="nlw-foot-mark">
-          <span className="qs">northern <b>light</b></span>
+          <span className="qs">northern light <b>wealth</b></span>
           <p className="nlw-foot-tag">Seasonal perspective. Daily discipline.</p>
           <p className="nlw-foot-addr">Street address<br />City, Province<br />hello@placeholder.ca</p>
         </div>

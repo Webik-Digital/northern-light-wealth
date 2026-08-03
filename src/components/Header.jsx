@@ -40,7 +40,7 @@ export default function Header() {
     <>
       <header className={`nlw-header${scrolled ? ' scrolled' : ''}`}>
         <Link className="nlw-mark" to="/" aria-label="Northern Light Wealth home">
-          <span className="qs">northern <b>light</b></span><span className="lbl">Wealth</span>
+          <img className="nlw-mark-img" src="https://media.base44.com/images/public/6a70610b0eb9bb2f777d7afd/e63ab7843_nlwwidelogo.jpg" alt="Northern Light Wealth" />
         </Link>
         <div className="nlw-head-right">
           <nav className="nlw-nav">
