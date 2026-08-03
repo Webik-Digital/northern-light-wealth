@@ -3,9 +3,10 @@ import { Image } from '@/components/ui/image';
 import Reveal from './Reveal';
 
 const TREES = {
-  winter: 'https://media.base44.com/images/public/6a70610b0eb9bb2f777d7afd/21b4c0a3c_generated_9339a9ee.png',
-  fall: 'https://media.base44.com/images/public/6a70610b0eb9bb2f777d7afd/1cca3f3ca_generated_bca9cb72.png',
-  spring: 'https://media.base44.com/images/public/6a70610b0eb9bb2f777d7afd/8019a4867_generated_6bbd101f.png',
+  winter: 'https://media.base44.com/images/public/6a70610b0eb9bb2f777d7afd/e410f210c_tree-winter.jpg',
+  fall: 'https://media.base44.com/images/public/6a70610b0eb9bb2f777d7afd/2aa49d740_tree-fall.jpg',
+  spring: 'https://media.base44.com/images/public/6a70610b0eb9bb2f777d7afd/292a405ad_tree-spring.jpg',
+  summer: 'https://media.base44.com/images/public/6a70610b0eb9bb2f777d7afd/1e1115c7a_tree-summer.jpg',
 };
 
 export default function StewardshipCard({ tag, name, oneLiner, detail, photo, to }) {

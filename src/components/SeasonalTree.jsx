@@ -11,10 +11,10 @@ const WASH = {
 const LABEL = { spring: 'Spring', summer: 'Summer', fall: 'Fall', winter: 'Winter' };
 
 const TREES = {
-  winter: 'https://media.base44.com/images/public/6a70610b0eb9bb2f777d7afd/21b4c0a3c_generated_9339a9ee.png',
-  spring: 'https://media.base44.com/images/public/6a70610b0eb9bb2f777d7afd/8019a4867_generated_6bbd101f.png',
-  summer: 'https://media.base44.com/images/public/6a70610b0eb9bb2f777d7afd/4f804a352_generated_ee226109.png',
-  fall: 'https://media.base44.com/images/public/6a70610b0eb9bb2f777d7afd/1cca3f3ca_generated_bca9cb72.png',
+  winter: 'https://media.base44.com/images/public/6a70610b0eb9bb2f777d7afd/e410f210c_tree-winter.jpg',
+  spring: 'https://media.base44.com/images/public/6a70610b0eb9bb2f777d7afd/292a405ad_tree-spring.jpg',
+  summer: 'https://media.base44.com/images/public/6a70610b0eb9bb2f777d7afd/1e1115c7a_tree-summer.jpg',
+  fall: 'https://media.base44.com/images/public/6a70610b0eb9bb2f777d7afd/2aa49d740_tree-fall.jpg',
 };
 
 // True current season from today's date (Northern Hemisphere).
