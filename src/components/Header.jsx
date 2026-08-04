@@ -2,15 +2,29 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import LockIcon from './LockIcon';
+import logo from '@/assets/nlw-logo.png';
+import logoReverse from '@/assets/nlw-logo-reverse.png';
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
+  const [onDark, setOnDark] = useState(false);
   const [authed, setAuthed] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
+    // the bar turns light-on-dark while it sits over a dark zone
+    const overDarkZone = () => {
+      const band = 72; // roughly the header's own height
+      return [...document.querySelectorAll('[data-dark-zone]')].some((el) => {
+        const r = el.getBoundingClientRect();
+        return r.top <= band && r.bottom >= 0;
+      });
+    };
+    const onScroll = () => {
+      setScrolled(window.scrollY > 8);
+      setOnDark(overDarkZone());
+    };
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
     return () => window.removeEventListener('scroll', onScroll);
@@ -38,9 +52,9 @@ export default function Header() {
 
   return (
     <>
-      <header className={`nlw-header${scrolled ? ' scrolled' : ''}`}>
+      <header className={`nlw-header${scrolled ? ' scrolled' : ''}${onDark ? ' on-dark' : ''}`}>
         <Link className="nlw-mark" to="/" aria-label="Northern Light Wealth home">
-          <span className="qs">northern <b>light</b></span><span className="lbl">Wealth</span>
+          <img src={onDark ? logoReverse : logo} alt="Northern Light Wealth" />
         </Link>
         <div className="nlw-head-right">
           <nav className="nlw-nav">
