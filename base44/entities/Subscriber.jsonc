@@ -1,0 +1,17 @@
+{
+  "type": "object",
+  "name": "Subscriber",
+  "properties": {
+    "email": {
+      "type": "string",
+      "format": "email"
+    },
+    "source": {
+      "type": "string",
+      "default": "the-four-turnings"
+    }
+  },
+  "required": [
+    "email"
+  ]
+}
