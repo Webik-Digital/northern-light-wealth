@@ -16,6 +16,7 @@
     --footer-plum: #2A1530;
     --season-accent: #3E6B57;
     --wash: rgba(62, 107, 87, .15);
+    --surface: #FBFAF9;
     --ease: cubic-bezier(.22, .61, .36, 1);
     --panel: 42vw;
     --pad-l: clamp(26px, 7.5vw, 150px);
@@ -82,6 +83,14 @@ button { font-family: inherit; }
     linear-gradient(90deg, var(--canvas) 0%, rgba(245,244,242,.9) 14%, rgba(245,244,242,.5) 34%, rgba(245,244,242,.2) 58%, rgba(245,244,242,0) 92%),
     linear-gradient(180deg, rgba(245,244,242,0) 80%, var(--canvas) 100%); }
 
+/* inner pages: the tree is held behind the hero only, then dissolves */
+/* sized so the tree has fully dissolved before the first solid band begins */
+.nlw-canopy.is-hero { position: absolute; height: clamp(360px, 46vh, 540px); background: transparent; }
+.nlw-canopy.is-hero img { -webkit-mask-image: linear-gradient(180deg, #000 30%, rgba(0,0,0,.28) 56%, transparent 74%); mask-image: linear-gradient(180deg, #000 30%, rgba(0,0,0,.28) 56%, transparent 74%); }
+.nlw-canopy.is-hero::after { background-color: transparent; background-image:
+  linear-gradient(90deg, var(--canvas) 0%, rgba(245,244,242,.9) 14%, rgba(245,244,242,.5) 34%, rgba(245,244,242,.2) 58%, rgba(245,244,242,0) 92%),
+  linear-gradient(180deg, rgba(245,244,242,0) 40%, rgba(245,244,242,.55) 74%, var(--canvas) 92%); }
+
 /* seasonal wash over the whole screen, bottom to top */
 .nlw-wash { position: fixed; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(0deg, var(--wash) 0%, rgba(245,244,242,0) 58%); transition: background 1.4s var(--ease); }
 
@@ -96,11 +105,20 @@ button { font-family: inherit; }
 /* ---------- header ---------- */
 .nlw-header { position: fixed; top: 0; left: 0; right: 0; z-index: 30; display: flex; align-items: center; justify-content: space-between; padding: 18px var(--pad-r) 18px var(--pad-l); background: linear-gradient(180deg, rgba(245,244,242,.94) 0%, rgba(245,244,242,.55) 55%, rgba(245,244,242,0) 100%); border-bottom: .5px solid transparent; transition: background .4s var(--ease), backdrop-filter .4s var(--ease), border-color .4s var(--ease), box-shadow .4s var(--ease); }
 .nlw-header.scrolled { background: rgba(245,244,242,.85); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-bottom-color: var(--rule); box-shadow: 0 10px 26px -24px rgba(43,36,48,.55); }
+/* over a dark section the bar inverts so it does not read as a light slab */
+.nlw-header.on-dark { background: rgba(42,21,48,.72); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-bottom-color: rgba(217,210,220,.16); box-shadow: none; }
+.nlw-header.on-dark .nlw-nav a { color: #D9D2DC; }
+.nlw-header.on-dark .nlw-nav a:hover { color: #fff; }
+.nlw-header.on-dark .nlw-nav-cta { color: #9FC7D2; border-color: rgba(217,210,220,.3); }
+.nlw-header.on-dark .nlw-nav-cta:hover { border-color: #9FC7D2; color: #C8E2E9; }
+.nlw-header.on-dark .nlw-portal { background: rgba(255,255,255,.13); color: #F3EEF4; }
+.nlw-header.on-dark .nlw-portal:hover { background: rgba(255,255,255,.2); }
+.nlw-header.on-dark .nlw-burger { color: #D9D2DC; }
+
 .nlw-head-right { display: flex; align-items: center; gap: 22px; }
-.nlw-mark { display: flex; align-items: baseline; gap: 9px; line-height: 1; }
-.nlw-mark .qs { font-family: 'Quicksand', sans-serif; font-weight: 600; font-size: 21px; color: var(--teal); }
-.nlw-mark .qs b { color: var(--plum); font-weight: 600; }
-.nlw-mark .lbl { font-size: 9.5px; letter-spacing: .28em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.nlw-mark { display: flex; align-items: center; line-height: 1; }
+.nlw-mark img { height: 26px; width: auto; display: block; }
+.nlw-mark:focus-visible { outline: 2px solid var(--season-accent); outline-offset: 6px; border-radius: 2px; }
 .nlw-nav { display: flex; align-items: center; gap: 30px; }
 .nlw-nav a { font-size: 13.5px; color: #2B2430; transition: color .3s; }
 .nlw-nav a:hover { color: var(--plum); }
@@ -156,23 +174,25 @@ button { font-family: inherit; }
 .nlw-stewardship .head { margin-bottom: 50px; max-width: 560px; }
 .nlw-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
 .nlw-card { position: relative; overflow: hidden; border-radius: 10px; min-height: 330px; background: #FBFAF9; border: .5px solid var(--rule); display: flex; flex-direction: column; justify-content: flex-end; padding: 32px 30px 28px; isolation: isolate; transition: transform .6s var(--ease), box-shadow .6s var(--ease), border-color .6s var(--ease); text-align: left; }
-.nlw-card .ph { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
-.nlw-card .ph img { width: 100%; height: 100%; object-fit: cover; transform: translateY(16%) scale(1.06); opacity: 0; transition: transform 1.15s var(--ease), opacity 1.05s var(--ease); }
-.nlw-card .scrim { position: absolute; inset: 0; z-index: 1; opacity: 0; transition: opacity 1.05s var(--ease); background: linear-gradient(180deg, rgba(51,26,56,.15) 0%, rgba(51,26,56,.55) 52%, rgba(51,26,56,.88) 100%); }
-.nlw-card .c { position: relative; z-index: 2; }
-.nlw-card .tag { font-size: 10.5px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--teal); margin-bottom: 12px; display: block; transition: color .6s var(--ease); }
-.nlw-card h3 { margin-bottom: 10px; transition: color .6s var(--ease); }
-.nlw-card .one { font-size: 15px; line-height: 1.6; color: var(--ink-soft); max-width: 30ch; margin-bottom: 14px; transition: color .6s var(--ease); }
+/* the photograph sits in the card and zooms in on hover; the scrim keeps the
+   text legible over it at all times */
+.nlw-card .ph { position: absolute; inset: 0; z-index: 0; overflow: hidden; border-radius: inherit; }
+/* the slight desaturation keeps three different photographs in one tonal family */
+.nlw-card .ph img { width: 100%; height: 100%; object-fit: cover; transform: scale(1); filter: saturate(.88) brightness(.94); transition: transform 1.15s var(--ease); will-change: transform; }
+/* only the top third of a card is ever empty, so the scrim goes to full strength
+   from 40% down, wherever text can actually land */
+.nlw-card .scrim { position: absolute; inset: 0; z-index: 1; transition: opacity 1.05s var(--ease); opacity: 1; background: linear-gradient(180deg, rgba(51,26,56,.28) 0%, rgba(51,26,56,.74) 40%, rgba(35,17,39,.92) 100%); }
+/* a guard for whatever photography replaces the placeholders later */
+.nlw-card .c { position: relative; z-index: 2; text-shadow: 0 1px 14px rgba(26,12,29,.45); }
+.nlw-card .tag { font-size: 10.5px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: #9FC7D2; margin-bottom: 12px; display: block; }
+.nlw-card h3 { margin-bottom: 10px; color: #F3EEF4; }
+.nlw-card .one { font-size: 15px; line-height: 1.6; color: #D8CFDC; max-width: 30ch; margin-bottom: 14px; }
 .nlw-card .more { font-size: 13.5px; line-height: 1.6; color: #E4DCE8; max-width: 32ch; opacity: 0; transform: translateY(8px); transition: opacity .8s var(--ease) .1s, transform .8s var(--ease) .1s; margin-bottom: 16px; }
-.nlw-card .go { font-size: 13px; font-weight: 500; color: var(--plum); display: inline-flex; gap: 7px; align-items: center; transition: color .6s var(--ease); }
+.nlw-card .go { font-size: 13px; font-weight: 500; color: #EDE7EF; display: inline-flex; gap: 7px; align-items: center; }
 .nlw-card .go .arw { transition: transform .5s var(--ease); }
 .nlw-card:hover, .nlw-card:focus-within { transform: translateY(-4px); border-color: transparent; box-shadow: 0 26px 50px -30px rgba(22,15,26,.75); }
-.nlw-card:hover .ph img, .nlw-card:focus-within .ph img { transform: translateY(0) scale(1); opacity: 1; }
-.nlw-card:hover .scrim, .nlw-card:focus-within .scrim { opacity: 1; }
-.nlw-card:hover h3, .nlw-card:focus-within h3 { color: #F3EEF4; }
-.nlw-card:hover .one, .nlw-card:focus-within .one { color: #D8CFDC; }
-.nlw-card:hover .tag, .nlw-card:focus-within .tag { color: #9FC7D2; }
-.nlw-card:hover .go, .nlw-card:focus-within .go { color: #EDE7EF; }
+.nlw-card:hover .ph img, .nlw-card:focus-within .ph img { transform: scale(1.09); }
+.nlw-card:hover .scrim, .nlw-card:focus-within .scrim { opacity: .94; }
 .nlw-card:hover .more, .nlw-card:focus-within .more { opacity: 1; transform: none; }
 .nlw-card:hover .go .arw, .nlw-card:focus-within .go .arw { transform: translateX(4px); }
 .nlw-card:focus-visible { outline: 2px solid var(--season-accent); outline-offset: 3px; }
@@ -196,8 +216,7 @@ button { font-family: inherit; }
 /* footer */
 .nlw-footer { position: relative; z-index: 2; background: #2A1530; color: #D9D2DC; }
 .nlw-foot-in { padding: 74px var(--pad-l) 40px; display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 40px 48px; max-width: 1180px; }
-.nlw-foot-mark .qs { font-family: 'Quicksand', sans-serif; font-weight: 600; font-size: 20px; color: #EBE4EE; }
-.nlw-foot-mark .qs b { color: #B9A9C0; }
+.nlw-foot-mark img { height: 25px; width: auto; display: block; }
 .nlw-foot-tag { font-family: 'Fraunces', serif; font-size: 15px; color: #B9A9C0; margin-top: 14px; line-height: 1.5; max-width: 26ch; }
 .nlw-foot-addr { font-size: 13px; color: #9C90A2; margin-top: 22px; line-height: 1.7; }
 .nlw-foot-col h4 { font-size: 11px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: #8F8296; margin-bottom: 16px; }
@@ -209,33 +228,214 @@ button { font-family: inherit; }
 .nlw-rv { opacity: 0; transform: translateY(18px); transition: opacity 1s var(--ease), transform 1s var(--ease); }
 .nlw-rv.in { opacity: 1; transform: none; }
 
-/* placeholder pages */
-.nlw-placeholder { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 140px var(--pad-l) clamp(84px, 13vh, 168px); position: relative; z-index: 2; }
-.nlw-placeholder .nlw-eyebrow { margin-bottom: 22px; }
-.nlw-placeholder .nlw-h1 { margin-bottom: 24px; max-width: 18ch; }
-.nlw-placeholder .nlw-lead { margin-bottom: 14px; }
+/* ---------- inner pages ---------- */
 
-/* locked resource state */
-.nlw-locked { border: .5px solid var(--rule); border-radius: 10px; padding: 40px; background: #FBFAF9; max-width: 560px; }
-.nlw-locked .nlw-h3 { margin-bottom: 14px; }
-.nlw-locked p { color: var(--ink-soft); margin-bottom: 22px; }
+/* Sections stay on the canvas. Colour comes from the one fixed seasonal wash
+   (.nlw-wash), exactly as on the homepage, and from the cards. */
+.nlw-section-tight { padding-block-start: 0; }
 
+/* Below the hero an inner page reserves nothing for the tree, so content runs
+   the full width instead of leaving the homepage's right-hand column empty.
+   Measures are widened but still capped, so lines stay readable. */
+.nlw-inner .nlw-section .nlw-wrap,
+.nlw-inner .nlw-section .nlw-wrap.wide { max-width: none; padding-right: clamp(26px, 6.5vw, 130px); }
+.nlw-inner .nlw-section .nlw-lead { max-width: 64ch; }
+.nlw-inner .nlw-passage p { max-width: 76ch; }
+.nlw-inner .nlw-head .nlw-h2 { max-width: 26ch; }
+.nlw-inner .nlw-archive p { max-width: 72ch; }
+.nlw-inner .nlw-pathway .purpose { max-width: 56ch; }
+.nlw-inner .nlw-pathway .detail { max-width: 72ch; }
+.nlw-inner .nlw-lib p { max-width: 68ch; }
+.nlw-inner .nlw-panel p { max-width: 68ch; }
+@media (min-width: 1240px) {
+  .nlw-inner .nlw-movements { grid-template-columns: repeat(4, 1fr); }
+  .nlw-inner .nlw-pathway { grid-template-columns: 320px 1fr; }
+}
+
+
+/* hero band: the tree shows through here and then dissolves into canvas */
+.nlw-page-hero { position: relative; padding-block: clamp(148px, 21vh, 224px) clamp(56px, 8vh, 92px); }
+.nlw-page-hero .nlw-h1 { margin-bottom: 24px; max-width: 17ch; }
+.nlw-page-hero .nlw-lead { max-width: 50ch; }
+
+.nlw-wrap.wide { max-width: 1100px; }
+.nlw-head { margin-bottom: 38px; }
+.nlw-head .nlw-h2 { max-width: 22ch; }
+
+/* ---------- pinned feature: text steps left, wiping image right ---------- */
+/* the page turns dark for the length of this section, then hands back to canvas */
+.nlw-sticky { position: relative; height: calc(var(--steps) * 100vh); background: var(--footer-plum); color: #C9BFCE; }
+.nlw-sticky .nlw-eyebrow { color: #9FC7D2; }
+.nlw-sticky .nlw-h2 { color: #F3EEF4; }
+.nlw-sticky .nlw-lead { color: #C9BFCE; }
+.nlw-sticky-panel { position: sticky; top: 0; height: 100vh; display: flex; align-items: center; }
+.nlw-sticky-in { display: grid; grid-template-columns: 1.14fr .86fr; align-items: center; gap: clamp(32px, 5vw, 76px); width: 100%;
+  padding-left: var(--pad-l); padding-right: clamp(26px, 6.5vw, 130px); }
+
+.nlw-sticky-text .nlw-eyebrow { margin-bottom: 30px; }
+/* steps are stacked so the panel never reflows as they swap */
+.nlw-sticky-steps { position: relative; min-height: 300px; }
+.nlw-sticky-step { position: absolute; inset: 0; opacity: 0; transform: translateY(14px); pointer-events: none;
+  transition: opacity .7s var(--ease), transform .7s var(--ease); }
+.nlw-sticky-step.is-on { opacity: 1; transform: none; pointer-events: auto; }
+.nlw-sticky-step .nlw-h2 { max-width: 17ch; }
+.nlw-sticky-step .nlw-lead { max-width: 44ch; font-size: 19px; }
+
+.nlw-sticky-frame { position: relative; aspect-ratio: 1 / 1.14; width: 100%; max-width: 430px; margin-left: auto; border-radius: 10px; overflow: hidden; background: rgba(255,255,255,.06); }
+/* the wipe: each shot opens from the middle out, as on the reference site */
+.nlw-sticky-shot { position: absolute; inset: 0; clip-path: inset(50% round 10px); transition: clip-path 1.05s var(--ease); }
+.nlw-sticky-shot.is-on { clip-path: inset(0% round 10px); }
+.nlw-sticky-shot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.nlw-sticky-progress { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: rgba(255,255,255,.18); z-index: 2; }
+.nlw-sticky-progress span { display: block; height: 100%; background: var(--season-accent); transform-origin: left center; transform: scaleX(0); transition: transform .2s linear, background-color 1.2s var(--ease); }
+
+@media (max-width: 900px) {
+  /* still pinned, but stacked: image above, text below */
+  .nlw-sticky-in { grid-template-columns: 1fr; gap: 26px; padding-left: 24px; padding-right: 24px; align-content: center; }
+  .nlw-sticky-media { order: -1; }
+  .nlw-sticky-frame { aspect-ratio: 4 / 3; max-height: 40vh; max-width: none; margin-left: 0; }
+  .nlw-sticky-frame img { height: 100%; }
+  .nlw-sticky-steps { min-height: 210px; }
+  .nlw-sticky-text .nlw-eyebrow { margin-bottom: 18px; }
+  .nlw-sticky-step .nlw-lead { font-size: 17px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nlw-sticky-step, .nlw-sticky-shot, .nlw-sticky-progress span { transition: none; }
+}
+
+/* calm passage */
+.nlw-passage p { font-size: 18px; line-height: 1.78; color: var(--ink-soft); max-width: 62ch; }
+.nlw-passage p + p { margin-top: 20px; }
+
+/* pale panel, shared by the gate, the confirmation, and the ownership note */
+.nlw-panel { background: #FBFAF9; border: .5px solid var(--rule); border-radius: 10px; padding: clamp(26px, 3.4vw, 40px); }
+.nlw-panel .nlw-h3 { margin-bottom: 12px; }
+.nlw-panel p { color: var(--ink-soft); max-width: 54ch; }
+
+/* copy still owed by NLW */
+.nlw-note { border-left: 2px solid var(--rule); padding: 3px 0 3px 16px; margin-top: 22px; font-size: 13px; line-height: 1.65; color: var(--muted); max-width: 48ch; }
+
+.nlw-actions { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; margin-top: 28px; }
+
+/* stewardship pathways, as solid cards with a coloured head rule */
+.nlw-pathways { margin-top: 46px; display: flex; flex-direction: column; gap: 18px; }
+.nlw-pathway { display: grid; grid-template-columns: 290px 1fr; gap: 18px 56px; padding: 34px 36px; border: .5px solid var(--rule); border-top-width: 3px; border-radius: 10px; background: var(--surface); transition: transform .6s var(--ease), box-shadow .6s var(--ease); }
+.nlw-pathway:nth-child(1) { border-top-color: var(--teal); }
+.nlw-pathway:nth-child(2) { border-top-color: var(--plum); }
+.nlw-pathway:nth-child(3) { border-top-color: var(--season-accent); }
+.nlw-pathway:hover { transform: translateY(-3px); box-shadow: 0 22px 44px -34px rgba(22,15,26,.6); }
+.nlw-pathway .tag { font-size: 10.5px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--teal); display: block; margin-bottom: 12px; }
+.nlw-pathway h3 { font-family: 'Fraunces', serif; font-weight: 340; font-size: 30px; line-height: 1.2; color: var(--plum); letter-spacing: -.01em; }
+.nlw-pathway .purpose { font-size: 17px; line-height: 1.65; color: var(--ink); max-width: 46ch; }
+.nlw-pathway .detail { font-size: 15.5px; line-height: 1.75; color: var(--ink-soft); max-width: 52ch; margin-top: 16px; }
+
+/* the four movements */
+.nlw-movements { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin-top: 42px; }
+.nlw-movement { background: var(--surface); border: .5px solid var(--rule); border-radius: 10px; padding: 26px 28px 28px; }
+.nlw-movement .num { font-size: 11px; font-weight: 500; letter-spacing: .18em; color: var(--teal); }
+.nlw-movement h3 { font-family: 'Fraunces', serif; font-weight: 340; font-size: 21px; color: var(--plum); margin: 8px 0 8px; }
+.nlw-movement p { font-size: 15px; line-height: 1.7; color: var(--ink-soft); max-width: 40ch; }
+
+/* advisor notes */
+.nlw-people { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 42px; }
+.nlw-person { background: var(--surface); border: .5px solid var(--rule); border-radius: 10px; padding: 26px 26px 28px; }
+.nlw-person h3 { font-family: 'Fraunces', serif; font-weight: 340; font-size: 20px; color: var(--plum); }
+.nlw-person .role { font-size: 11px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin: 7px 0 12px; }
+.nlw-person p { font-size: 15px; line-height: 1.7; color: var(--ink-soft); }
+
+/* featured turning, set like a printed page */
+.nlw-feature { background: var(--surface); border: .5px solid var(--rule); border-top: 3px solid var(--season-accent); border-radius: 10px; padding: clamp(32px, 4vw, 48px); transition: border-color 1.4s var(--ease); }
+.nlw-feature .nlw-eyebrow { color: var(--season-accent); transition: color 1.2s var(--ease); }
+.nlw-feature .nlw-h2 { max-width: 19ch; margin-bottom: 20px; }
+.nlw-feature .stand { margin-bottom: 26px; }
+.nlw-feature .meta { font-size: 12px; letter-spacing: .04em; color: var(--muted); margin-top: 22px; }
+.nlw-essay { margin-top: 28px; max-width: 62ch; }
+.nlw-essay p { font-size: 17px; line-height: 1.8; color: var(--ink-soft); }
+.nlw-essay p + p { margin-top: 18px; }
+
+/* archive */
+.nlw-filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+.nlw-filter { font-size: 11.5px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; padding: 8px 15px; border-radius: 4px; border: .5px solid var(--rule); background: transparent; color: var(--ink-soft); cursor: pointer; transition: all .35s var(--ease); }
+.nlw-filter:hover { border-color: var(--teal); color: var(--teal); }
+.nlw-filter[aria-pressed="true"] { border-color: var(--teal); color: var(--teal); background: rgba(27, 91, 110, .06); }
+.nlw-filter:focus-visible { outline: 2px solid var(--season-accent); outline-offset: 3px; }
+.nlw-archive { list-style: none; }
+.nlw-archive li { border-bottom: .5px solid var(--rule); }
+.nlw-archive .row { display: grid; grid-template-columns: 180px 1fr; gap: 8px 44px; padding: 28px 0; align-items: start; }
+.nlw-archive .when { font-size: 11.5px; font-weight: 500; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); padding-top: 5px; }
+.nlw-archive h3 { font-family: 'Fraunces', serif; font-weight: 340; font-size: 22px; line-height: 1.28; color: var(--plum); }
+.nlw-archive p { font-size: 15px; line-height: 1.7; color: var(--ink-soft); max-width: 56ch; margin-top: 8px; }
+.nlw-archive .empty { padding: 28px 0; color: var(--muted); font-size: 15px; }
+
+/* forms */
+.nlw-form { display: flex; flex-direction: column; gap: 20px; max-width: 520px; }
+.nlw-label { display: flex; flex-direction: column; gap: 8px; }
+.nlw-label > span { font-size: 13px; color: var(--ink-soft); }
+.nlw-input { font-family: inherit; font-size: 16px; line-height: 1.6; padding: 12px 14px; border-radius: 5px; border: .5px solid var(--rule); background: #FBFAF9; color: var(--ink); outline: none; width: 100%; transition: border-color .3s var(--ease); }
+.nlw-input:focus { border-color: var(--teal); }
+textarea.nlw-input { min-height: 140px; resize: vertical; }
+.nlw-form-error { font-size: 14px; color: var(--plum); }
+.nlw-form-small { font-size: 12.5px; line-height: 1.7; color: var(--muted); max-width: 46ch; }
+.nlw-inline-form { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-block: 24px 14px; }
+/* the label carries the flex sizing: on the input it would set a vertical basis */
+.nlw-inline-form .nlw-label { flex: 1 1 260px; max-width: 380px; }
+.nlw-inline-form .nlw-input { width: 100%; }
+
+/* contact */
+.nlw-contact-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 30px 64px; align-items: start; }
+.nlw-direct .item { border-top: .5px solid var(--rule); padding: 20px 0; }
+.nlw-direct .k { font-size: 11px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.nlw-direct .v { font-size: 16px; color: var(--ink); margin-top: 8px; }
+.nlw-direct .v a { color: var(--teal); }
+.nlw-direct .v a:hover { color: var(--teal-deep); }
+.nlw-direct .sub { font-size: 14px; color: var(--ink-soft); margin-top: 6px; max-width: 34ch; }
+
+/* gated library */
+.nlw-lib { list-style: none; margin-top: 40px; border-top: .5px solid var(--rule); }
+.nlw-lib li { display: flex; align-items: flex-start; gap: 16px; padding: 24px 0; border-bottom: .5px solid var(--rule); }
+.nlw-lib .lk { color: var(--muted); flex: none; margin-top: 4px; }
+.nlw-lib h3 { font-family: 'Fraunces', serif; font-weight: 340; font-size: 20px; color: var(--plum); }
+.nlw-lib p { font-size: 15px; line-height: 1.7; color: var(--ink-soft); margin-top: 6px; max-width: 52ch; }
+.nlw-lib .cat { font-size: 10.5px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--teal); display: block; margin-bottom: 8px; }
+.nlw-helpline { margin-top: 44px; font-size: 15px; color: var(--ink-soft); }
+.nlw-helpline .nlw-link-more { margin-top: 12px; }
+
+/* between the desktop header and the mobile drawer the bar runs out of room */
+@media (max-width: 1160px) {
+  .nlw-mark img { height: 23px; }
+  .nlw-head-right { gap: 16px; }
+  .nlw-nav { gap: 20px; }
+  .nlw-nav a { font-size: 13px; white-space: nowrap; }
+  .nlw-nav-cta { padding: 8px 13px; font-size: 11.5px; white-space: nowrap; }
+  .nlw-portal { padding: 8px 12px; }
+}
+@media (max-width: 1080px) {
+  .nlw-nav .nlw-nav-cta { display: none; }
+}
+@media (max-width: 1040px) {
+  .nlw-pathway { grid-template-columns: 1fr; gap: 14px; padding: 36px 0; }
+  .nlw-people { grid-template-columns: 1fr; gap: 24px; }
+  .nlw-contact-grid { grid-template-columns: 1fr; gap: 46px; }
+  .nlw-archive .row { grid-template-columns: 1fr; gap: 6px; }
+  .nlw-archive .when { padding-top: 0; }
+}
 @media (max-width: 960px) {
   .nlw-cards { grid-template-columns: 1fr; gap: 16px; }
+  .nlw-movements { grid-template-columns: 1fr; gap: 26px; }
   .nlw-card { min-height: 290px; }
+  /* no hover on touch, so the detail line is shown outright */
   .nlw-card .more { opacity: 1; transform: none; }
-  .nlw-card .ph img { opacity: .92; transform: none; }
-  .nlw-card .scrim { opacity: 1; }
-  .nlw-card h3 { color: #F3EEF4; }
-  .nlw-card .one { color: #D8CFDC; }
-  .nlw-card .tag { color: #9FC7D2; }
-  .nlw-card .go { color: #EDE7EF; }
 }
 @media (max-width: 820px) {
   :root { --panel: 0px; }
   .nlw-canopy { position: relative; width: 100%; height: 38vh; }
   .nlw-canopy::after { background: linear-gradient(180deg, rgba(245,244,242,0) 52%, var(--canvas) 100%); }
-  .nlw-wrap, .nlw-stewardship .nlw-wrap { max-width: none; padding-left: 24px; padding-right: 24px; }
+  .nlw-canopy.is-hero { position: relative; width: 100%; height: 32vh; }
+  .nlw-canopy.is-hero::after { background-image: linear-gradient(180deg, rgba(245,244,242,0) 46%, var(--canvas) 100%); }
+  .nlw-mark img { height: 21px; }
+  .nlw-page-hero { padding-block: 44px clamp(48px, 7vh, 72px); }
+  .nlw-wrap, .nlw-stewardship .nlw-wrap, .nlw-wrap.wide,
+  .nlw-inner .nlw-section .nlw-wrap, .nlw-inner .nlw-section .nlw-wrap.wide { max-width: none; padding-left: 24px; padding-right: 24px; }
   .nlw-header { padding-top: 22px; padding-left: 24px; padding-right: 24px; }
   .nlw-nav, .nlw-nav-cta { display: none; }
   .nlw-portal .plabel { display: none; }
