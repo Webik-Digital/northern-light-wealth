@@ -73,7 +73,7 @@ export default function Home() {
                 name="EstateReady"
                 oneLiner="Readiness for the family and the estate, prepared long before it is ever needed."
                 detail="Family continuity, operational continuity before probate, and stewardship that carries on long after."
-                photo="winter"
+                photo="estate"
                 to="/stewardship"
               />
               <StewardshipCard
@@ -81,7 +81,7 @@ export default function Home() {
                 name="SaleReady"
                 oneLiner="Preparation for the owner, for the sale itself and for the life that follows it."
                 detail="Owner, family, tax, liquidity, and identity, all readied before and after the transaction."
-                photo="fall"
+                photo="sale"
                 to="/stewardship"
               />
               <StewardshipCard
@@ -89,7 +89,7 @@ export default function Home() {
                 name="Harvest Share"
                 oneLiner="Generosity built into the plan, with a portion of your giving returned to you in recognition."
                 detail="Grounded in participation and community, not cause marketing. Exact terms confirmed with you."
-                photo="spring"
+                photo="harvest"
                 to="/stewardship"
               />
             </div>
