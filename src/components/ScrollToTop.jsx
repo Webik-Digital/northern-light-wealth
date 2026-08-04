@@ -26,7 +26,7 @@ export default function ScrollToTop() {
       return () => window.clearTimeout(timer);
     }
 
-    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, [pathname, hash, navigationType]);
 
   return null;
