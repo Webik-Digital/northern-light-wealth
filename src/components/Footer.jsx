@@ -1,12 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import logoReverse from '@/assets/nlw-logo-reverse.png';
 
 export default function Footer() {
   return (
     <footer className="nlw-footer">
       <div className="nlw-foot-in">
         <div className="nlw-foot-mark">
-          <span className="qs">northern <b>light</b></span>
+          <img src={logoReverse} alt="Northern Light Wealth" />
           <p className="nlw-foot-tag">Seasonal perspective. Daily discipline.</p>
           <p className="nlw-foot-addr">Street address<br />City, Province<br />hello@placeholder.ca</p>
         </div>
