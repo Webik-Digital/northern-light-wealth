@@ -26,7 +26,12 @@ function currentSeason() {
   return 'winter';
 }
 
-export default function SeasonalTree() {
+// mode 'page'  — the homepage signature: fixed full-height panel, scroll-driven
+//                through the year, with the manual season control.
+// mode 'hero'  — inner pages: the tree sits behind the page hero only and then
+//                dissolves into canvas, held at the true current season.
+export default function SeasonalTree({ mode = 'page' }) {
+  const heroOnly = mode === 'hero';
   const reduce = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const [season, setSeason] = useState(() => currentSeason());
   const imgs = useRef({});
@@ -84,7 +89,7 @@ export default function SeasonalTree() {
     scrollSeason();
     return () => window.removeEventListener('scroll', onScroll);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [reduce]);
+  }, [reduce, heroOnly]);
 
   const onDot = (s) => {
     manual.current = s;
@@ -95,6 +100,26 @@ export default function SeasonalTree() {
     manual.current = null;
     scrollSeason();
   };
+
+  if (heroOnly) {
+    return (
+      <>
+        <div className="nlw-canopy is-hero" aria-hidden="true">
+          {ORDER.map((s) => (
+            <img
+              key={s}
+              ref={(el) => { imgs.current[s] = el; }}
+              data-season={s}
+              src={TREES[s]}
+              alt=""
+              aria-hidden="true"
+            />
+          ))}
+        </div>
+        <div className="nlw-wash" aria-hidden="true" />
+      </>
+    );
+  }
 
   return (
     <>
