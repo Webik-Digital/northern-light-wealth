@@ -6,6 +6,7 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import ScrollToTop from './components/ScrollToTop';
+import PageTransition from './components/PageTransition';
 import Home from '@/pages/Home';
 import About from '@/pages/About';
 import Stewardship from '@/pages/Stewardship';
@@ -66,6 +67,7 @@ function App() {
       <QueryClientProvider client={queryClientInstance}>
         <Router>
           <ScrollToTop />
+          <PageTransition />
           <AuthenticatedApp />
         </Router>
         <Toaster />
