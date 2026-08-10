@@ -1,0 +1,9 @@
+# The Base44 sandbox writes LF. Without this, syncing from a Windows checkout
+# rewrites every line of every file it touches and each round-trip shows up as
+# a full-file diff. Normalise to LF in the repository.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.ico binary
