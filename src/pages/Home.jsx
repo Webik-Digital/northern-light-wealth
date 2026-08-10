@@ -6,6 +6,8 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Reveal from '@/components/Reveal';
 import StewardshipCard from '@/components/StewardshipCard';
+import TestimonialCarousel from '@/components/TestimonialCarousel';
+import { TESTIMONIALS } from '@/data/testimonials';
 
 const SEASON_LABEL = { spring: 'Spring', summer: 'Summer', fall: 'Fall', winter: 'Winter' };
 
@@ -21,12 +23,13 @@ export default function Home() {
   const [issue, setIssue] = useState(null);
 
   useEffect(() => {
-    base44.entities.Turning.filter({}, '-publishedAt', 1)
+    base44.entities.Turning.filter({}, '-publishedAt', 20)
       .then((rows) => {
-        if (rows && rows.length) {
-          const featured = rows.find((r) => r.isFeatured) || rows[0];
-          setIssue(featured);
-        }
+        // drafts carry no publishedAt, and a future date is not live yet
+        const live = (rows || []).filter(
+          (r) => r.publishedAt && new Date(r.publishedAt) <= new Date()
+        );
+        if (live.length) setIssue(live.find((r) => r.isFeatured) || live[0]);
       })
       .catch(() => {});
   }, []);
@@ -73,24 +76,24 @@ export default function Home() {
                 name="EstateReady"
                 oneLiner="Readiness for the family and the estate, prepared long before it is ever needed."
                 detail="Family continuity, operational continuity before probate, and stewardship that carries on long after."
-                photo="winter"
-                to="/stewardship"
+                photo="estate"
+                to="/estate-ready"
               />
               <StewardshipCard
                 tag="Transition"
                 name="SaleReady"
                 oneLiner="Preparation for the owner, for the sale itself and for the life that follows it."
                 detail="Owner, family, tax, liquidity, and identity, all readied before and after the transaction."
-                photo="fall"
-                to="/stewardship"
+                photo="sale"
+                to="/sale-ready"
               />
               <StewardshipCard
                 tag="Giving"
                 name="Harvest Share"
                 oneLiner="Generosity built into the plan, with a portion of your giving returned to you in recognition."
                 detail="Grounded in participation and community, not cause marketing. Exact terms confirmed with you."
-                photo="spring"
-                to="/stewardship"
+                photo="harvest"
+                to="/harvest-share"
               />
             </div>
             <Reveal className="sys">
@@ -123,7 +126,10 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 6. Closing */}
+        {/* 6. Client testimonials */}
+        <TestimonialCarousel items={TESTIMONIALS} />
+
+        {/* 7. Closing */}
         <section className="nlw-closing nlw-section">
           <div className="nlw-wrap">
             <Reveal as="h2" className="nlw-h2">If it is a fit, we should talk.</Reveal>

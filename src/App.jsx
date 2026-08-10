@@ -9,6 +9,8 @@ import ScrollToTop from './components/ScrollToTop';
 import Home from '@/pages/Home';
 import About from '@/pages/About';
 import Stewardship from '@/pages/Stewardship';
+import Pathway from '@/pages/Pathway';
+import Admin from '@/pages/Admin';
 import FourTurnings from '@/pages/FourTurnings';
 import Resources from '@/pages/Resources';
 import Contact from '@/pages/Contact';
@@ -44,9 +46,13 @@ const AuthenticatedApp = () => {
       <Route path="/" element={<Home />} />
       <Route path="/about" element={<About />} />
       <Route path="/stewardship" element={<Stewardship />} />
+      <Route path="/estate-ready" element={<Pathway id="estate-ready" />} />
+      <Route path="/sale-ready" element={<Pathway id="sale-ready" />} />
+      <Route path="/harvest-share" element={<Pathway id="harvest-share" />} />
       <Route path="/the-four-turnings" element={<FourTurnings />} />
       <Route path="/resources" element={<Resources />} />
       <Route path="/contact" element={<Contact />} />
+      <Route path="/admin" element={<Admin />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

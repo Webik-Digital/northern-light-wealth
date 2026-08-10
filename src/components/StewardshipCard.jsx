@@ -2,18 +2,21 @@ import React from 'react';
 import { Image } from '@/components/ui/image';
 import Reveal from './Reveal';
 
-const TREES = {
-  winter: 'https://media.base44.com/images/public/6a70610b0eb9bb2f777d7afd/e410f210c_tree-winter.jpg',
-  fall: 'https://media.base44.com/images/public/6a70610b0eb9bb2f777d7afd/2aa49d740_tree-fall.jpg',
-  spring: 'https://media.base44.com/images/public/6a70610b0eb9bb2f777d7afd/292a405ad_tree-spring.jpg',
-  summer: 'https://media.base44.com/images/public/6a70610b0eb9bb2f777d7afd/1e1115c7a_tree-summer.jpg',
+// One photograph per pathway, chosen to match the moment each one speaks to:
+// a life handed on, a life's work, and a harvest shared. These are licence-free
+// placeholders served from Unsplash; swap them for NLW's own photography and
+// upload it to the app's media so nothing is loaded from a third party.
+const PHOTOS = {
+  estate: 'https://images.unsplash.com/photo-1534768654272-e97681c3a2c7?auto=format&fit=crop&w=900&q=70',
+  sale: 'https://images.unsplash.com/photo-1753164726626-e4c38056a03f?auto=format&fit=crop&w=900&q=70',
+  harvest: 'https://images.unsplash.com/photo-1515276427842-f85802d514a2?auto=format&fit=crop&w=900&q=70',
 };
 
 export default function StewardshipCard({ tag, name, oneLiner, detail, photo, to }) {
   return (
     <Reveal to={to} className="nlw-card" aria-label={`${name} — ${tag}`}>
       <span className="ph">
-        <Image src={TREES[photo]} alt="" fittingType="fill" aria-hidden="true" />
+        <Image src={PHOTOS[photo]} alt="" fittingType="fill" aria-hidden="true" />
       </span>
       <span className="scrim" aria-hidden="true" />
       <span className="c">

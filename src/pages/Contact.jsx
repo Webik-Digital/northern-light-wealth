@@ -22,7 +22,11 @@ export default function Contact() {
     }
     setBusy(true);
     try {
-      await base44.entities.ContactSubmission.create({ name: name.trim(), contact: contact.trim(), message: message.trim() });
+      await base44.entities.ContactSubmission.create({
+        name: name.trim(),
+        contact: contact.trim(),
+        message: message.trim(),
+      });
       setSubmitted(true);
     } catch (err) {
       setError('Something went wrong sending your note. Please try again.');
@@ -33,58 +37,108 @@ export default function Contact() {
 
   return (
     <>
-      <SeasonalTree />
+      <SeasonalTree mode="hero" />
       <Header />
-      <main className="nlw-main">
-        <section className="nlw-placeholder">
-          <div className="nlw-wrap" style={{ maxWidth: 640 }}>
+
+      <main className="nlw-main nlw-inner">
+        <section className="nlw-page-hero">
+          <div className="nlw-wrap">
             <Reveal as="p" className="nlw-eyebrow">Contact</Reveal>
             <Reveal as="h1" className="nlw-h1">Begin a conversation.</Reveal>
-            <Reveal as="p" className="nlw-lead">One unhurried conversation. If we are not the right stewards for you, we will tell you plainly.</Reveal>
+            <Reveal as="p" className="nlw-lead">Tell us a little, and we will answer personally. No obligation, and no sales sequence.</Reveal>
+          </div>
+        </section>
 
-            {submitted ? (
-              <Reveal className="nlw-locked" style={{ marginTop: 36 }}>
-                <h3 className="nlw-h3">Thank you, your note is with us.</h3>
-                <p>We will be in touch shortly at the details you provided.</p>
-              </Reveal>
-            ) : (
-              <Reveal>
-                <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 18, marginTop: 36, maxWidth: 560 }}>
-                  <label style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                    <span style={{ fontSize: 13, color: 'var(--ink-soft)' }}>Name</span>
-                    <input value={name} onChange={(e) => setName(e.target.value)} style={inputStyle} autoComplete="name" />
-                  </label>
-                  <label style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                    <span style={{ fontSize: 13, color: 'var(--ink-soft)' }}>How to reach you</span>
-                    <input value={contact} onChange={(e) => setContact(e.target.value)} style={inputStyle} placeholder="Email or phone" />
-                  </label>
-                  <label style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                    <span style={{ fontSize: 13, color: 'var(--ink-soft)' }}>Your note</span>
-                    <textarea value={message} onChange={(e) => setMessage(e.target.value)} style={{ ...inputStyle, minHeight: 130, resize: 'vertical' }} />
-                  </label>
-                  {error && <p style={{ color: 'var(--plum)', fontSize: 14 }}>{error}</p>}
-                  <button type="submit" className="nlw-btn" disabled={busy} style={{ alignSelf: 'flex-start', opacity: busy ? 0.6 : 1 }}>
-                    {busy ? 'Sending…' : 'Send note'}
-                  </button>
-                  <p style={{ fontSize: 13, color: 'var(--muted)', marginTop: 8 }}>A direct line and a book-a-time option will follow here. What happens next: a brief reply, then an unhurried first conversation.</p>
-                </form>
-              </Reveal>
-            )}
+        <section className="nlw-section">
+          <div className="nlw-wrap wide">
+            <div className="nlw-contact-grid">
+              {/* The form */}
+              <div>
+                {submitted ? (
+                  <Reveal className="nlw-panel">
+                    <h2 className="nlw-h3">Thank you. Your note is with us.</h2>
+                    <p>One of us will read it and reply personally, usually within a couple of days.</p>
+                  </Reveal>
+                ) : (
+                  <Reveal>
+                    <form className="nlw-form" onSubmit={onSubmit}>
+                      <label className="nlw-label">
+                        <span>Your name</span>
+                        <input
+                          className="nlw-input"
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          autoComplete="name"
+                        />
+                      </label>
+                      <label className="nlw-label">
+                        <span>Where we can reach you</span>
+                        <input
+                          className="nlw-input"
+                          value={contact}
+                          onChange={(e) => setContact(e.target.value)}
+                          placeholder="Email or phone"
+                        />
+                      </label>
+                      <label className="nlw-label">
+                        <span>What is on your mind (a few lines is plenty)</span>
+                        <textarea
+                          className="nlw-input"
+                          value={message}
+                          onChange={(e) => setMessage(e.target.value)}
+                        />
+                      </label>
+                      {error && <p className="nlw-form-error">{error}</p>}
+                      <button type="submit" className="nlw-btn" disabled={busy} style={{ alignSelf: 'flex-start', opacity: busy ? 0.6 : 1 }}>
+                        {busy ? 'Sending…' : 'Send'}
+                      </button>
+                    </form>
+                  </Reveal>
+                )}
+              </div>
+
+              {/* Direct line and what happens next */}
+              <div>
+                <Reveal as="p" className="nlw-eyebrow">Direct line</Reveal>
+                <Reveal className="nlw-direct">
+                  <div className="item">
+                    <p className="k">Write to us</p>
+                    <p className="v"><a href="mailto:hello@placeholder.ca">hello@placeholder.ca</a></p>
+                  </div>
+                  <div className="item">
+                    <p className="k">Call</p>
+                    <p className="v">+1 000 000 0000</p>
+                    <p className="sub">Weekdays, local hours.</p>
+                  </div>
+                  <div className="item">
+                    <p className="k">Book a time</p>
+                    <p className="sub">A short introductory call at a time that suits you.</p>
+                    <p className="v" style={{ marginTop: 10 }}>
+                      <span className="nlw-link-more" style={{ color: 'var(--muted)', cursor: 'default' }}>
+                        Find a time <span className="arw">→</span>
+                      </span>
+                    </p>
+                  </div>
+                </Reveal>
+                <Reveal as="p" className="nlw-note">Contact details and the booking link are placeholders, to be provided by NLW.</Reveal>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* What happens next */}
+        <section className="nlw-section nlw-section-tight">
+          <div className="nlw-wrap">
+            <Reveal as="p" className="nlw-eyebrow">What happens next</Reveal>
+            <Reveal as="h2" className="nlw-h2" style={{ maxWidth: '22ch' }}>A person reads your note, and replies personally.</Reveal>
+            <Reveal as="p" className="nlw-lead" style={{ marginTop: 20 }}>
+              If there is a fit we suggest a first conversation. Nothing automated, and no follow-up sequence.
+            </Reveal>
           </div>
         </section>
       </main>
+
       <Footer />
     </>
   );
 }
-
-const inputStyle = {
-  fontFamily: 'inherit',
-  fontSize: 16,
-  padding: '12px 14px',
-  borderRadius: 5,
-  border: '.5px solid var(--rule)',
-  background: '#FBFAF9',
-  color: 'var(--ink)',
-  outline: 'none',
-};

@@ -1,10 +1,19 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import SeasonalTree from '@/components/SeasonalTree';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Reveal from '@/components/Reveal';
 import LockIcon from '@/components/LockIcon';
 import { base44 } from '@/api/base44Client';
+
+// Shown while locked: enough to see the shape of the library, not the contents.
+const SHAPE = [
+  { title: 'Estate and succession documents', body: 'Templates and checklists, kept current.' },
+  { title: 'Business sale preparation', body: 'What to ready, and when.' },
+  { title: 'Family stewardship guides', body: 'For the next generation.' },
+  { title: 'Seasonal briefings for partners', body: 'Short notes, four times a year.' },
+];
 
 export default function Resources() {
   const [authed, setAuthed] = useState(false);
@@ -15,61 +24,148 @@ export default function Resources() {
     let active = true;
     base44.auth.isAuthenticated().then((ok) => { if (active) setAuthed(ok); }).catch(() => {});
     base44.entities.Resource.filter({}, 'order', 50)
-      .then((rows) => { if (active) setItems(rows || []); })
+      .then(async (rows) => {
+        // items uploaded to private storage are stored as a file_uri, not a URL,
+        // so they need a signed link before a client can open them
+        const resolved = await Promise.all(
+          (rows || []).map(async (r) => {
+            if (!r.fileOrUrl || /^https?:\/\//i.test(r.fileOrUrl)) return r;
+            try {
+              const { signed_url } = await base44.integrations.Core.CreateFileSignedUrl({ file_uri: r.fileOrUrl });
+              return { ...r, href: signed_url };
+            } catch (e) {
+              return { ...r, href: '' };
+            }
+          })
+        );
+        if (active) setItems(resolved);
+      })
       .catch(() => {})
       .finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
   }, []);
 
-  const requestAccess = () => {
-    base44.auth.redirectToLogin(window.location.pathname);
+  const signIn = () => base44.auth.redirectToLogin(window.location.pathname);
+
+  const openLibrary = () => {
+    const el = document.getElementById('library');
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   return (
     <>
-      <SeasonalTree />
+      <SeasonalTree mode="hero" />
       <Header />
-      <main className="nlw-main">
-        <section className="nlw-placeholder">
-          <div className="nlw-wrap" style={{ maxWidth: 720 }}>
+
+      <main className="nlw-main nlw-inner">
+        <section className="nlw-page-hero">
+          <div className="nlw-wrap">
             <Reveal as="p" className="nlw-eyebrow">Resources</Reveal>
-            <Reveal as="h1" className="nlw-h1">The library.</Reveal>
-            <Reveal as="p" className="nlw-lead">A quiet collection of thinking and planning materials for our clients.</Reveal>
+            <Reveal as="h1" className="nlw-h1">Stewardship Resources</Reveal>
+            <Reveal as="p" className="nlw-lead">A reserved area for clients and invited guests. Access here is given, not sold.</Reveal>
+          </div>
+        </section>
+
+        {/* The gate */}
+        <section className="nlw-section">
+          <div className="nlw-wrap">
+            <Reveal className="nlw-panel">
+              {authed ? (
+                <>
+                  <h2 className="nlw-h3">Welcome back. Your library is open.</h2>
+                  <p>The newest briefings are at the top.</p>
+                  <div className="nlw-actions">
+                    <button type="button" className="nlw-btn" onClick={openLibrary}>Open the library</button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: 'var(--teal)', fontSize: 12.5, letterSpacing: '.12em', textTransform: 'uppercase', fontWeight: 500, marginBottom: 14 }}>
+                    <LockIcon className="nlw-icon" /> Client access
+                  </span>
+                  <h2 className="nlw-h3">Kept here for the people we work with.</h2>
+                  <p>A working library of documents, guides, and seasonal briefings, arranged with your advisor rather than opened to everyone.</p>
+                  <div className="nlw-actions">
+                    <button type="button" className="nlw-btn" onClick={signIn}>Enter the library</button>
+                    <Link to="/contact" className="nlw-link-more">Request access <span className="arw">→</span></Link>
+                  </div>
+                </>
+              )}
+            </Reveal>
+          </div>
+        </section>
+
+        {/* The shape of the library */}
+        <section className="nlw-section nlw-section-tight" id="library">
+          <div className="nlw-wrap wide">
+            <Reveal className="nlw-head">
+              <p className="nlw-eyebrow">What is inside</p>
+              <h2 className="nlw-h2">
+                {authed ? 'Your library.' : 'Enough to see the shape of the library, not the contents.'}
+              </h2>
+            </Reveal>
 
             {!authed ? (
-              <Reveal className="nlw-locked" style={{ marginTop: 36 }}>
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: 'var(--teal)', marginBottom: 12 }}>
-                  <LockIcon className="nlw-icon" /> Client access
-                </span>
-                <h3 className="nlw-h3">The library is gated.</h3>
-                <p>Signed-in clients see the full library. Gated items require a client login. Request access and we will be in touch.</p>
-                <button className="nlw-btn" onClick={requestAccess}>Client login</button>
-              </Reveal>
+              <ul className="nlw-lib">
+                {SHAPE.map((s) => (
+                  <li key={s.title}>
+                    <LockIcon className="nlw-icon lk" />
+                    <div>
+                      <h3>{s.title}</h3>
+                      <p>{s.body}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
             ) : loading ? (
-              <Reveal><p style={{ marginTop: 36, color: 'var(--muted)' }}>Loading the library…</p></Reveal>
+              <p style={{ marginTop: 36, color: 'var(--muted)' }}>Opening the library…</p>
             ) : items.length === 0 ? (
-              <Reveal><p style={{ marginTop: 36, color: 'var(--muted)' }}>The library is being curated. New writing and materials will appear here each turning of the year.</p></Reveal>
+              <ul className="nlw-lib">
+                {SHAPE.map((s) => (
+                  <li key={s.title}>
+                    <div>
+                      <h3>{s.title}</h3>
+                      <p>{s.body}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
             ) : (
-              <Reveal>
-                <ul style={{ listStyle: 'none', marginTop: 36, display: 'flex', flexDirection: 'column', gap: 14 }}>
-                  {items.map((r) => (
-                    <li key={r.id} style={{ border: '.5px solid var(--rule)', borderRadius: 10, padding: '20px 22px', background: '#FBFAF9' }}>
-                      <span style={{ fontSize: 11, letterSpacing: '.16em', textTransform: 'uppercase', color: 'var(--teal)', fontWeight: 500 }}>{r.category}</span>
-                      <h3 className="nlw-h3" style={{ marginTop: 8 }}>{r.title}</h3>
-                      {r.description && <p style={{ color: 'var(--ink-soft)', marginTop: 6 }}>{r.description}</p>}
-                      {r.fileOrUrl && (
-                        <a href={r.fileOrUrl} target="_blank" rel="noreferrer" className="nlw-link-more" style={{ marginTop: 10, display: 'inline-flex' }}>
+              <ul className="nlw-lib">
+                {items.map((r) => (
+                  <li key={r.id}>
+                    <div>
+                      {r.category && <span className="cat">{r.category}</span>}
+                      <h3>{r.title}</h3>
+                      {r.description && <p>{r.description}</p>}
+                      {(r.href || r.fileOrUrl) && (
+                        <a href={r.href || r.fileOrUrl} target="_blank" rel="noreferrer" className="nlw-link-more" style={{ marginTop: 12 }}>
                           Open <span className="arw">→</span>
                         </a>
                       )}
-                    </li>
-                  ))}
-                </ul>
-              </Reveal>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            {!authed && (
+              <Reveal as="p" className="nlw-note">Library contents are drawn from the Resource entity and shown once a client signs in.</Reveal>
             )}
           </div>
         </section>
+
+        {/* Help line */}
+        <section className="nlw-section nlw-section-tight">
+          <div className="nlw-wrap">
+            <Reveal as="h2" className="nlw-h2" style={{ maxWidth: '20ch' }}>If you need access, or you are not sure whether you already have it, speak with us.</Reveal>
+            <Reveal style={{ marginTop: 26 }}>
+              <Link to="/contact" className="nlw-link-more">Speak with us <span className="arw">→</span></Link>
+            </Reveal>
+          </div>
+        </section>
       </main>
+
       <Footer />
     </>
   );
