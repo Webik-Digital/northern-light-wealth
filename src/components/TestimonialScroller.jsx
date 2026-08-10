@@ -5,7 +5,11 @@ import Reveal from './Reveal';
 // scroll into the cards moving sideways. The card nearest the middle of the
 // viewport is the one being read, so it takes the plum. When the track runs
 // out the section releases and the page carries on down.
-export default function TestimonialScroller({ items = [] }) {
+export default function TestimonialScroller({
+  items = [],
+  eyebrow = 'In their words',
+  heading = 'What clients say about the work.',
+}) {
   const wrapRef = useRef(null);
   const trackRef = useRef(null);
   const [x, setX] = useState(0);
@@ -49,6 +53,15 @@ export default function TestimonialScroller({ items = [] }) {
       const xStart = xFor(0);
       const xEnd = xFor(cards.length - 1);
       const travel = Math.max(xStart - xEnd, 0);
+      if (travel === 0) {
+        // a single card has nowhere to go: pinning would just eat a screen of
+        // scroll to show something already still
+        setPinned(false);
+        setX(0);
+        setActive(0);
+        wrap.style.height = '';
+        return;
+      }
       wrap.style.height = `${window.innerHeight + travel}px`;
 
       const rect = wrap.getBoundingClientRect();
@@ -89,8 +102,8 @@ export default function TestimonialScroller({ items = [] }) {
       <div className="nlw-tscroll-panel">
         <div className="nlw-wrap">
           <Reveal className="nlw-head">
-            <p className="nlw-eyebrow">In their words</p>
-            <h2 className="nlw-h2">What clients say about the work.</h2>
+            <p className="nlw-eyebrow">{eyebrow}</p>
+            <h2 className="nlw-h2">{heading}</h2>
           </Reveal>
         </div>
 

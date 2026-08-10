@@ -19,10 +19,11 @@ export default function BrandDraw({ className = '' }) {
       return undefined;
     }
     if (!('IntersectionObserver' in window)) { setDrawn(true); return undefined; }
+    // Re-arm on the way out rather than unobserving: dropping the class resets
+    // the dash offset, so the mark draws again the next time it is scrolled to
+    // instead of sitting there already finished.
     const io = new IntersectionObserver(
-      (entries) => entries.forEach((e) => {
-        if (e.isIntersecting) { setDrawn(true); io.unobserve(e.target); }
-      }),
+      (entries) => entries.forEach((e) => setDrawn(e.isIntersecting)),
       { threshold: 0.45 }
     );
     io.observe(el);

@@ -7,10 +7,16 @@ import Reveal from '@/components/Reveal';
 import ClosingCTA from '@/components/ClosingCTA';
 import PageNotFound from '@/lib/PageNotFound';
 import { getPathway } from '@/data/pathways';
+import TestimonialScroller from '@/components/TestimonialScroller';
+import { TESTIMONIALS } from '@/data/testimonials';
 
 export default function Pathway({ id }) {
   const p = getPathway(id);
   if (!p) return <PageNotFound />;
+
+  // this pathway's quotes, plus the one that speaks to the relationship rather
+  // than a single programme
+  const quotes = TESTIMONIALS.filter((t) => t.pathway === p.name || t.pathway == null);
 
   return (
     <>
@@ -80,30 +86,12 @@ export default function Pathway({ id }) {
           </div>
         </section>
 
-        {/* Testimonials — supplied by NLW */}
-        <section className="nlw-section nlw-section-tight">
-          <div className="nlw-wrap wide">
-            <Reveal className="nlw-head">
-              <p className="nlw-eyebrow">In their words</p>
-              <h2 className="nlw-h2">Clients who came through this door.</h2>
-            </Reveal>
-            {p.testimonials.length === 0 ? (
-              <Reveal as="p" className="nlw-note">
-                {p.name} client testimonials to be supplied by NLW, with written permission to
-                publish and the attribution each client agrees to.
-              </Reveal>
-            ) : (
-              <div className="nlw-quotes">
-                {p.testimonials.map((t, i) => (
-                  <Reveal key={i} className="nlw-quote">
-                    <blockquote>{t.quote}</blockquote>
-                    <p className="who">{t.who}</p>
-                  </Reveal>
-                ))}
-              </div>
-            )}
-          </div>
-        </section>
+        {/* Testimonials — the homepage treatment, narrowed to this pathway */}
+        <TestimonialScroller
+          items={quotes}
+          eyebrow="In their words"
+          heading="Clients who came through this door."
+        />
 
         {/* Closing */}
         <ClosingCTA heading="Wherever your season begins, a conversation is the same first step." tight />
