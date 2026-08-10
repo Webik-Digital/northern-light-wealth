@@ -31,7 +31,7 @@ export default function Admin() {
       <div className="nlw-admin-gate">
         <h1 className="nlw-h3">Sign in to manage the site.</h1>
         <p>This area is for Northern Light Wealth staff.</p>
-        <button className="nlw-btn" onClick={() => base44.auth.redirectToLogin('/admin')}>Sign in</button>
+        <Link className="nlw-btn" to="/login?returnTo=%2Fadmin">Sign in</Link>
       </div>
     );
   }

@@ -357,6 +357,20 @@ button { font-family: inherit; }
   .nlw-brandmark.is-drawn .nl, .nlw-brandmark.is-drawn .wealth { animation: none; }
 }
 
+/* ---------- sign in / sign up ---------- */
+.nlw-auth { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 48px 24px; background: var(--canvas); }
+.nlw-auth-inner { width: 100%; max-width: 430px; }
+.nlw-auth-mark { display: block; margin: 0 auto 30px; width: fit-content; }
+.nlw-auth-mark img { height: 26px; width: auto; display: block; }
+.nlw-auth-card { background: var(--surface); border: .5px solid var(--rule); border-radius: 10px; padding: clamp(26px, 4vw, 38px); }
+.nlw-auth-card .nlw-h3 { margin-bottom: 8px; }
+.nlw-auth-sub { font-size: 14.5px; line-height: 1.6; color: var(--ink-soft); margin-bottom: 26px; }
+.nlw-auth-body label { font-size: 13px; color: var(--ink-soft); }
+.nlw-auth-foot { text-align: center; font-size: 14px; color: var(--ink-soft); margin-top: 22px; }
+.nlw-auth-foot a { color: var(--teal); }
+.nlw-auth-foot a:hover { color: var(--teal-deep); }
+.nlw-auth-back { display: flex; justify-content: center; margin-top: 26px; font-size: 13px; color: var(--muted); }
+
 /* ---------- admin portal ---------- */
 /* Deliberately plainer than the public site: this is a working surface, and it
    should never be mistaken for a page a client sees. */

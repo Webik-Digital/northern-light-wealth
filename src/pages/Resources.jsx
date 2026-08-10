@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import SeasonalTree from '@/components/SeasonalTree';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -19,6 +19,7 @@ export default function Resources() {
   const [authed, setAuthed] = useState(false);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     let active = true;
@@ -45,7 +46,7 @@ export default function Resources() {
     return () => { active = false; };
   }, []);
 
-  const signIn = () => base44.auth.redirectToLogin(window.location.pathname);
+  const signIn = () => navigate(`/login?returnTo=${encodeURIComponent('/resources')}`);
 
   const openLibrary = () => {
     const el = document.getElementById('library');

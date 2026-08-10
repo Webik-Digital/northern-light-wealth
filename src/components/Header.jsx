@@ -41,7 +41,10 @@ export default function Header() {
       navigate('/resources');
       return;
     }
-    base44.auth.redirectToLogin(window.location.pathname);
+    // our own sign-in page rather than the platform's, so the client never
+    // leaves the firm's site to get to the library
+    const here = window.location.pathname + window.location.search;
+    navigate(here === '/' ? '/login' : `/login?returnTo=${encodeURIComponent(here)}`);
   };
 
   const handleLogout = async () => {
