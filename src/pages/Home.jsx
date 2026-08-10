@@ -130,20 +130,23 @@ export default function Home() {
         {/* 6. Client testimonials */}
         <TestimonialCarousel items={TESTIMONIALS} />
 
-        {/* 7. Closing */}
-        <section className="nlw-closing nlw-section">
+        {/* 7. Closing — the mark draws itself in the column the tree has vacated */}
+        <section className="nlw-closing nlw-closing-split nlw-section">
           <div className="nlw-wrap">
-            <Reveal as="h2" className="nlw-h2">If it is a fit, we should talk.</Reveal>
-            <Reveal as="p" className="nlw-lead">One unhurried conversation. If we are not the right stewards for you, we will tell you plainly.</Reveal>
-            <Reveal>
-              <Link to="/contact" className="nlw-btn">Begin a conversation</Link>
-            </Reveal>
+            <div className="nlw-closing-grid">
+              <div>
+                <Reveal as="h2" className="nlw-h2">If it is a fit, we should talk.</Reveal>
+                <Reveal as="p" className="nlw-lead">One unhurried conversation. If we are not the right stewards for you, we will tell you plainly.</Reveal>
+                <Reveal>
+                  <Link to="/contact" className="nlw-btn">Begin a conversation</Link>
+                </Reveal>
+              </div>
+              <div className="nlw-closing-mark">
+                <BrandDraw />
+              </div>
+            </div>
           </div>
         </section>
-        {/* 8. Sign-off: the mark draws itself as the tree finishes fading */}
-        <div className="nlw-signoff">
-          <BrandDraw />
-        </div>
       </main>
 
       <Footer />
