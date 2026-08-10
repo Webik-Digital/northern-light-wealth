@@ -1,0 +1,16 @@
+// Client access is granted, not self-served: accounts are created by an admin
+// in the Base44 dashboard and the client signs in with that email and password.
+// Every social provider is off, so there is no route in that bypasses the
+// invitation.
+{
+  "enableUsernamePassword": true,
+  "enableGoogleLogin": false,
+  "enableMicrosoftLogin": false,
+  "enableFacebookLogin": false,
+  "enableAppleLogin": false,
+  "ssoProviderName": null,
+  "enableSSOLogin": false,
+  "googleOAuthMode": "default",
+  "googleOAuthClientId": null,
+  "useWorkspaceSSO": false
+}
