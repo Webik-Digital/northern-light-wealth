@@ -106,6 +106,14 @@ export const AuthProvider = ({ children }) => {
       
       // If user auth fails, it might be an expired token
       if (error.status === 401 || error.status === 403) {
+        // Drop the dead token rather than carrying it into every later request:
+        // left in place it 401s on every page load for a visitor who is simply
+        // signed out. Cleared straight from storage — auth.logout() navigates
+        // even with no URL passed, which is its own redirect out of the page.
+        try {
+          window.localStorage.removeItem('base44_access_token');
+          window.localStorage.removeItem('token');
+        } catch (e) { /* storage unavailable */ }
         setAuthError({
           type: 'auth_required',
           message: 'Authentication required'
@@ -128,8 +136,12 @@ export const AuthProvider = ({ children }) => {
   };
 
   const navigateToLogin = () => {
-    // Use the SDK's redirectToLogin method
-    base44.auth.redirectToLogin(window.location.href);
+    // Our own sign-in page, not the SDK's redirect: that one appends from_url
+    // with the whole current URL, so calling it from /login nests the previous
+    // URL inside the next one on every pass.
+    if (window.location.pathname === '/login') return;
+    const here = window.location.pathname + window.location.search;
+    window.location.href = here === '/' ? '/login' : `/login?returnTo=${encodeURIComponent(here)}`;
   };
 
   return (

@@ -21,7 +21,7 @@ import Contact from '@/pages/Contact';
 // Add page imports here
 
 const AuthenticatedApp = () => {
-  const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
+  const { isLoadingAuth, isLoadingPublicSettings, authError } = useAuth();
 
   // Show loading spinner while checking app public settings or auth
   if (isLoadingPublicSettings || isLoadingAuth) {
@@ -32,15 +32,13 @@ const AuthenticatedApp = () => {
     );
   }
 
-  // Handle authentication errors
-  if (authError) {
-    if (authError.type === 'user_not_registered') {
-      return <UserNotRegisteredError />;
-    } else if (authError.type === 'auth_required') {
-      // Redirect to login automatically
-      navigateToLogin();
-      return null;
-    }
+  // This is a public marketing site with two gated areas, not an app that sits
+  // wholly behind a login. Never bounce the whole shell to /login: that page is
+  // itself a route here, so redirecting from it re-entered this check and looped,
+  // nesting from_url on every pass. /resources and /admin prompt for sign-in
+  // themselves, which is the only place a prompt belongs.
+  if (authError && authError.type === 'user_not_registered') {
+    return <UserNotRegisteredError />;
   }
 
   // Render the main app
