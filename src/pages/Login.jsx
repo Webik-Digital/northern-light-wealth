@@ -37,7 +37,15 @@ export default function Login() {
       subtitle="For clients and invited guests of Northern Light Wealth."
       footer={
         <>
-          Access is arranged with your advisor.{" "}
+          Just invited?{" "}
+          <Link
+            to={"/activate" + (returnTo !== "/" ? "?returnTo=" + encodeURIComponent(returnTo) : "")}
+            className="text-primary font-medium hover:underline"
+          >
+            Set your password
+          </Link>
+          <br />
+          Not a client yet?{" "}
           <Link to="/contact" className="text-primary font-medium hover:underline">
             Request access
           </Link>

@@ -13,6 +13,7 @@ import Stewardship from '@/pages/Stewardship';
 import Pathway from '@/pages/Pathway';
 import Admin from '@/pages/Admin';
 import Login from '@/pages/Login';
+import Activate from '@/pages/Activate';
 import ForgotPassword from '@/pages/ForgotPassword';
 import ResetPassword from '@/pages/ResetPassword';
 import FourTurnings from '@/pages/FourTurnings';
@@ -55,7 +56,11 @@ const AuthenticatedApp = () => {
       <Route path="/resources" element={<Resources />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/admin" element={<Admin />} />
-      {/* no /register: accounts are created by an admin, never self-served */}
+      {/* Not open sign-up: this is where someone the admin has already invited
+          sets their password. Routed at /register too, in case that is where
+          the platform's invitation email points. */}
+      <Route path="/activate" element={<Activate />} />
+      <Route path="/register" element={<Activate />} />
       <Route path="/login" element={<Login />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
