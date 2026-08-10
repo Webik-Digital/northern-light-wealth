@@ -448,6 +448,48 @@ button { font-family: inherit; }
 .nlw-quote blockquote { font-family: 'Fraunces', serif; font-weight: 340; font-size: 20px; line-height: 1.45; color: var(--plum); }
 .nlw-quote .who { font-size: 12px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-top: 18px; }
 
+/* ---------- testimonials: pinned horizontal scroll ---------- */
+.nlw-tscroll { position: relative; --tcard-w: clamp(280px, 30vw, 400px); }
+.nlw-tscroll.is-pinned .nlw-tscroll-panel { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
+.nlw-tscroll-panel { padding-block: clamp(56px, 8vh, 96px); }
+.nlw-tscroll-panel .nlw-head { margin-bottom: 40px; }
+.nlw-tscroll-viewport { overflow: hidden; }
+.nlw-tscroll-track { display: flex; gap: 22px; padding-left: var(--pad-l); padding-right: clamp(26px, 6.5vw, 130px); will-change: transform; }
+/* half a viewport either side, so the first and last cards can reach the middle
+   and take the highlight like the rest */
+.nlw-tscroll.is-pinned .nlw-tscroll-track { padding-left: calc(50vw - var(--tcard-w) / 2); padding-right: calc(50vw - var(--tcard-w) / 2); }
+.nlw-tscroll.is-pinned .nlw-tscroll-track { transition: transform .12s linear; }
+
+.nlw-tcard { flex: 0 0 var(--tcard-w); background: var(--surface); border: .5px solid var(--rule); border-radius: 10px;
+  padding: clamp(24px, 2.6vw, 34px); display: flex; flex-direction: column; gap: 16px; min-height: 300px;
+  transition: background-color .55s var(--ease), border-color .55s var(--ease), transform .55s var(--ease), box-shadow .55s var(--ease); }
+.nlw-tcard .flag { align-self: flex-start; font-size: 10px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--muted); border: .5px solid var(--rule); border-radius: 3px; padding: 3px 8px; transition: color .55s var(--ease), border-color .55s var(--ease); }
+.nlw-tcard blockquote { font-family: 'Fraunces', serif; font-weight: 340; font-size: clamp(17px, 1.5vw, 20px); line-height: 1.45; color: var(--plum);
+  flex: 1; transition: color .55s var(--ease); }
+.nlw-tcard figcaption { display: flex; flex-direction: column; gap: 5px; font-size: 11.5px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; }
+.nlw-tcard .who { color: var(--muted); transition: color .55s var(--ease); }
+.nlw-tcard .tag { color: var(--teal); transition: color .55s var(--ease); }
+
+/* the card in the middle is the one being read */
+.nlw-tcard.is-center { background: var(--footer-plum); border-color: var(--footer-plum); transform: translateY(-6px);
+  box-shadow: 0 30px 60px -38px rgba(22,15,26,.8); }
+.nlw-tcard.is-center blockquote { color: #F3EEF4; }
+.nlw-tcard.is-center .who { color: #C9BFCE; }
+.nlw-tcard.is-center .tag { color: #9FC7D2; }
+.nlw-tcard.is-center .flag { color: #A296A8; border-color: rgba(217,210,220,.28); }
+
+@media (max-width: 900px) {
+  /* not pinned on touch: a plain swipe list, so the gesture stays the user's */
+  .nlw-tscroll-panel { padding-block: clamp(48px, 7vh, 80px); }
+  .nlw-tscroll-viewport { overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+  .nlw-tscroll-track { padding-left: 24px; padding-right: 24px; }
+  .nlw-tcard { flex-basis: min(78vw, 340px); scroll-snap-align: center; min-height: 260px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nlw-tscroll-track, .nlw-tcard { transition: none; }
+}
+
 /* ---------- testimonial carousel ---------- */
 .nlw-carousel-stage { position: relative; min-height: 260px; }
 .nlw-carousel-slide { position: absolute; inset: 0; opacity: 0; transform: translateY(12px); pointer-events: none;

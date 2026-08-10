@@ -4,6 +4,7 @@ import SeasonalTree from '@/components/SeasonalTree';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Reveal from '@/components/Reveal';
+import ClosingCTA from '@/components/ClosingCTA';
 import StickyFeature from '@/components/StickyFeature';
 
 // The section's own copy, split into steps. The tree carries the seasonal
@@ -98,14 +99,7 @@ export default function About() {
         </section>
 
         {/* Closing */}
-        <section className="nlw-closing nlw-section">
-          <div className="nlw-wrap">
-            <Reveal as="h2" className="nlw-h2">We hold ourselves to the standard we would want held for our own families.</Reveal>
-            <Reveal>
-              <Link to="/contact" className="nlw-btn">Begin a conversation</Link>
-            </Reveal>
-          </div>
-        </section>
+        <ClosingCTA heading="We hold ourselves to the standard we would want held for our own families." />
       </main>
 
       <Footer />

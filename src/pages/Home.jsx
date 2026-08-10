@@ -6,8 +6,8 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Reveal from '@/components/Reveal';
 import StewardshipCard from '@/components/StewardshipCard';
-import TestimonialCarousel from '@/components/TestimonialCarousel';
-import BrandDraw from '@/components/BrandDraw';
+import TestimonialScroller from '@/components/TestimonialScroller';
+import ClosingCTA from '@/components/ClosingCTA';
 import { TESTIMONIALS } from '@/data/testimonials';
 
 const SEASON_LABEL = { spring: 'Spring', summer: 'Summer', fall: 'Fall', winter: 'Winter' };
@@ -128,25 +128,13 @@ export default function Home() {
         </section>
 
         {/* 6. Client testimonials */}
-        <TestimonialCarousel items={TESTIMONIALS} />
+        <TestimonialScroller items={TESTIMONIALS} />
 
         {/* 7. Closing — the mark draws itself in the column the tree has vacated */}
-        <section className="nlw-closing nlw-closing-split nlw-section">
-          <div className="nlw-wrap">
-            <div className="nlw-closing-grid">
-              <div>
-                <Reveal as="h2" className="nlw-h2">If it is a fit, we should talk.</Reveal>
-                <Reveal as="p" className="nlw-lead">One unhurried conversation. If we are not the right stewards for you, we will tell you plainly.</Reveal>
-                <Reveal>
-                  <Link to="/contact" className="nlw-btn">Begin a conversation</Link>
-                </Reveal>
-              </div>
-              <div className="nlw-closing-mark">
-                <BrandDraw />
-              </div>
-            </div>
-          </div>
-        </section>
+        <ClosingCTA
+          heading="If it is a fit, we should talk."
+          lead="One unhurried conversation. If we are not the right stewards for you, we will tell you plainly."
+        />
       </main>
 
       <Footer />

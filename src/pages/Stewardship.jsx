@@ -4,6 +4,7 @@ import SeasonalTree from '@/components/SeasonalTree';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Reveal from '@/components/Reveal';
+import ClosingCTA from '@/components/ClosingCTA';
 
 const PATHWAYS = [
   {
@@ -105,14 +106,7 @@ export default function Stewardship() {
         </section>
 
         {/* Closing */}
-        <section className="nlw-closing nlw-section">
-          <div className="nlw-wrap">
-            <Reveal as="h2" className="nlw-h2">Wherever your season begins, a conversation is the same first step.</Reveal>
-            <Reveal>
-              <Link to="/contact" className="nlw-btn">Begin a conversation</Link>
-            </Reveal>
-          </div>
-        </section>
+        <ClosingCTA heading="Wherever your season begins, a conversation is the same first step." />
       </main>
 
       <Footer />
