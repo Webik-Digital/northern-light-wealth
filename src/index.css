@@ -95,7 +95,9 @@ button { font-family: inherit; }
 .nlw-wash { position: fixed; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(0deg, var(--wash) 0%, rgba(245,244,242,0) 58%); transition: background 1.4s var(--ease); }
 
 /* season control */
-.nlw-season-ctl { position: fixed; top: 50%; right: clamp(16px, 2.4vw, 34px); transform: translateY(-50%); z-index: 40; display: flex; flex-direction: column; align-items: flex-end; gap: 14px; }
+/* centred, not flush right: the vertical label is wider than the dots, so
+   aligning their edges left their centre lines apart */
+.nlw-season-ctl { position: fixed; top: 50%; right: clamp(16px, 2.4vw, 34px); transform: translateY(-50%); z-index: 40; display: flex; flex-direction: column; align-items: center; gap: 14px; }
 .nlw-season-name { font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--season-accent); font-weight: 500; writing-mode: vertical-rl; transform: rotate(180deg); cursor: pointer; user-select: none; transition: color 1.2s var(--ease); }
 .nlw-dots { display: flex; flex-direction: column; gap: 11px; }
 .nlw-dot { width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--muted); background: transparent; cursor: pointer; padding: 0; transition: all .5s var(--ease); }
