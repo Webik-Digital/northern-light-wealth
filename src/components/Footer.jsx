@@ -15,12 +15,15 @@ export default function Footer() {
           <h4>Firm</h4>
           <Link to="/about">About</Link>
           <Link to="/stewardship">Stewardship</Link>
-          <Link to="/estate-ready">EstateReady</Link>
-          <Link to="/sale-ready">SaleReady</Link>
-          <Link to="/harvest-share">Harvest Share</Link>
           <Link to="/the-four-turnings">The Four Turnings</Link>
           <Link to="/resources">Resources</Link>
           <Link to="/contact">Contact</Link>
+        </div>
+        <div className="nlw-foot-col">
+          <h4>Stewardship</h4>
+          <Link to="/estate-ready">EstateReady</Link>
+          <Link to="/sale-ready">SaleReady</Link>
+          <Link to="/harvest-share">Harvest Share</Link>
         </div>
         <div className="nlw-foot-col">
           <h4>Legal</h4>
