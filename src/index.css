@@ -318,6 +318,30 @@ button { font-family: inherit; }
   .nlw-sticky-step, .nlw-sticky-shot, .nlw-sticky-progress span { transition: none; }
 }
 
+/* ---------- brand mark that draws itself ---------- */
+.nlw-signoff { position: relative; z-index: 2; padding: clamp(56px, 9vh, 110px) var(--pad-l) clamp(64px, 10vh, 130px); display: flex; justify-content: center; }
+.nlw-brandmark { width: min(520px, 72vw); }
+.nlw-brandmark svg { width: 100%; height: auto; display: block; overflow: visible; }
+.nlw-brandmark path { fill: transparent; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke;
+  stroke-dasharray: 1; stroke-dashoffset: 1; }
+.nlw-brandmark .nl { stroke: var(--plum); }
+.nlw-brandmark .wealth { stroke: var(--teal); }
+
+/* the stroke travels contour by contour, then the fill settles in behind it */
+.nlw-brandmark.is-drawn .nl { animation: nlw-draw 2.1s linear forwards, nlw-ink-plum .9s var(--ease) 1.9s forwards; }
+.nlw-brandmark.is-drawn .wealth { animation: nlw-draw 1.7s linear .95s forwards, nlw-ink-teal .9s var(--ease) 2.5s forwards; }
+
+@keyframes nlw-draw { to { stroke-dashoffset: 0; } }
+@keyframes nlw-ink-plum { to { fill: var(--plum); stroke-opacity: 0; } }
+@keyframes nlw-ink-teal { to { fill: var(--teal); stroke-opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .nlw-brandmark path { stroke-dashoffset: 0; stroke-opacity: 0; }
+  .nlw-brandmark .nl { fill: var(--plum); }
+  .nlw-brandmark .wealth { fill: var(--teal); }
+  .nlw-brandmark.is-drawn .nl, .nlw-brandmark.is-drawn .wealth { animation: none; }
+}
+
 /* ---------- admin portal ---------- */
 /* Deliberately plainer than the public site: this is a working surface, and it
    should never be mistaken for a page a client sees. */

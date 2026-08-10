@@ -7,6 +7,7 @@ import Footer from '@/components/Footer';
 import Reveal from '@/components/Reveal';
 import StewardshipCard from '@/components/StewardshipCard';
 import TestimonialCarousel from '@/components/TestimonialCarousel';
+import BrandDraw from '@/components/BrandDraw';
 import { TESTIMONIALS } from '@/data/testimonials';
 
 const SEASON_LABEL = { spring: 'Spring', summer: 'Summer', fall: 'Fall', winter: 'Winter' };
@@ -139,6 +140,10 @@ export default function Home() {
             </Reveal>
           </div>
         </section>
+        {/* 8. Sign-off: the mark draws itself as the tree finishes fading */}
+        <div className="nlw-signoff">
+          <BrandDraw />
+        </div>
       </main>
 
       <Footer />
