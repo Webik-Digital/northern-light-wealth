@@ -8,15 +8,14 @@ import ClosingCTA from '@/components/ClosingCTA';
 import PageNotFound from '@/lib/PageNotFound';
 import { getPathway } from '@/data/pathways';
 import TestimonialScroller from '@/components/TestimonialScroller';
-import { TESTIMONIALS } from '@/data/testimonials';
+import { testimonialsFor } from '@/data/testimonials';
 
 export default function Pathway({ id }) {
   const p = getPathway(id);
   if (!p) return <PageNotFound />;
 
-  // this pathway's quotes, plus the one that speaks to the relationship rather
-  // than a single programme
-  const quotes = TESTIMONIALS.filter((t) => t.pathway === p.name || t.pathway == null);
+  // this pathway's quotes first, topped up to a full row
+  const quotes = testimonialsFor(p.name);
 
   return (
     <>

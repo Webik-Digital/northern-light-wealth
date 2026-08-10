@@ -286,7 +286,7 @@ button { font-family: inherit; }
 .nlw-sticky .nlw-h2 { color: #F3EEF4; }
 .nlw-sticky .nlw-lead { color: #C9BFCE; }
 .nlw-sticky-panel { position: sticky; top: 0; height: 100vh; display: flex; align-items: center; }
-.nlw-sticky-in { display: grid; grid-template-columns: 1.05fr .95fr; align-items: center; gap: clamp(32px, 5vw, 76px); width: 100%;
+.nlw-sticky-in { display: grid; grid-template-columns: .88fr 1.12fr; align-items: center; gap: clamp(32px, 5vw, 76px); width: 100%;
   padding-left: var(--pad-l); padding-right: clamp(26px, 6.5vw, 130px); }
 
 .nlw-sticky-text .nlw-eyebrow { margin-bottom: 30px; }
@@ -300,7 +300,7 @@ button { font-family: inherit; }
 
 /* same proportions and reach as the pathway pages' images, so About does not
    read as a different template */
-.nlw-sticky-frame { position: relative; aspect-ratio: 4 / 3; width: 100%; max-width: 490px; margin-left: auto; border-radius: 10px; overflow: hidden; background: rgba(255,255,255,.06); }
+.nlw-sticky-frame { position: relative; aspect-ratio: 4 / 3; width: 100%; max-width: 760px; margin-left: auto; border-radius: 10px; overflow: hidden; background: rgba(255,255,255,.06); }
 /* the wipe: each shot opens from the middle out, as on the reference site */
 .nlw-sticky-shot { position: absolute; inset: 0; clip-path: inset(50% round 10px); transition: clip-path 1.05s var(--ease); }
 .nlw-sticky-shot.is-on { clip-path: inset(0% round 10px); }

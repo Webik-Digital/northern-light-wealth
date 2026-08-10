@@ -7,6 +7,20 @@
 // their permission and the attribution they agreed to.
 //
 // To go live, drop `placeholder: true` and fill in quote / who / pathway.
+// A testimonial section always shows at least MIN cards: fewer than that and
+// the row looks unfinished and has too little to scroll through. A pathway's
+// own quotes lead, then the one about the relationship, then the rest — each
+// card carries its own pathway tag, so nothing is passed off as belonging to a
+// programme it does not.
+const MIN = 5;
+
+export function testimonialsFor(pathwayName, min = MIN) {
+  const own = TESTIMONIALS.filter((t) => t.pathway === pathwayName);
+  const general = TESTIMONIALS.filter((t) => t.pathway == null);
+  const rest = TESTIMONIALS.filter((t) => t.pathway && t.pathway !== pathwayName);
+  return [...own, ...general, ...rest].slice(0, Math.max(min, own.length + general.length));
+}
+
 export const TESTIMONIALS = [
   {
     placeholder: true,
