@@ -1,9 +1,3 @@
-// An issue of The Four Turnings.
-//
-// An issue is a designed publication that NLW produces elsewhere and publishes
-// here, so this record holds the issue's identity and the documents, not the
-// writing itself. `body` remains for an optional short summary; it is no longer
-// the essay.
 {
   "name": "Turning",
   "type": "object",
