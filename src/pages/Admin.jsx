@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import EssayAdmin from '@/components/admin/EssayAdmin';
+import IssueAdmin from '@/components/admin/IssueAdmin';
 import LibraryAdmin from '@/components/admin/LibraryAdmin';
 import logo from '@/assets/nlw-logo.png';
 
 const TABS = [
-  { id: 'essays', label: 'The Four Turnings' },
+  { id: 'issues', label: 'The Four Turnings' },
   { id: 'library', label: 'Resource library' },
 ];
 
 export default function Admin() {
   const [user, setUser] = useState(undefined); // undefined while loading, null when signed out
-  const [tab, setTab] = useState('essays');
+  const [tab, setTab] = useState('issues');
 
   useEffect(() => {
     let active = true;
@@ -75,7 +75,7 @@ export default function Admin() {
       </header>
 
       <main className="nlw-admin-main">
-        {tab === 'essays' && <EssayAdmin />}
+        {tab === 'issues' && <IssueAdmin />}
         {tab === 'library' && <LibraryAdmin />}
       </main>
     </div>

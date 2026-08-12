@@ -6,6 +6,8 @@ import Footer from '@/components/Footer';
 import Reveal from '@/components/Reveal';
 import ClosingCTA from '@/components/ClosingCTA';
 import StickyFeature from '@/components/StickyFeature';
+import { TEAM } from '@/data/team';
+import { APPROACHES, TENETS } from '@/data/practice';
 
 // The section's own copy, split into steps. The tree carries the seasonal
 // argument the passage makes, so it turns from bare to full as you scroll.
@@ -28,12 +30,6 @@ const HOW_WE_THINK = [
   },
 ];
 
-// Advisor names and bios are supplied by NLW. Placeholders until then.
-const PEOPLE = [
-  { name: 'Advisor name', role: 'Role', note: 'One or two plain sentences on background and the clients they look after. Placeholder bio, to be provided.' },
-  { name: 'Advisor name', role: 'Role', note: 'Placeholder bio, to be provided.' },
-  { name: 'Advisor name', role: 'Role', note: 'Placeholder bio, to be provided.' },
-];
 
 export default function About() {
   return (
@@ -78,6 +74,48 @@ export default function About() {
           </div>
         </section>
 
+        {/* How it works */}
+        <section className="nlw-section nlw-section-tight">
+          <div className="nlw-wrap wide">
+            <Reveal className="nlw-head">
+              <p className="nlw-eyebrow">How it works</p>
+              <h2 className="nlw-h2">Three parts, working as one.</h2>
+            </Reveal>
+            <div className="nlw-approaches">
+              {APPROACHES.map((a, i) => (
+                <Reveal key={a.name} className="nlw-approach">
+                  <span className="num">{String(i + 1).padStart(2, '0')}</span>
+                  <h3>{a.name}</h3>
+                  <p>{a.body}</p>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* The investment tenets */}
+        <section className="nlw-section nlw-section-tight">
+          <div className="nlw-wrap wide">
+            <Reveal className="nlw-head">
+              <p className="nlw-eyebrow">The investment tenets</p>
+              <h2 className="nlw-h2">Eight rules the money is held to.</h2>
+            </Reveal>
+            <ol className="nlw-tenets">
+              {TENETS.map((t, i) => (
+                <li key={t.title}>
+                  <Reveal className="row">
+                    <span className="num">{String(i + 1).padStart(2, '0')}</span>
+                    <div>
+                      <h3>{t.title}</h3>
+                      <p>{t.body}</p>
+                    </div>
+                  </Reveal>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+
         {/* The people */}
         <section className="nlw-section nlw-section-tight">
           <div className="nlw-wrap wide">
@@ -85,16 +123,26 @@ export default function About() {
               <p className="nlw-eyebrow">The people</p>
               <h2 className="nlw-h2">The advisors you would be working with.</h2>
             </Reveal>
-            <div className="nlw-people">
-              {PEOPLE.map((p, i) => (
-                <Reveal key={i} className="nlw-person">
-                  <h3>{p.name}</h3>
-                  <p className="role">{p.role}</p>
-                  <p>{p.note}</p>
+            <div className="nlw-advisors">
+              {TEAM.map((p) => (
+                <Reveal key={p.name} className="nlw-advisor">
+                  <div className="portrait">
+                    <img src={p.photo} alt={p.name} loading="lazy" />
+                  </div>
+                  <div className="who">
+                    <h3>{p.name}</h3>
+                    <p className="role">{p.role}</p>
+                    {p.designations.length > 0 && (
+                      <ul className="creds">
+                        {p.designations.map((d) => <li key={d}>{d}</li>)}
+                      </ul>
+                    )}
+                    {p.bio.map((para, i) => <p key={i} className="bio">{para}</p>)}
+                    {p.bioNote && <p className="nlw-note">{p.bioNote}</p>}
+                  </div>
                 </Reveal>
               ))}
             </div>
-            <Reveal as="p" className="nlw-note">Advisor names, roles, and bios to be provided by NLW.</Reveal>
           </div>
         </section>
 

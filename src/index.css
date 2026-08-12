@@ -43,9 +43,9 @@
     --input: 40 14% 88%;
     --ring: 191 59% 37%;
     --radius: 0.5rem;
-    --font-heading: 'Fraunces', serif;
-    --font-body: 'Inter', sans-serif;
-    --font-display: 'Fraunces', serif;
+    --font-heading: 'Lexend Deca', sans-serif;
+    --font-body: 'Source Sans 3', sans-serif;
+    --font-display: 'Lexend Deca', sans-serif;
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     --sidebar-background: 40 14% 97%;
     --sidebar-foreground: 240 4% 26%;
@@ -64,7 +64,7 @@ html { scroll-behavior: auto; }
 body {
   background: var(--canvas);
   color: var(--ink);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Source Sans 3', sans-serif;
   font-size: 16px;
   line-height: 1.75;
   -webkit-font-smoothing: antialiased;
@@ -147,10 +147,12 @@ button { font-family: inherit; }
 .nlw-wrap { padding-left: var(--pad-l); padding-right: var(--pad-r); max-width: 840px; }
 .nlw-section { padding-block: clamp(84px, 13vh, 168px); }
 .nlw-eyebrow { font-size: 12px; font-weight: 500; letter-spacing: .15em; text-transform: uppercase; color: var(--teal); margin-bottom: 26px; }
-.nlw-h1, .nlw-h2, .nlw-h3 { font-family: 'Fraunces', serif; font-weight: 340; color: var(--plum); letter-spacing: -.01em; }
-.nlw-h1 { font-size: clamp(41px, 5.3vw, 70px); line-height: 1.07; }
-.nlw-h2 { font-size: clamp(28px, 3.5vw, 42px); line-height: 1.15; }
-.nlw-h3 { font-size: 21px; line-height: 1.25; }
+.nlw-h1, .nlw-h2, .nlw-h3 { font-family: 'Lexend Deca', sans-serif; font-weight: 400; color: var(--plum); letter-spacing: -.005em; }
+/* Lexend Deca runs larger on the body and wider than the serif this scale was
+   set for, so the sizes come down a step and the leading opens up. */
+.nlw-h1 { font-size: clamp(37px, 4.7vw, 62px); line-height: 1.14; }
+.nlw-h2 { font-size: clamp(26px, 3.1vw, 38px); line-height: 1.22; }
+.nlw-h3 { font-size: 20px; line-height: 1.32; }
 .nlw-lead { font-size: 18px; line-height: 1.72; color: var(--ink-soft); max-width: 54ch; }
 
 .nlw-btn { display: inline-flex; align-items: center; gap: 9px; font-size: 14px; font-weight: 500; background: var(--teal); color: var(--canvas); padding: 13px 24px; border-radius: 5px; transition: transform .4s var(--ease), background .4s var(--ease), box-shadow .4s var(--ease); border: 0; cursor: pointer; }
@@ -202,7 +204,7 @@ button { font-family: inherit; }
 
 /* fiduciary */
 .nlw-fiduciary { padding-block: clamp(74px, 10vh, 120px); }
-.nlw-fiduciary p { font-family: 'Fraunces', serif; font-weight: 340; font-size: clamp(25px, 2.9vw, 36px); line-height: 1.3; color: var(--plum); max-width: 26ch; }
+.nlw-fiduciary p { font-family: 'Lexend Deca', sans-serif; font-weight: 400; font-size: clamp(25px, 2.9vw, 36px); line-height: 1.3; color: var(--plum); max-width: 26ch; }
 .nlw-fiduciary .k { color: var(--teal); }
 
 /* issue */
@@ -221,7 +223,7 @@ button { font-family: inherit; }
 .nlw-foot-in { padding: 48px var(--pad-l) 30px; padding-right: clamp(26px, 6.5vw, 130px); display: grid;
   grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 30px 40px; align-items: start; }
 .nlw-foot-mark img { height: 23px; width: auto; display: block; }
-.nlw-foot-tag { font-family: 'Fraunces', serif; font-size: 14.5px; color: #B9A9C0; margin-top: 12px; line-height: 1.5; max-width: 26ch; }
+.nlw-foot-tag { font-family: 'Lexend Deca', sans-serif; font-size: 14.5px; color: #B9A9C0; margin-top: 12px; line-height: 1.5; max-width: 26ch; }
 .nlw-foot-addr { font-size: 13px; color: #9C90A2; margin-top: 14px; line-height: 1.65; }
 .nlw-foot-col h4 { font-size: 11px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: #8F8296; margin-bottom: 12px; }
 .nlw-foot-col a { display: block; font-size: 13.5px; color: #D9D2DC; margin-bottom: 7px; transition: color .3s; }
@@ -395,7 +397,7 @@ button { font-family: inherit; }
 .nlw-admin-grid { display: grid; grid-template-columns: minmax(280px, 380px) 1fr; gap: 28px; align-items: start; max-width: 1400px; }
 
 .nlw-admin-list-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
-.nlw-admin-list-head h2 { font-family: 'Fraunces', serif; font-weight: 340; font-size: 22px; color: var(--plum); }
+.nlw-admin-list-head h2 { font-family: 'Lexend Deca', sans-serif; font-weight: 400; font-size: 22px; color: var(--plum); }
 .nlw-admin-list ul { list-style: none; border-top: .5px solid var(--rule); }
 .nlw-admin-list li { display: flex; align-items: stretch; border-bottom: .5px solid var(--rule); background: #fff; }
 .nlw-admin-list li.is-on { background: #F2F6F7; }
@@ -421,7 +423,7 @@ button { font-family: inherit; }
 .nlw-admin-err { font-size: 14px; color: #8A2B2B; }
 .nlw-admin-ok { font-size: 14px; color: var(--teal); }
 .nlw-admin-preview { border-top: .5px solid var(--rule); padding-top: 20px; }
-.nlw-admin-preview h3 { font-family: 'Fraunces', serif; font-weight: 340; font-size: 26px; line-height: 1.2; color: var(--plum); margin: 10px 0 12px; }
+.nlw-admin-preview h3 { font-family: 'Lexend Deca', sans-serif; font-weight: 400; font-size: 26px; line-height: 1.2; color: var(--plum); margin: 10px 0 12px; }
 .nlw-admin-preview .dek { font-size: 17px; color: var(--ink-soft); margin-bottom: 16px; }
 .nlw-admin-preview p { font-size: 16px; line-height: 1.75; color: var(--ink-soft); max-width: 62ch; }
 .nlw-admin-preview p + p { margin-top: 14px; }
@@ -449,7 +451,7 @@ button { font-family: inherit; }
 /* pull quotes */
 .nlw-quotes { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; }
 .nlw-quote { background: var(--surface); border: .5px solid var(--rule); border-top: 3px solid var(--teal); border-radius: 10px; padding: 30px 32px; }
-.nlw-quote blockquote { font-family: 'Fraunces', serif; font-weight: 340; font-size: 20px; line-height: 1.45; color: var(--plum); }
+.nlw-quote blockquote { font-family: 'Lexend Deca', sans-serif; font-weight: 400; font-size: 20px; line-height: 1.45; color: var(--plum); }
 .nlw-quote .who { font-size: 12px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-top: 18px; }
 
 /* ---------- testimonials: pinned horizontal scroll ---------- */
@@ -469,7 +471,7 @@ button { font-family: inherit; }
   transition: background-color .55s var(--ease), border-color .55s var(--ease), transform .55s var(--ease), box-shadow .55s var(--ease); }
 .nlw-tcard .flag { align-self: flex-start; font-size: 10px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase;
   color: var(--muted); border: .5px solid var(--rule); border-radius: 3px; padding: 3px 8px; transition: color .55s var(--ease), border-color .55s var(--ease); }
-.nlw-tcard blockquote { font-family: 'Fraunces', serif; font-weight: 340; font-size: clamp(17px, 1.5vw, 20px); line-height: 1.45; color: var(--plum);
+.nlw-tcard blockquote { font-family: 'Lexend Deca', sans-serif; font-weight: 400; font-size: clamp(17px, 1.5vw, 20px); line-height: 1.45; color: var(--plum);
   flex: 1; transition: color .55s var(--ease); }
 .nlw-tcard figcaption { display: flex; flex-direction: column; gap: 5px; font-size: 11.5px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; }
 .nlw-tcard .who { color: var(--muted); transition: color .55s var(--ease); }
@@ -499,7 +501,7 @@ button { font-family: inherit; }
 .nlw-carousel-slide { position: absolute; inset: 0; opacity: 0; transform: translateY(12px); pointer-events: none;
   transition: opacity .7s var(--ease), transform .7s var(--ease); max-width: 62ch; }
 .nlw-carousel-slide.is-on { opacity: 1; transform: none; pointer-events: auto; }
-.nlw-carousel-slide blockquote { font-family: 'Fraunces', serif; font-weight: 340; font-size: clamp(23px, 2.6vw, 32px); line-height: 1.34; color: var(--plum); }
+.nlw-carousel-slide blockquote { font-family: 'Lexend Deca', sans-serif; font-weight: 400; font-size: clamp(23px, 2.6vw, 32px); line-height: 1.34; color: var(--plum); }
 .nlw-carousel-slide figcaption { font-size: 12px; font-weight: 500; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); margin-top: 26px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
 .nlw-carousel-slide figcaption .tag { color: var(--teal); }
 .nlw-carousel-controls { display: flex; align-items: center; gap: 18px; margin-top: 12px; }
@@ -538,7 +540,7 @@ button { font-family: inherit; }
 .nlw-pathway:nth-child(3) { border-top-color: var(--season-accent); }
 .nlw-pathway:hover { transform: translateY(-3px); box-shadow: 0 22px 44px -34px rgba(22,15,26,.6); }
 .nlw-pathway .tag { font-size: 10.5px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--teal); display: block; margin-bottom: 12px; }
-.nlw-pathway h3 { font-family: 'Fraunces', serif; font-weight: 340; font-size: 30px; line-height: 1.2; color: var(--plum); letter-spacing: -.01em; }
+.nlw-pathway h3 { font-family: 'Lexend Deca', sans-serif; font-weight: 400; font-size: 30px; line-height: 1.2; color: var(--plum); letter-spacing: -.005em; }
 .nlw-pathway .purpose { font-size: 17px; line-height: 1.65; color: var(--ink); max-width: 46ch; }
 .nlw-pathway .detail { font-size: 15.5px; line-height: 1.75; color: var(--ink-soft); max-width: 52ch; margin-top: 16px; }
 
@@ -546,13 +548,59 @@ button { font-family: inherit; }
 .nlw-movements { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin-top: 42px; }
 .nlw-movement { background: var(--surface); border: .5px solid var(--rule); border-radius: 10px; padding: 26px 28px 28px; }
 .nlw-movement .num { font-size: 11px; font-weight: 500; letter-spacing: .18em; color: var(--teal); }
-.nlw-movement h3 { font-family: 'Fraunces', serif; font-weight: 340; font-size: 21px; color: var(--plum); margin: 8px 0 8px; }
+.nlw-movement h3 { font-family: 'Lexend Deca', sans-serif; font-weight: 400; font-size: 21px; color: var(--plum); margin: 8px 0 8px; }
 .nlw-movement p { font-size: 15px; line-height: 1.7; color: var(--ink-soft); max-width: 40ch; }
+
+/* ---------- how it works ---------- */
+.nlw-approaches { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.nlw-approach { background: var(--surface); border: .5px solid var(--rule); border-top: 3px solid var(--teal); border-radius: 10px; padding: 28px 30px 30px; }
+.nlw-approach .num { font-size: 11px; font-weight: 500; letter-spacing: .18em; color: var(--teal); }
+.nlw-approach h3 { font-family: 'Lexend Deca', sans-serif; font-weight: 400; font-size: 22px; color: var(--plum); margin: 10px 0 10px; }
+.nlw-approach p { font-size: 15px; line-height: 1.7; color: var(--ink-soft); }
+
+/* ---------- investment tenets ---------- */
+.nlw-tenets { list-style: none; border-top: .5px solid var(--rule); columns: 2; column-gap: 56px; }
+.nlw-tenets li { break-inside: avoid; border-bottom: .5px solid var(--rule); }
+.nlw-tenets .row { display: grid; grid-template-columns: 42px 1fr; gap: 4px 18px; padding: 22px 0; }
+.nlw-tenets .num { grid-row: span 2; font-size: 11px; font-weight: 500; letter-spacing: .16em; color: var(--teal); padding-top: 5px; }
+.nlw-tenets h3 { font-family: 'Lexend Deca', sans-serif; font-weight: 400; font-size: 19px; line-height: 1.3; color: var(--plum); }
+.nlw-tenets p { font-size: 14.5px; line-height: 1.65; color: var(--ink-soft); margin-top: 5px; }
+
+/* ---------- advisors ---------- */
+.nlw-advisors { display: flex; flex-direction: column; gap: 20px; }
+.nlw-advisor { display: grid; grid-template-columns: 260px 1fr; gap: 30px 44px; background: var(--surface); border: .5px solid var(--rule); border-radius: 10px; padding: 30px 34px; align-items: start; }
+.nlw-advisor .portrait { border-radius: 8px; overflow: hidden; background: var(--canvas); }
+.nlw-advisor .portrait img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 20%; filter: saturate(.92); }
+.nlw-advisor .who h3 { font-family: 'Lexend Deca', sans-serif; font-weight: 400; font-size: 27px; line-height: 1.2; color: var(--plum); }
+.nlw-advisor .role { font-size: 11.5px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin-top: 8px; }
+.nlw-advisor .creds { list-style: none; display: flex; flex-wrap: wrap; gap: 7px; margin-top: 14px; }
+.nlw-advisor .creds li { font-size: 10.5px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--teal); border: .5px solid var(--rule); border-radius: 3px; padding: 4px 9px; }
+.nlw-advisor .bio { font-size: 15.5px; line-height: 1.75; color: var(--ink-soft); max-width: 68ch; margin-top: 16px; }
+
+/* ---------- recognition and press ---------- */
+/* Sources range from 300x300 squares to a 300x66 strip, so each sits in a box
+   of the same size and is fitted inside it. Sizing on height alone would put a
+   60px square next to a 273px banner. */
+.nlw-logos { display: flex; flex-wrap: wrap; align-items: center; gap: clamp(20px, 2.6vw, 40px); }
+.nlw-logo { display: grid; place-items: center; width: clamp(112px, 11vw, 152px); height: clamp(54px, 5.2vw, 72px); }
+.nlw-logo img { display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain;
+  filter: grayscale(1) contrast(.92); opacity: .62; mix-blend-mode: multiply; transition: opacity .4s var(--ease), filter .4s var(--ease); }
+.nlw-logo:hover img { filter: none; opacity: 1; }
+.nlw-logos.is-press .nlw-logo { height: clamp(36px, 3.4vw, 46px); }
+.nlw-logos-sub { margin-top: 46px; }
+.nlw-logos-sub .nlw-eyebrow { margin-bottom: 20px; }
+
+@media (max-width: 900px) {
+  .nlw-approaches { grid-template-columns: 1fr; }
+  .nlw-tenets { columns: 1; }
+  .nlw-advisor { grid-template-columns: 1fr; gap: 22px; padding: 24px; }
+  .nlw-advisor .portrait { max-width: 220px; }
+}
 
 /* advisor notes */
 .nlw-people { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 42px; }
 .nlw-person { background: var(--surface); border: .5px solid var(--rule); border-radius: 10px; padding: 26px 26px 28px; }
-.nlw-person h3 { font-family: 'Fraunces', serif; font-weight: 340; font-size: 20px; color: var(--plum); }
+.nlw-person h3 { font-family: 'Lexend Deca', sans-serif; font-weight: 400; font-size: 20px; color: var(--plum); }
 .nlw-person .role { font-size: 11px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin: 7px 0 12px; }
 .nlw-person p { font-size: 15px; line-height: 1.7; color: var(--ink-soft); }
 
@@ -562,6 +610,20 @@ button { font-family: inherit; }
 .nlw-feature .nlw-h2 { max-width: 19ch; margin-bottom: 20px; }
 .nlw-feature .stand { margin-bottom: 26px; }
 .nlw-feature .meta { font-size: 12px; letter-spacing: .04em; color: var(--muted); margin-top: 22px; }
+/* an issue's standing sections, listed so the reader knows what is inside */
+.nlw-issue-contents { list-style: none; margin: 26px 0 4px; border-top: .5px solid var(--rule); }
+.nlw-issue-contents li { display: grid; grid-template-columns: 40px 168px 1fr; gap: 14px; align-items: baseline;
+  padding: 12px 0; border-bottom: .5px solid var(--rule); }
+.nlw-issue-contents .no { font-size: 11px; font-weight: 500; letter-spacing: .16em; color: var(--teal); }
+.nlw-issue-contents .sec { font-size: 11px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.nlw-issue-contents .ttl { font-family: 'Lexend Deca', sans-serif; font-size: 16px; color: var(--plum); }
+.nlw-issue-links { display: flex; gap: 22px; flex-wrap: wrap; margin-top: 12px; }
+
+@media (max-width: 720px) {
+  .nlw-issue-contents li { grid-template-columns: 32px 1fr; row-gap: 2px; }
+  .nlw-issue-contents .ttl { grid-column: 2; }
+}
+
 .nlw-essay { margin-top: 28px; max-width: 62ch; }
 .nlw-essay p { font-size: 17px; line-height: 1.8; color: var(--ink-soft); }
 .nlw-essay p + p { margin-top: 18px; }
@@ -576,7 +638,7 @@ button { font-family: inherit; }
 .nlw-archive li { border-bottom: .5px solid var(--rule); }
 .nlw-archive .row { display: grid; grid-template-columns: 180px 1fr; gap: 8px 44px; padding: 28px 0; align-items: start; }
 .nlw-archive .when { font-size: 11.5px; font-weight: 500; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); padding-top: 5px; }
-.nlw-archive h3 { font-family: 'Fraunces', serif; font-weight: 340; font-size: 22px; line-height: 1.28; color: var(--plum); }
+.nlw-archive h3 { font-family: 'Lexend Deca', sans-serif; font-weight: 400; font-size: 22px; line-height: 1.28; color: var(--plum); }
 .nlw-archive p { font-size: 15px; line-height: 1.7; color: var(--ink-soft); max-width: 56ch; margin-top: 8px; }
 .nlw-archive .empty { padding: 28px 0; color: var(--muted); font-size: 15px; }
 
@@ -607,7 +669,7 @@ textarea.nlw-input { min-height: 140px; resize: vertical; }
 .nlw-lib { list-style: none; margin-top: 40px; border-top: .5px solid var(--rule); }
 .nlw-lib li { display: flex; align-items: flex-start; gap: 16px; padding: 24px 0; border-bottom: .5px solid var(--rule); }
 .nlw-lib .lk { color: var(--muted); flex: none; margin-top: 4px; }
-.nlw-lib h3 { font-family: 'Fraunces', serif; font-weight: 340; font-size: 20px; color: var(--plum); }
+.nlw-lib h3 { font-family: 'Lexend Deca', sans-serif; font-weight: 400; font-size: 20px; color: var(--plum); }
 .nlw-lib p { font-size: 15px; line-height: 1.7; color: var(--ink-soft); margin-top: 6px; max-width: 52ch; }
 .nlw-lib .cat { font-size: 10.5px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--teal); display: block; margin-bottom: 8px; }
 .nlw-helpline { margin-top: 44px; font-size: 15px; color: var(--ink-soft); }

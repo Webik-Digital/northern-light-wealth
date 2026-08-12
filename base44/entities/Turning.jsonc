@@ -1,3 +1,9 @@
+// An issue of The Four Turnings.
+//
+// An issue is a designed publication that NLW produces elsewhere and publishes
+// here, so this record holds the issue's identity and the documents, not the
+// writing itself. `body` remains for an optional short summary; it is no longer
+// the essay.
 {
   "name": "Turning",
   "type": "object",
@@ -17,6 +23,10 @@
     "year": {
       "type": "number"
     },
+    "marker": {
+      "type": "string",
+      "description": "Solstice or equinox wording, e.g. 'Summer Solstice'"
+    },
     "slug": {
       "type": "string"
     },
@@ -24,7 +34,16 @@
       "type": "string"
     },
     "body": {
-      "type": "string"
+      "type": "string",
+      "description": "Optional short summary shown under the standfirst"
+    },
+    "pdfUrl": {
+      "type": "string",
+      "description": "The issue as a PDF"
+    },
+    "webUrl": {
+      "type": "string",
+      "description": "Optional web version of the issue"
     },
     "publishedAt": {
       "type": "string",

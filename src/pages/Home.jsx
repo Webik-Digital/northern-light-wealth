@@ -8,6 +8,8 @@ import Reveal from '@/components/Reveal';
 import StewardshipCard from '@/components/StewardshipCard';
 import TestimonialScroller from '@/components/TestimonialScroller';
 import ClosingCTA from '@/components/ClosingCTA';
+import { AWARDS, PRESS } from '@/data/recognition';
+import { issuesFrom } from '@/data/turnings';
 import { TESTIMONIALS } from '@/data/testimonials';
 
 const SEASON_LABEL = { spring: 'Spring', summer: 'Summer', fall: 'Fall', winter: 'Winter' };
@@ -21,19 +23,18 @@ function currentSeason() {
 }
 
 export default function Home() {
-  const [issue, setIssue] = useState(null);
+  const [rows, setRows] = useState(null);
 
   useEffect(() => {
     base44.entities.Turning.filter({}, '-publishedAt', 20)
-      .then((rows) => {
-        // drafts carry no publishedAt, and a future date is not live yet
-        const live = (rows || []).filter(
-          (r) => r.publishedAt && new Date(r.publishedAt) <= new Date()
-        );
-        if (live.length) setIssue(live.find((r) => r.isFeatured) || live[0]);
-      })
-      .catch(() => {});
+      .then((r) => setRows(r || []))
+      .catch(() => setRows([]));
   }, []);
+
+  // same rule as The Four Turnings page: published, not future-dated, and an
+  // actual document, else the four that ship with the site
+  const issues = issuesFrom(rows);
+  const issue = issues.find((i) => i.isFeatured) || issues[0] || null;
 
   const season = currentSeason();
   const year = new Date().getFullYear();
@@ -113,13 +114,11 @@ export default function Home() {
         {/* 5. Current issue */}
         <section className="nlw-issue nlw-section">
           <div className="nlw-wrap">
-            <Reveal as="p" className="nlw-eyebrow">The Four Turnings · {SEASON_LABEL[season]} {year}</Reveal>
-            <Reveal as="h2" className="nlw-h2">
-              {issue ? issue.title : 'The quiet season for the loudest decisions.'}
+            <Reveal as="p" className="nlw-eyebrow">
+              The Four Turnings · {issue ? (issue.marker || SEASON_LABEL[issue.season]) : SEASON_LABEL[season]} {issue ? issue.year : year}
             </Reveal>
-            <Reveal as="p" className="nlw-lead dek">
-              {issue && issue.dek ? issue.dek : 'A short essay on why the unhurried months are usually when the most consequential planning gets done well.'}
-            </Reveal>
+            <Reveal as="h2" className="nlw-h2">{issue ? issue.title : 'The Season of Connection'}</Reveal>
+            <Reveal as="p" className="nlw-lead dek">{issue ? issue.dek : ''}</Reveal>
             <Reveal>
               <Link to="/the-four-turnings" className="nlw-link-more">Read the issue <span className="arw">→</span></Link>
             </Reveal>
@@ -130,7 +129,36 @@ export default function Home() {
         {/* 6. Client testimonials */}
         <TestimonialScroller items={TESTIMONIALS} />
 
-        {/* 7. Closing — the mark draws itself in the column the tree has vacated */}
+        {/* 7. Recognition and press */}
+        <section className="nlw-section nlw-section-tight">
+          <div className="nlw-wrap wide">
+            <Reveal className="nlw-head">
+              <p className="nlw-eyebrow">Recognition</p>
+              <h2 className="nlw-h2">Held to a standard others have noticed.</h2>
+            </Reveal>
+
+            <Reveal className="nlw-logos">
+              {AWARDS.map((a) => (
+                <div key={a.name} className="nlw-logo" title={a.name}>
+                  <img src={a.src} alt={a.name} loading="lazy" />
+                </div>
+              ))}
+            </Reveal>
+
+            <Reveal className="nlw-logos-sub">
+              <p className="nlw-eyebrow">As seen in</p>
+              <div className="nlw-logos is-press">
+                {PRESS.map((p) => (
+                  <div key={p.name} className="nlw-logo" title={p.name}>
+                    <img src={p.src} alt={p.name} loading="lazy" />
+                  </div>
+                ))}
+              </div>
+            </Reveal>
+          </div>
+        </section>
+
+        {/* 8. Closing — the mark draws itself in the column the tree has vacated */}
         <ClosingCTA
           heading="If it is a fit, we should talk."
           lead="One unhurried conversation. If we are not the right stewards for you, we will tell you plainly."
