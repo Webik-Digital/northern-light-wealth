@@ -57,7 +57,7 @@ export default function About() {
               <p>A year has four turnings, and so does a life's work. There are seasons for building, for holding, for letting go, and for beginning again. We plan for all of them before they arrive, so that when a season changes you are ready rather than surprised. That is the idea behind our writing, and behind our tree.</p>
             </Reveal>
             <Reveal style={{ marginTop: 26 }}>
-              <Link to="/the-four-turnings" className="nlw-link-more">The Four Turnings <span className="arw">→</span></Link>
+              <Link to="/resources" className="nlw-link-more">The Four Turnings <span className="arw">→</span></Link>
             </Reveal>
           </div>
         </section>

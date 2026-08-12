@@ -120,9 +120,9 @@ export default function Home() {
             <Reveal as="h2" className="nlw-h2">{issue ? issue.title : 'The Season of Connection'}</Reveal>
             <Reveal as="p" className="nlw-lead dek">{issue ? issue.dek : ''}</Reveal>
             <Reveal>
-              <Link to="/the-four-turnings" className="nlw-link-more">Read the issue <span className="arw">→</span></Link>
+              <Link to="/resources" className="nlw-link-more">Read it in the client library <span className="arw">→</span></Link>
             </Reveal>
-            <Reveal as="p" className="meta">Published at the solstice. New writing each turning of the year.</Reveal>
+            <Reveal as="p" className="meta">Published at each solstice and equinox, for clients and invited guests.</Reveal>
           </div>
         </section>
 

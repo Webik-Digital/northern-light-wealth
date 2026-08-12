@@ -65,7 +65,6 @@ export default function Header() {
             <Link to="/estate-ready">EstateReady</Link>
             <Link to="/sale-ready">SaleReady</Link>
             <Link to="/harvest-share">Harvest Share</Link>
-            <Link to="/the-four-turnings">The Four Turnings</Link>
             <Link to="/contact" className="nlw-nav-cta">Begin a conversation</Link>
           </nav>
           <button className="nlw-portal" onClick={handleLogin} aria-label={authed ? 'Client area' : 'Client login'}>
@@ -87,7 +86,6 @@ export default function Header() {
             <Link to="/estate-ready" onClick={close}>EstateReady</Link>
             <Link to="/sale-ready" onClick={close}>SaleReady</Link>
             <Link to="/harvest-share" onClick={close}>Harvest Share</Link>
-            <Link to="/the-four-turnings" onClick={close}>The Four Turnings</Link>
             <Link to="/contact" onClick={close}>Begin a conversation</Link>
             {/* still reachable, just no longer top-level */}
             <Link to="/resources" onClick={close}>Resources</Link>

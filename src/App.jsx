@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
@@ -16,7 +16,6 @@ import Login from '@/pages/Login';
 import Activate from '@/pages/Activate';
 import ForgotPassword from '@/pages/ForgotPassword';
 import ResetPassword from '@/pages/ResetPassword';
-import FourTurnings from '@/pages/FourTurnings';
 import Resources from '@/pages/Resources';
 import Contact from '@/pages/Contact';
 // Add page imports here
@@ -52,7 +51,8 @@ const AuthenticatedApp = () => {
       <Route path="/estate-ready" element={<Pathway id="estate-ready" />} />
       <Route path="/sale-ready" element={<Pathway id="sale-ready" />} />
       <Route path="/harvest-share" element={<Pathway id="harvest-share" />} />
-      <Route path="/the-four-turnings" element={<FourTurnings />} />
+      {/* retired: the issues live in the client library now */}
+      <Route path="/the-four-turnings" element={<Navigate to="/resources" replace />} />
       <Route path="/resources" element={<Resources />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/admin" element={<Admin />} />

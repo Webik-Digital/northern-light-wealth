@@ -6,6 +6,7 @@ import Footer from '@/components/Footer';
 import Reveal from '@/components/Reveal';
 import LockIcon from '@/components/LockIcon';
 import { base44 } from '@/api/base44Client';
+import { ISSUES } from '@/data/turnings';
 
 // Shown while locked: enough to see the shape of the library, not the contents.
 const SHAPE = [
@@ -20,6 +21,30 @@ export default function Resources() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [subscribed, setSubscribed] = useState(false);
+  const [subError, setSubError] = useState('');
+  const [busy, setBusy] = useState(false);
+
+  const onSubscribe = async (e) => {
+    e.preventDefault();
+    setSubError('');
+    const value = email.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      setSubError('Please enter an email address we can reach you at.');
+      return;
+    }
+    setBusy(true);
+    try {
+      await base44.entities.Subscriber.create({ email: value, source: 'the-four-turnings' });
+      setSubscribed(true);
+      setEmail('');
+    } catch (err) {
+      setSubError('Something went wrong. Please try again, or write to us directly.');
+    } finally {
+      setBusy(false);
+    }
+  };
 
   useEffect(() => {
     let active = true;
@@ -90,6 +115,77 @@ export default function Resources() {
                     <button type="button" className="nlw-btn" onClick={signIn}>Enter the library</button>
                     <Link to="/contact" className="nlw-link-more">Request access <span className="arw">→</span></Link>
                   </div>
+                </>
+              )}
+            </Reveal>
+          </div>
+        </section>
+
+        {/* The Four Turnings, the library's standing series */}
+        <section className="nlw-section nlw-section-tight">
+          <div className="nlw-wrap wide">
+            <Reveal className="nlw-head">
+              <p className="nlw-eyebrow">The Four Turnings</p>
+              <h2 className="nlw-h2">Our seasonal letter, issue by issue.</h2>
+            </Reveal>
+
+            <ul className="nlw-lib">
+              {ISSUES.map((i) => (
+                <li key={i.id}>
+                  {!authed && <LockIcon className="nlw-icon lk" />}
+                  <div>
+                    <span className="cat">{i.marker} {i.year}</span>
+                    <h3>{i.title}</h3>
+                    <p>{i.dek}</p>
+                    {authed && i.pdfUrl && (
+                      <a href={i.pdfUrl} target="_blank" rel="noreferrer" className="nlw-link-more" style={{ marginTop: 12 }}>
+                        Read the issue <span className="arw">→</span>
+                      </a>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+
+            {!authed && (
+              <Reveal as="p" className="nlw-note">
+                Each issue opens once you are signed in.
+              </Reveal>
+            )}
+          </div>
+        </section>
+
+        {/* Subscribe: open to everyone, since this is how readers first arrive */}
+        <section className="nlw-section nlw-section-tight">
+          <div className="nlw-wrap">
+            <Reveal className="nlw-panel">
+              {subscribed ? (
+                <>
+                  <h2 className="nlw-h3">You are on the list.</h2>
+                  <p>We will send the next issue when it is published.</p>
+                </>
+              ) : (
+                <>
+                  <h2 className="nlw-h2" style={{ maxWidth: '20ch' }}>Receive each turning when it is published.</h2>
+                  <p style={{ marginTop: 14 }}>Four emails a year. Nothing else.</p>
+                  <form className="nlw-inline-form" onSubmit={onSubscribe}>
+                    <label className="nlw-label">
+                      <input
+                        className="nlw-input"
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="Email address"
+                        autoComplete="email"
+                        aria-label="Email address"
+                      />
+                    </label>
+                    <button type="submit" className="nlw-btn" disabled={busy} style={{ opacity: busy ? 0.6 : 1 }}>
+                      {busy ? 'Subscribing…' : 'Subscribe'}
+                    </button>
+                  </form>
+                  {subError && <p className="nlw-form-error">{subError}</p>}
+                  <p className="nlw-form-small">We send only the letter. No sales sequence.</p>
                 </>
               )}
             </Reveal>
