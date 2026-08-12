@@ -567,15 +567,20 @@ button { font-family: inherit; }
 .nlw-tenets p { font-size: 14.5px; line-height: 1.65; color: var(--ink-soft); margin-top: 5px; }
 
 /* ---------- advisors ---------- */
-.nlw-advisors { display: flex; flex-direction: column; gap: 20px; }
-.nlw-advisor { display: grid; grid-template-columns: 260px 1fr; gap: 30px 44px; background: var(--surface); border: .5px solid var(--rule); border-radius: 10px; padding: 30px 34px; align-items: start; }
+/* Two founders side by side: the portrait sits with the name, and the bio runs
+   the full width of its column underneath, so neither leaves a tall gap. */
+.nlw-advisors { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; align-items: start; }
+.nlw-advisor { background: var(--surface); border: .5px solid var(--rule); border-radius: 10px; padding: 30px 32px; }
+.nlw-advisor .head { display: grid; grid-template-columns: 132px 1fr; gap: 22px; align-items: center; }
 .nlw-advisor .portrait { border-radius: 8px; overflow: hidden; background: var(--canvas); }
 .nlw-advisor .portrait img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 20%; filter: saturate(.92); }
-.nlw-advisor .who h3 { font-family: 'Lexend Deca', sans-serif; font-weight: 400; font-size: 27px; line-height: 1.2; color: var(--plum); }
+.nlw-advisor .who h3 { font-family: 'Lexend Deca', sans-serif; font-weight: 400; font-size: 24px; line-height: 1.2; color: var(--plum); }
 .nlw-advisor .role { font-size: 11.5px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin-top: 8px; }
-.nlw-advisor .creds { list-style: none; display: flex; flex-wrap: wrap; gap: 7px; margin-top: 14px; }
-.nlw-advisor .creds li { font-size: 10.5px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--teal); border: .5px solid var(--rule); border-radius: 3px; padding: 4px 9px; }
-.nlw-advisor .bio { font-size: 15.5px; line-height: 1.75; color: var(--ink-soft); max-width: 68ch; margin-top: 16px; }
+.nlw-advisor .creds { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.nlw-advisor .creds li { font-size: 10.5px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--teal); border: .5px solid var(--rule); border-radius: 3px; padding: 4px 8px; }
+.nlw-advisor .body { margin-top: 22px; }
+.nlw-advisor .bio { font-size: 15px; line-height: 1.72; color: var(--ink-soft); }
+.nlw-advisor .bio + .bio { margin-top: 14px; }
 
 /* ---------- recognition and press ---------- */
 /* Sources range from 300x300 squares to a 300x66 strip, so each sits in a box
@@ -593,8 +598,9 @@ button { font-family: inherit; }
 @media (max-width: 900px) {
   .nlw-approaches { grid-template-columns: 1fr; }
   .nlw-tenets { columns: 1; }
-  .nlw-advisor { grid-template-columns: 1fr; gap: 22px; padding: 24px; }
-  .nlw-advisor .portrait { max-width: 220px; }
+  .nlw-advisors { grid-template-columns: 1fr; }
+  .nlw-advisor { padding: 24px; }
+  .nlw-advisor .head { grid-template-columns: 110px 1fr; gap: 18px; }
 }
 
 /* advisor notes */

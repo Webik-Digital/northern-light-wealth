@@ -126,19 +126,22 @@ export default function About() {
             <div className="nlw-advisors">
               {TEAM.map((p) => (
                 <Reveal key={p.name} className="nlw-advisor">
-                  <div className="portrait">
-                    <img src={p.photo} alt={p.name} loading="lazy" />
+                  <div className="head">
+                    <div className="portrait">
+                      <img src={p.photo} alt={p.name} loading="lazy" />
+                    </div>
+                    <div className="who">
+                      <h3>{p.name}</h3>
+                      <p className="role">{p.role}</p>
+                      {p.designations.length > 0 && (
+                        <ul className="creds">
+                          {p.designations.map((d) => <li key={d}>{d}</li>)}
+                        </ul>
+                      )}
+                    </div>
                   </div>
-                  <div className="who">
-                    <h3>{p.name}</h3>
-                    <p className="role">{p.role}</p>
-                    {p.designations.length > 0 && (
-                      <ul className="creds">
-                        {p.designations.map((d) => <li key={d}>{d}</li>)}
-                      </ul>
-                    )}
+                  <div className="body">
                     {p.bio.map((para, i) => <p key={i} className="bio">{para}</p>)}
-                    {p.bioNote && <p className="nlw-note">{p.bioNote}</p>}
                   </div>
                 </Reveal>
               ))}

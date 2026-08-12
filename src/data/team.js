@@ -32,14 +32,4 @@ export const TEAM = [
       'Garth’s combination of expertise, creativity, and commitment makes him a trusted partner for clients seeking purposeful wealth solutions.',
     ],
   },
-  {
-    name: 'Adam Beach',
-    role: 'Private Wealth Manager',
-    designations: [],
-    photo: `${PHOTO}2025/04/adam.jpg`,
-    bio: [],
-    // nlwealth.ca/about-us links Adam's name to /about-us/brian-beach/, which
-    // returns 404, so there is no bio to carry over. NLW to supply.
-    bioNote: 'Bio to be supplied by NLW. The link on the current site points at a page that no longer exists.',
-  },
 ];
