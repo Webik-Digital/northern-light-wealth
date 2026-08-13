@@ -7,6 +7,7 @@ import Reveal from '@/components/Reveal';
 import LockIcon from '@/components/LockIcon';
 import { base44 } from '@/api/base44Client';
 import { ISSUES } from '@/data/turnings';
+import ResourceSearch from '@/components/ResourceSearch';
 
 // Shown while locked: enough to see the shape of the library, not the contents.
 const SHAPE = [
@@ -89,6 +90,9 @@ export default function Resources() {
             <Reveal as="p" className="nlw-eyebrow">Resources</Reveal>
             <Reveal as="h1" className="nlw-h1">Stewardship Resources</Reveal>
             <Reveal as="p" className="nlw-lead">A reserved area for clients and invited guests. Access here is given, not sold.</Reveal>
+            <Reveal>
+              <ResourceSearch libraryItems={items} authed={authed} />
+            </Reveal>
           </div>
         </section>
 

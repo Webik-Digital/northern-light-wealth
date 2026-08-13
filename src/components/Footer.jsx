@@ -15,6 +15,7 @@ export default function Footer() {
           <h4>Firm</h4>
           <Link to="/about">About</Link>
           <Link to="/stewardship">Stewardship</Link>
+          <Link to="/the-four-turnings">The Four Turnings</Link>
           <Link to="/resources">Resources</Link>
           <Link to="/contact">Contact</Link>
         </div>

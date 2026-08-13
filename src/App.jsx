@@ -11,6 +11,7 @@ import Home from '@/pages/Home';
 import About from '@/pages/About';
 import Stewardship from '@/pages/Stewardship';
 import Pathway from '@/pages/Pathway';
+import FourTurnings from '@/pages/FourTurnings';
 import Admin from '@/pages/Admin';
 import Login from '@/pages/Login';
 import Activate from '@/pages/Activate';
@@ -51,8 +52,7 @@ const AuthenticatedApp = () => {
       <Route path="/estate-ready" element={<Pathway id="estate-ready" />} />
       <Route path="/sale-ready" element={<Pathway id="sale-ready" />} />
       <Route path="/harvest-share" element={<Pathway id="harvest-share" />} />
-      {/* retired: the issues live in the client library now */}
-      <Route path="/the-four-turnings" element={<Navigate to="/resources" replace />} />
+      <Route path="/the-four-turnings" element={<FourTurnings />} />
       <Route path="/resources" element={<Resources />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/admin" element={<Admin />} />
