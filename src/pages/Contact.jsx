@@ -3,6 +3,7 @@ import SeasonalTree from '@/components/SeasonalTree';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Reveal from '@/components/Reveal';
+import SeasonGlyph from '@/components/SeasonGlyph';
 import { base44 } from '@/api/base44Client';
 
 export default function Contact() {
@@ -42,6 +43,7 @@ export default function Contact() {
 
       <main className="nlw-main nlw-inner">
         <section className="nlw-page-hero">
+          <SeasonGlyph variant="watermark" />
           <div className="nlw-wrap">
             <Reveal as="p" className="nlw-eyebrow">Contact</Reveal>
             <Reveal as="h1" className="nlw-h1">Begin a conversation.</Reveal>

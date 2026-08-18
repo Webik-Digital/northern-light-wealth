@@ -119,7 +119,7 @@ button { font-family: inherit; }
 
 .nlw-head-right { display: flex; align-items: center; gap: 22px; }
 .nlw-mark { display: flex; align-items: center; line-height: 1; }
-.nlw-mark img { height: 26px; width: auto; display: block; }
+.nlw-mark img { height: 34px; width: auto; display: block; }
 .nlw-mark:focus-visible { outline: 2px solid var(--season-accent); outline-offset: 6px; border-radius: 2px; }
 .nlw-nav { display: flex; align-items: center; gap: 30px; }
 .nlw-nav a { font-size: 13.5px; color: #2B2430; transition: color .3s; }
@@ -376,6 +376,101 @@ button { font-family: inherit; }
 .nlw-auth-foot a { color: var(--teal); }
 .nlw-auth-foot a:hover { color: var(--teal-deep); }
 .nlw-auth-back { display: flex; justify-content: center; margin-top: 26px; font-size: 13px; color: var(--muted); }
+
+/* ---------- the wheel ---------- */
+/* The seasons as a single painted circle. It turns a quarter across the
+   section, which is the idea the section is describing. */
+.nlw-wheel { display: flex; justify-content: center; align-items: center; }
+.nlw-wheel img { width: min(100%, 620px); height: auto; display: block;
+  transition: transform .35s var(--ease); will-change: transform; }
+
+/* ---------- the seasonal band ---------- */
+/* A strip of the season's painting, full bleed, between the last section and
+   the footer. Every season is mounted; CSS shows the one the page is in. */
+/* The bands are natively 3.4:1 to 9.8:1, so they only survive at a ratio near
+   their own. Anything wider crops them to a sliver. */
+.nlw-band-strip { position: relative; width: 100%; height: clamp(96px, 13vw, 150px); overflow: hidden; background: var(--canvas); }
+.nlw-band-strip.is-fixed img { position: absolute; inset: 0; opacity: 1; }
+
+/* across the head of a Four Turnings issue: the issue wears its own season */
+.nlw-feature.has-band { padding-top: 0; overflow: hidden; }
+.nlw-feature-band { margin: 0 calc(-1 * clamp(32px, 4vw, 48px)) clamp(26px, 3vw, 34px);
+  width: auto; height: clamp(150px, 17vw, 215px); }
+.nlw-band-strip img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  opacity: 0; transition: opacity 1.6s var(--ease); }
+/* before any season is published, fall back to the one in the DOM */
+.nlw-band-strip:not(.is-fixed) img[data-season="summer"] { opacity: 1; }
+:root[data-season] .nlw-band-strip:not(.is-fixed) img { opacity: 0; }
+:root[data-season="spring"] .nlw-band-strip:not(.is-fixed) img[data-season="spring"],
+:root[data-season="summer"] .nlw-band-strip:not(.is-fixed) img[data-season="summer"],
+:root[data-season="fall"]   .nlw-band-strip:not(.is-fixed) img[data-season="fall"],
+:root[data-season="winter"] .nlw-band-strip:not(.is-fixed) img[data-season="winter"] { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .nlw-wheel img, .nlw-band-strip img { transition: none; }
+}
+
+/* ---------- seasonal marks ---------- */
+/* Every season is mounted and crossfaded, so a change reads as one season
+   giving way to the next rather than an image being swapped out. */
+.nlw-glyph { position: relative; display: inline-block; line-height: 0; }
+.nlw-glyph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;
+  opacity: 0; transition: opacity 1.6s var(--ease); }
+.nlw-glyph img.is-on { opacity: 1; }
+/* the first mounted image holds the box open; the rest stack on top of it */
+.nlw-glyph img:first-child { position: relative; }
+
+/* small accent, e.g. beside the season name or an issue date */
+.nlw-glyph.is-mark { width: 30px; height: 30px; }
+
+/* the empty half of an inner-page hero */
+.nlw-glyph.is-watermark { position: absolute; z-index: 0; pointer-events: none;
+  width: clamp(150px, 17vw, 240px); height: clamp(150px, 17vw, 240px);
+  right: clamp(24px, 7vw, 132px); bottom: clamp(-10px, 2vh, 26px); }
+.nlw-glyph.is-watermark img { opacity: 0; }
+.nlw-glyph.is-watermark img.is-on { opacity: .1; animation: nlw-glyph-drift 11s ease-in-out infinite; }
+
+@keyframes nlw-glyph-drift {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-9px) rotate(1.2deg); }
+}
+
+/* the season control on the homepage */
+.nlw-season-glyph.is-mark { width: 26px; height: 26px; margin-bottom: 2px; }
+
+/* issue markers */
+.nlw-issue-eyebrow { display: flex; align-items: center; gap: 9px; }
+.nlw-issue-mark.is-mark { width: 22px; height: 22px; }
+.nlw-archive .when { display: flex; align-items: center; gap: 9px; }
+.nlw-issue-mark.is-row.is-mark { width: 18px; height: 18px; flex: none; }
+
+@media (max-width: 900px) {
+  /* the hero has no spare width on a phone; the mark would crowd the words */
+  .nlw-glyph.is-watermark { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nlw-glyph img { transition: none; }
+  .nlw-glyph.is-watermark img.is-on { animation: none; }
+}
+
+/* A resource row wears its band across the top, the way an issue card does.
+   Static, not on hover: the band is how you tell one from the next, so it
+   should be there when the eye arrives. The row wraps, which lets the band
+   take a full line above the lock and the words without restructuring. */
+.nlw-lib li.has-band { flex-wrap: wrap; align-items: flex-start; column-gap: 14px; row-gap: 0;
+  padding-top: 0; }
+.nlw-lib li.has-band > div:not(.nlw-lib-band) { flex: 1; min-width: 0; }
+/* full bleed inside the card: pulled out by the padding it sits in */
+.nlw-band-strip.nlw-lib-band { order: -1; flex: 0 0 auto; width: auto; align-self: stretch;
+  margin: 0 calc(-1 * clamp(22px, 2.4vw, 30px)) clamp(20px, 2.2vw, 26px);
+  min-width: calc(100% + 2 * clamp(22px, 2.4vw, 30px));
+  height: clamp(104px, 12vw, 158px); border-radius: 0;
+  overflow: hidden; position: relative; opacity: 1; transform: none; }
+.nlw-lib-band img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 1; }
+
+@media (max-width: 760px) {
+  .nlw-band-strip.nlw-lib-band { height: clamp(86px, 26vw, 120px); }
+}
 
 /* ---------- search ---------- */
 .nlw-search { max-width: 520px; margin-top: 30px; }
@@ -687,18 +782,37 @@ textarea.nlw-input { min-height: 140px; resize: vertical; }
 .nlw-direct .sub { font-size: 14px; color: var(--ink-soft); margin-top: 6px; max-width: 34ch; }
 
 /* gated library */
-.nlw-lib { list-style: none; margin-top: 40px; border-top: .5px solid var(--rule); }
-.nlw-lib li { display: flex; align-items: flex-start; gap: 16px; padding: 24px 0; border-bottom: .5px solid var(--rule); }
+/* A library of cards rather than a ruled list: each item is its own object,
+   with its band inside it, so no dividers are needed to separate them. Two
+   across also suits the artwork — a narrower card is close to the bands' own
+   proportions, where a full-width row cropped them hard. */
+.nlw-lib { list-style: none; margin-top: 40px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; align-items: start; }
+.nlw-lib li { display: flex; align-items: flex-start; gap: 16px;
+  background: var(--surface); border: .5px solid var(--rule); border-radius: 10px;
+  padding: clamp(22px, 2.4vw, 30px); overflow: hidden;
+  transition: transform .5s var(--ease), box-shadow .5s var(--ease); }
+.nlw-lib li:hover { transform: translateY(-3px); box-shadow: 0 22px 44px -34px rgba(22,15,26,.55); }
 .nlw-lib .lk { color: var(--muted); flex: none; margin-top: 4px; }
 .nlw-lib h3 { font-family: 'Lexend Deca', sans-serif; font-weight: 400; font-size: 20px; color: var(--plum); }
 .nlw-lib p { font-size: 15px; line-height: 1.7; color: var(--ink-soft); margin-top: 6px; max-width: 52ch; }
 .nlw-lib .cat { font-size: 10.5px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--teal); display: block; margin-bottom: 8px; }
+/* The library's own categories are a plain grid, not cards: they carry no
+   artwork and no season, so a card frame would promise something they do not
+   hold. Same two columns, so the page still reads as one library. */
+.nlw-lib.is-plain li { background: none; border: 0; border-radius: 0; padding: 0;
+  align-items: flex-start; }
+.nlw-lib.is-plain li:hover { transform: none; box-shadow: none; }
+
+/* one card per row once two would be too narrow to hold a band or a sentence */
+@media (max-width: 900px) {
+  .nlw-lib { grid-template-columns: 1fr; }
+}
 .nlw-helpline { margin-top: 44px; font-size: 15px; color: var(--ink-soft); }
 .nlw-helpline .nlw-link-more { margin-top: 12px; }
 
 /* between the desktop header and the mobile drawer the bar runs out of room */
 @media (max-width: 1160px) {
-  .nlw-mark img { height: 23px; }
+  .nlw-mark img { height: 30px; }
   .nlw-head-right { gap: 16px; }
   .nlw-nav { gap: 20px; }
   .nlw-nav a { font-size: 13px; white-space: nowrap; }
@@ -728,7 +842,7 @@ textarea.nlw-input { min-height: 140px; resize: vertical; }
   .nlw-canopy::after { background: linear-gradient(180deg, rgba(245,244,242,0) 52%, var(--canvas) 100%); }
   .nlw-canopy.is-hero { position: relative; width: 100%; height: 32vh; }
   .nlw-canopy.is-hero::after { background-image: linear-gradient(180deg, rgba(245,244,242,0) 46%, var(--canvas) 100%); }
-  .nlw-mark img { height: 21px; }
+  .nlw-mark img { height: 26px; }
   .nlw-page-hero { padding-block: 44px clamp(48px, 7vh, 72px); }
   .nlw-wrap, .nlw-stewardship .nlw-wrap, .nlw-wrap.wide,
   .nlw-inner .nlw-section .nlw-wrap, .nlw-inner .nlw-section .nlw-wrap.wide { max-width: none; padding-left: 24px; padding-right: 24px; }

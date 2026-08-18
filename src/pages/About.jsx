@@ -4,29 +4,22 @@ import SeasonalTree from '@/components/SeasonalTree';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Reveal from '@/components/Reveal';
+import SeasonGlyph from '@/components/SeasonGlyph';
 import ClosingCTA from '@/components/ClosingCTA';
 import StickyFeature from '@/components/StickyFeature';
 import { TEAM } from '@/data/team';
 import { APPROACHES, TENETS } from '@/data/practice';
 
-// The section's own copy, split into steps. The tree carries the seasonal
-// argument the passage makes, so it turns from bare to full as you scroll.
-const TREE = 'https://media.base44.com/images/public/6a70610b0eb9bb2f777d7afd/';
+// The section's own copy, split into steps. The wheel turns alongside it.
 const HOW_WE_THINK = [
   {
     title: 'Most firms manage money. We steward what money is for.',
-    image: `${TREE}292a405ad_tree-spring.jpg`,
-    alt: 'The tree in leaf in spring',
   },
   {
     body: 'That means holding the whole picture, the family, the business, the transition, and the causes you want to outlast you, as one continuing responsibility rather than a set of separate accounts.',
-    image: `${TREE}2aa49d740_tree-fall.jpg`,
-    alt: 'The same tree turning in autumn',
   },
   {
     body: 'We work slowly, we write things down, and we say what we think. What you get is counsel you can rely on through every season, not advice tuned to the mood of the market.',
-    image: `${TREE}e410f210c_tree-winter.jpg`,
-    alt: 'The same tree bare in winter',
   },
 ];
 
@@ -39,6 +32,7 @@ export default function About() {
 
       <main className="nlw-main nlw-inner">
         <section className="nlw-page-hero">
+          <SeasonGlyph variant="watermark" />
           <div className="nlw-wrap">
             <Reveal as="p" className="nlw-eyebrow">About</Reveal>
             <Reveal as="h1" className="nlw-h1">About the firm and the view behind it.</Reveal>
@@ -47,7 +41,7 @@ export default function About() {
         </section>
 
         {/* How we think — pinned, one step at a time */}
-        <StickyFeature eyebrow="How we think" steps={HOW_WE_THINK} />
+        <StickyFeature eyebrow="How we think" steps={HOW_WE_THINK} media="wheel" />
 
         {/* The seasonal view — full top padding: it follows the dark band, not a padded section */}
         <section className="nlw-section">

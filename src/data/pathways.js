@@ -2,10 +2,14 @@
 // Descriptions are NLW's approved copy. `evidence` and `testimonials` are
 // deliberately empty: references and client quotes must come from NLW, they
 // are not written here.
+import winterScene from '@/assets/seasons/winter-scene.jpg';
+import autumnScene from '@/assets/seasons/autumn-scene.jpg';
+import summerScene from '@/assets/seasons/summer-scene.jpg';
+
 const PHOTO = {
-  estate: 'https://images.unsplash.com/photo-1534768654272-e97681c3a2c7?auto=format&fit=crop&w=1200&q=70',
-  sale: 'https://images.unsplash.com/photo-1753164726626-e4c38056a03f?auto=format&fit=crop&w=1200&q=70',
-  harvest: 'https://images.unsplash.com/photo-1515276427842-f85802d514a2?auto=format&fit=crop&w=1200&q=70',
+  estate: winterScene,
+  sale: autumnScene,
+  harvest: summerScene,
 };
 
 export const PATHWAYS = [
@@ -19,7 +23,7 @@ export const PATHWAYS = [
       'Family continuity, operational continuity before probate, and stewardship that carries on long after.',
     ],
     photo: PHOTO.estate,
-    alt: 'An older hand holding a young hand',
+    alt: 'Winter across the Prairie, painted',
     evidence: [],
     testimonials: [],
   },
@@ -33,7 +37,7 @@ export const PATHWAYS = [
       'Owner, family, tax, liquidity, and identity, all readied before and after the transaction.',
     ],
     photo: PHOTO.sale,
-    alt: 'A maker at work in a workshop',
+    alt: 'Autumn turning across the Prairie, painted',
     evidence: [],
     testimonials: [],
   },
@@ -47,7 +51,7 @@ export const PATHWAYS = [
     ],
     note: 'Wording to be finalised with NLW compliance. No terms or figures are stated here.',
     photo: PHOTO.harvest,
-    alt: 'Hands holding cut wheat',
+    alt: 'The harvest in high summer, painted',
     evidence: [],
     testimonials: [],
   },

@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
+import wheel from '@/assets/seasons/wheel.png';
 
 // A pinned section: the panel holds still while the page scrolls through it,
 // swapping the text on the left and wiping the paired image in on the right.
 // steps: [{ title?, body?, image, alt }]
-export default function StickyFeature({ eyebrow, steps }) {
+export default function StickyFeature({ eyebrow, steps, media = 'images' }) {
   const wrapRef = useRef(null);
   const [active, setActive] = useState(0);
   const [progress, setProgress] = useState(0);
@@ -63,6 +64,12 @@ export default function StickyFeature({ eyebrow, steps }) {
           </div>
 
           <div className="nlw-sticky-media">
+            {media === 'wheel' ? (
+              <div className="nlw-wheel" aria-hidden="true">
+                {/* a quarter turn across the section: the year moving on */}
+                <img src={wheel} alt="" style={{ transform: `rotate(${progress * 90}deg)` }} />
+              </div>
+            ) : (
             <div className="nlw-sticky-frame">
               {steps.map((s, i) => (
                 <div key={i} className={`nlw-sticky-shot${i === active ? ' is-on' : ''}`}>
@@ -73,6 +80,7 @@ export default function StickyFeature({ eyebrow, steps }) {
                 <span style={{ transform: `scaleX(${progress})` }} />
               </div>
             </div>
+            )}
           </div>
         </div>
       </div>

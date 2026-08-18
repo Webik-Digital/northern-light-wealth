@@ -3,6 +3,8 @@ import SeasonalTree from '@/components/SeasonalTree';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Reveal from '@/components/Reveal';
+import SeasonGlyph from '@/components/SeasonGlyph';
+import SeasonBand from '@/components/SeasonBand';
 import { base44 } from '@/api/base44Client';
 import { issuesFrom } from '@/data/turnings';
 import LockIcon from '@/components/LockIcon';
@@ -65,6 +67,7 @@ export default function FourTurnings() {
 
       <main className="nlw-main nlw-inner">
         <section className="nlw-page-hero">
+          <SeasonGlyph variant="watermark" />
           <div className="nlw-wrap">
             <Reveal as="p" className="nlw-eyebrow">The Four Turnings</Reveal>
             <Reveal as="h1" className="nlw-h1">The Four Turnings</Reveal>
@@ -79,8 +82,10 @@ export default function FourTurnings() {
         {featured && (
           <section className="nlw-section">
             <div className="nlw-wrap">
-              <Reveal className="nlw-feature" style={{ borderTopColor: ACCENT[featured.season] }}>
-                <p className="nlw-eyebrow" style={{ color: ACCENT[featured.season] }}>
+              <Reveal className="nlw-feature has-band" style={{ borderTopColor: ACCENT[featured.season] }}>
+                <SeasonBand season={featured.season} className="nlw-feature-band" />
+                <p className="nlw-eyebrow nlw-issue-eyebrow" style={{ color: ACCENT[featured.season] }}>
+                  <SeasonGlyph season={featured.season} className="nlw-issue-mark" />
                   Current issue · {when(featured)}
                 </p>
                 <h2 className="nlw-h2">{featured.title}</h2>
@@ -152,7 +157,10 @@ export default function FourTurnings() {
                 shown.map((i) => (
                   <li key={i.id}>
                     <Reveal className="row">
-                      <span className="when">{when(i)}</span>
+                      <span className="when">
+                        <SeasonGlyph season={i.season} className="nlw-issue-mark is-row" />
+                        {when(i)}
+                      </span>
                       <div>
                         <h3>{i.title}</h3>
                         {i.dek && <p>{i.dek}</p>}

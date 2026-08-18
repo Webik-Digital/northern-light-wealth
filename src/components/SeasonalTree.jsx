@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import SeasonGlyph from './SeasonGlyph';
 
 const ORDER = ['summer', 'fall', 'winter', 'spring'];
 const ACCENT = { spring: '#5E7C5A', summer: '#3E6B57', fall: '#9A6B3F', winter: '#3C6E80' };
@@ -42,6 +43,8 @@ export default function SeasonalTree({ mode = 'page' }) {
     const root = document.documentElement;
     root.style.setProperty('--season-accent', ACCENT[s]);
     root.style.setProperty('--wash', WASH[s]);
+    // published so the seasonal band and anything else can follow in CSS alone
+    root.dataset.season = s;
     setSeason(s);
   };
 
@@ -138,6 +141,7 @@ export default function SeasonalTree({ mode = 'page' }) {
       <div className="nlw-wash" aria-hidden="true" />
 
       <div className="nlw-season-ctl" role="group" aria-label="Seasonal view">
+        <SeasonGlyph season={season} className="nlw-season-glyph" />
         <span
           className="nlw-season-name"
           title="Return to automatic season"

@@ -4,6 +4,7 @@ import SeasonalTree from '@/components/SeasonalTree';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Reveal from '@/components/Reveal';
+import SeasonGlyph from '@/components/SeasonGlyph';
 import ClosingCTA from '@/components/ClosingCTA';
 
 const PATHWAYS = [
@@ -43,6 +44,7 @@ export default function Stewardship() {
 
       <main className="nlw-main nlw-inner">
         <section className="nlw-page-hero">
+          <SeasonGlyph variant="watermark" />
           <div className="nlw-wrap">
             <Reveal as="p" className="nlw-eyebrow">Stewardship</Reveal>
             <Reveal as="h1" className="nlw-h1">Stewardship, expressed three ways.</Reveal>

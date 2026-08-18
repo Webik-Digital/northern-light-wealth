@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import LockIcon from './LockIcon';
-import logo from '@/assets/nlw-logo.png';
-import logoReverse from '@/assets/nlw-logo-reverse.png';
+import logo from '@/assets/nlw-logo-stacked.svg';
+import logoReverse from '@/assets/nlw-logo-stacked-reverse.svg';
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);

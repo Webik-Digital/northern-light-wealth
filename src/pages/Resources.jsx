@@ -4,10 +4,12 @@ import SeasonalTree from '@/components/SeasonalTree';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Reveal from '@/components/Reveal';
+import SeasonGlyph from '@/components/SeasonGlyph';
 import LockIcon from '@/components/LockIcon';
 import { base44 } from '@/api/base44Client';
 import { ISSUES } from '@/data/turnings';
 import ResourceSearch from '@/components/ResourceSearch';
+import SeasonBand from '@/components/SeasonBand';
 
 // Shown while locked: enough to see the shape of the library, not the contents.
 const SHAPE = [
@@ -86,6 +88,7 @@ export default function Resources() {
 
       <main className="nlw-main nlw-inner">
         <section className="nlw-page-hero">
+          <SeasonGlyph variant="watermark" />
           <div className="nlw-wrap">
             <Reveal as="p" className="nlw-eyebrow">Resources</Reveal>
             <Reveal as="h1" className="nlw-h1">Stewardship Resources</Reveal>
@@ -135,7 +138,7 @@ export default function Resources() {
 
             <ul className="nlw-lib">
               {ISSUES.map((i) => (
-                <li key={i.id}>
+                <li key={i.id} className="has-band">
                   {!authed && <LockIcon className="nlw-icon lk" />}
                   <div>
                     <span className="cat">{i.marker} {i.year}</span>
@@ -147,6 +150,7 @@ export default function Resources() {
                       </a>
                     )}
                   </div>
+                  <SeasonBand season={i.season} className="nlw-lib-band" />
                 </li>
               ))}
             </ul>
@@ -207,7 +211,7 @@ export default function Resources() {
             </Reveal>
 
             {!authed ? (
-              <ul className="nlw-lib">
+              <ul className="nlw-lib is-plain">
                 {SHAPE.map((s) => (
                   <li key={s.title}>
                     <LockIcon className="nlw-icon lk" />
@@ -221,7 +225,7 @@ export default function Resources() {
             ) : loading ? (
               <p style={{ marginTop: 36, color: 'var(--muted)' }}>Opening the library…</p>
             ) : items.length === 0 ? (
-              <ul className="nlw-lib">
+              <ul className="nlw-lib is-plain">
                 {SHAPE.map((s) => (
                   <li key={s.title}>
                     <div>
@@ -232,7 +236,7 @@ export default function Resources() {
                 ))}
               </ul>
             ) : (
-              <ul className="nlw-lib">
+              <ul className="nlw-lib is-plain">
                 {items.map((r) => (
                   <li key={r.id}>
                     <div>
