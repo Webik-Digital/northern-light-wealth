@@ -4,6 +4,7 @@ import SeasonalTree from '@/components/SeasonalTree';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Reveal from '@/components/Reveal';
+import SubscribePanel from '@/components/SubscribePanel';
 import SeasonGlyph from '@/components/SeasonGlyph';
 import LockIcon from '@/components/LockIcon';
 import { base44 } from '@/api/base44Client';
@@ -24,30 +25,6 @@ export default function Resources() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [subscribed, setSubscribed] = useState(false);
-  const [subError, setSubError] = useState('');
-  const [busy, setBusy] = useState(false);
-
-  const onSubscribe = async (e) => {
-    e.preventDefault();
-    setSubError('');
-    const value = email.trim();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-      setSubError('Please enter an email address we can reach you at.');
-      return;
-    }
-    setBusy(true);
-    try {
-      await base44.entities.Subscriber.create({ email: value, source: 'the-four-turnings' });
-      setSubscribed(true);
-      setEmail('');
-    } catch (err) {
-      setSubError('Something went wrong. Please try again, or write to us directly.');
-    } finally {
-      setBusy(false);
-    }
-  };
 
   useEffect(() => {
     let active = true;
@@ -163,42 +140,7 @@ export default function Resources() {
           </div>
         </section>
 
-        {/* Subscribe: open to everyone, since this is how readers first arrive */}
-        <section className="nlw-section nlw-section-tight">
-          <div className="nlw-wrap">
-            <Reveal className="nlw-panel">
-              {subscribed ? (
-                <>
-                  <h2 className="nlw-h3">You are on the list.</h2>
-                  <p>We will send the next issue when it is published.</p>
-                </>
-              ) : (
-                <>
-                  <h2 className="nlw-h2" style={{ maxWidth: '20ch' }}>Receive each turning when it is published.</h2>
-                  <p style={{ marginTop: 14 }}>Four emails a year. Nothing else.</p>
-                  <form className="nlw-inline-form" onSubmit={onSubscribe}>
-                    <label className="nlw-label">
-                      <input
-                        className="nlw-input"
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="Email address"
-                        autoComplete="email"
-                        aria-label="Email address"
-                      />
-                    </label>
-                    <button type="submit" className="nlw-btn" disabled={busy} style={{ opacity: busy ? 0.6 : 1 }}>
-                      {busy ? 'Subscribing…' : 'Subscribe'}
-                    </button>
-                  </form>
-                  {subError && <p className="nlw-form-error">{subError}</p>}
-                  <p className="nlw-form-small">We send only the letter. No sales sequence.</p>
-                </>
-              )}
-            </Reveal>
-          </div>
-        </section>
+        <SubscribePanel />
 
         {/* The shape of the library */}
         <section className="nlw-section nlw-section-tight" id="library">
