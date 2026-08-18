@@ -724,8 +724,12 @@ button { font-family: inherit; }
    of the same size and is fitted inside it. Sizing on height alone would put a
    60px square next to a 273px banner. */
 .nlw-logos { display: flex; flex-wrap: wrap; align-items: center; gap: clamp(20px, 2.6vw, 40px); }
-.nlw-logo { display: grid; place-items: center; width: clamp(112px, 11vw, 152px); height: clamp(54px, 5.2vw, 72px); }
-.nlw-logo img { display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain;
+/* The box is the frame and the image is laid inside it absolutely: a percentage
+   max-height resolves against the grid track, which is auto-sized here, so the
+   300x300 sources ignored it and drew 112x112 inside a 112x54 cell, spilling
+   onto the row beneath. Filling the box outright leaves object-fit in charge. */
+.nlw-logo { position: relative; width: clamp(112px, 11vw, 152px); height: clamp(54px, 5.2vw, 72px); }
+.nlw-logo img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: contain;
   filter: grayscale(1) contrast(.92); opacity: .62; mix-blend-mode: multiply; transition: opacity .4s var(--ease), filter .4s var(--ease); }
 .nlw-logo:hover img { filter: none; opacity: 1; }
 .nlw-logos.is-press .nlw-logo { height: clamp(36px, 3.4vw, 46px); }
@@ -850,7 +854,7 @@ textarea.nlw-input { min-height: 140px; resize: vertical; }
   .nlw-nav .nlw-nav-cta { display: none; }
 }
 @media (max-width: 1040px) {
-  .nlw-pathway { grid-template-columns: 1fr; gap: 14px; padding: 36px 0; }
+  .nlw-pathway { grid-template-columns: 1fr; gap: 14px; padding: 30px 26px; }
   .nlw-people { grid-template-columns: 1fr; gap: 24px; }
   .nlw-contact-grid { grid-template-columns: 1fr; gap: 46px; }
   .nlw-archive .row { grid-template-columns: 1fr; gap: 6px; }
@@ -887,6 +891,55 @@ textarea.nlw-input { min-height: 140px; resize: vertical; }
   .nlw-season-name { writing-mode: horizontal-tb; transform: none; }
   .nlw-dots { flex-direction: row; }
 }
+/* ---------- touch targets ---------- */
+/* Below the desktop header the site is driven by a finger, so everything that
+   can be pressed is grown to a 44px box. The visible mark is left alone: the
+   target grows around it rather than the design growing with it. */
+@media (max-width: 820px) {
+  .nlw-burger { display: inline-flex; align-items: center; justify-content: center;
+    min-width: 44px; min-height: 44px; padding: 0 10px; margin-right: -10px; }
+  .nlw-portal { min-height: 44px; padding: 9px 13px; }
+  .nlw-btn, .nlw-filter { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
+
+  /* The dots keep their 8px mark and hand the hit area to the button around it.
+     The control floats over the page, so only the dots take taps: the season
+     label must not swallow a press meant for the content beneath it. */
+  .nlw-season-ctl { bottom: 20px; gap: 6px; pointer-events: none; }
+  .nlw-dots { gap: 0; }
+  .nlw-dot { width: 40px; height: 40px; padding: 0; border: 0; border-radius: 0;
+    background: none; display: grid; place-items: center; pointer-events: auto; }
+  .nlw-dot::after { content: ''; width: 8px; height: 8px; border-radius: 50%;
+    border: 1px solid var(--muted); transition: all .5s var(--ease); }
+  .nlw-dot[aria-current="true"] { background: none; transform: none; }
+  .nlw-dot[aria-current="true"]::after { background: var(--season-accent);
+    border-color: var(--season-accent); transform: scale(1.15); }
+}
+
+/* ---------- phones ---------- */
+/* One column is already in place by here; what is left is the type and the
+   gutters, which were still set for a screen twice this wide. */
+@media (max-width: 560px) {
+  :root { --pad-l: 20px; --pad-r: 20px; }
+  .nlw-wrap, .nlw-stewardship .nlw-wrap, .nlw-wrap.wide,
+  .nlw-inner .nlw-section .nlw-wrap, .nlw-inner .nlw-section .nlw-wrap.wide,
+  .nlw-header, .nlw-foot-in, .nlw-foot-base { padding-left: 20px; padding-right: 20px; }
+
+  .nlw-h1 { font-size: clamp(31px, 8.6vw, 37px); }
+  .nlw-h2 { font-size: clamp(23px, 6.4vw, 26px); }
+  .nlw-lead { font-size: 17px; }
+  .nlw-pathway { padding: 26px 22px; }
+  .nlw-pathway h3 { font-size: 25px; }
+  .nlw-advisor { padding: 22px; }
+  .nlw-advisor .head { grid-template-columns: 92px 1fr; gap: 16px; }
+  .nlw-advisor .who h3 { font-size: 21px; }
+  .nlw-person, .nlw-panel { padding: 24px 22px; }
+  .nlw-section { padding-block: clamp(56px, 8vh, 84px); }
+
+  /* three or four marks per row rather than two, now that they behave */
+  .nlw-logos { gap: 16px 18px; }
+  .nlw-logo { width: clamp(92px, 27vw, 112px); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .nlw-canopy img, .nlw-card .ph img, .nlw-card .scrim, .nlw-card .more, .nlw-wash { transition: none; }
