@@ -28,26 +28,41 @@ export default function Resources() {
 
   useEffect(() => {
     let active = true;
-    base44.auth.isAuthenticated().then((ok) => { if (active) setAuthed(ok); }).catch(() => {});
-    base44.entities.Resource.filter({}, 'order', 50)
-      .then(async (rows) => {
-        // items uploaded to private storage are stored as a file_uri, not a URL,
-        // so they need a signed link before a client can open them
-        const resolved = await Promise.all(
-          (rows || []).map(async (r) => {
-            if (!r.fileOrUrl || /^https?:\/\//i.test(r.fileOrUrl)) return r;
-            try {
-              const { signed_url } = await base44.integrations.Core.CreateFileSignedUrl({ file_uri: r.fileOrUrl });
-              return { ...r, href: signed_url };
-            } catch (e) {
-              return { ...r, href: '' };
-            }
-          })
-        );
-        if (active) setItems(resolved);
-      })
-      .catch(() => {})
-      .finally(() => { if (active) setLoading(false); });
+
+    // The library is read only for someone signed in. The entity refuses it to
+    // anyone else, so this is not what keeps it private; it just avoids firing
+    // a request on every public page view that could only come back refused.
+    const loadLibrary = async () => {
+      const rows = await base44.entities.Resource.filter({}, 'order', 50);
+      // items uploaded to private storage are stored as a file_uri, not a URL,
+      // so they need a signed link before a client can open them
+      const resolved = await Promise.all(
+        (rows || []).map(async (r) => {
+          if (!r.fileOrUrl || /^https?:\/\//i.test(r.fileOrUrl)) return r;
+          try {
+            const { signed_url } = await base44.integrations.Core.CreateFileSignedUrl({ file_uri: r.fileOrUrl });
+            return { ...r, href: signed_url };
+          } catch (e) {
+            return { ...r, href: '' };
+          }
+        })
+      );
+      if (active) setItems(resolved);
+    };
+
+    (async () => {
+      try {
+        const ok = await base44.auth.isAuthenticated();
+        if (!active) return;
+        setAuthed(ok);
+        if (ok) await loadLibrary();
+      } catch (e) {
+        // signed out, or the library declined: the page simply stays locked
+      } finally {
+        if (active) setLoading(false);
+      }
+    })();
+
     return () => { active = false; };
   }, []);
 
@@ -116,12 +131,11 @@ export default function Resources() {
             <ul className="nlw-lib">
               {ISSUES.map((i) => (
                 <li key={i.id} className="has-band">
-                  {!authed && <LockIcon className="nlw-icon lk" />}
                   <div>
                     <span className="cat">{i.marker} {i.year}</span>
                     <h3>{i.title}</h3>
                     <p>{i.dek}</p>
-                    {authed && i.pdfUrl && (
+                    {i.pdfUrl && (
                       <a href={i.pdfUrl} target="_blank" rel="noreferrer" className="nlw-link-more" style={{ marginTop: 12 }}>
                         Read the issue <span className="arw">→</span>
                       </a>
@@ -132,11 +146,10 @@ export default function Resources() {
               ))}
             </ul>
 
-            {!authed && (
-              <Reveal as="p" className="nlw-note">
-                Each issue opens once you are signed in.
-              </Reveal>
-            )}
+            <Reveal as="p" className="nlw-note">
+              The letter is open to everyone. The library below is the part kept
+              for clients.
+            </Reveal>
           </div>
         </section>
 

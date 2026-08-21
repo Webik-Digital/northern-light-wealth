@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 
+// Everything in the library is for clients. The Resource entity refuses a read
+// to anyone not signed in, so there is no such thing as an open item here and
+// no switch offering one: uploads go to private storage and are handed over as
+// a signed link. The public half of the site is The Four Turnings.
 const blank = () => ({
   title: '',
   category: '',
   description: '',
   fileOrUrl: '',
-  isGated: true,
   order: 0,
 });
 
@@ -38,14 +41,8 @@ export default function LibraryAdmin() {
     if (!file) return;
     setUploading(true); setErr(''); setMsg('');
     try {
-      // gated items go to private storage; open items to public storage
-      if (draft.isGated) {
-        const { file_uri } = await base44.integrations.Core.UploadPrivateFile({ file });
-        set('fileOrUrl', file_uri);
-      } else {
-        const { file_url } = await base44.integrations.Core.UploadFile({ file });
-        set('fileOrUrl', file_url);
-      }
+      const { file_uri } = await base44.integrations.Core.UploadPrivateFile({ file });
+      set('fileOrUrl', file_uri);
       setMsg(`Uploaded ${file.name}.`);
     } catch (e2) {
       setErr('The upload failed. Please try again.');
@@ -64,7 +61,7 @@ export default function LibraryAdmin() {
       category: draft.category.trim(),
       description: draft.description.trim(),
       fileOrUrl: draft.fileOrUrl.trim(),
-      isGated: !!draft.isGated,
+      isGated: true,
       order: Number(draft.order) || 0,
     };
     try {
@@ -118,9 +115,7 @@ export default function LibraryAdmin() {
                   <span className="t">{r.title}</span>
                   <span className="m">
                     {r.category}
-                    <em className={`state ${r.isGated ? 'draft' : 'live'}`}>
-                      {r.isGated ? 'Clients only' : 'Open'}
-                    </em>
+                    <em className="state draft">Clients only</em>
                   </span>
                 </button>
                 <button type="button" className="del" onClick={() => remove(r)} aria-label={`Remove ${r.title}`}>Remove</button>
@@ -158,16 +153,12 @@ export default function LibraryAdmin() {
                 onChange={(e) => set('description', e.target.value)} />
             </label>
 
-            <label className="nlw-admin-check">
-              <input type="checkbox" checked={!!draft.isGated} onChange={(e) => set('isGated', e.target.checked)} />
-              <span>Clients only. Uncheck to make this openly downloadable.</span>
-            </label>
-
             <div className="nlw-admin-file">
               <p className="nlw-admin-muted">
-                Upload a document, or paste a link. {draft.isGated
-                  ? 'Gated uploads go to private storage and are served through a signed link.'
-                  : 'Open uploads go to public storage.'}
+                Upload a document, or paste a link. Everything here is for clients only:
+                uploads go to private storage and are opened through a signed link, and
+                the library is not served to anyone who is not signed in. To publish
+                something openly, use The Four Turnings.
               </p>
               <input type="file" onChange={onFile} disabled={uploading} />
               {uploading && <p className="nlw-admin-muted">Uploading…</p>}
@@ -178,7 +169,9 @@ export default function LibraryAdmin() {
               </label>
               {draft.fileOrUrl && (
                 <p className="nlw-admin-muted">
-                  {isLink(draft.fileOrUrl) ? 'External link.' : 'Stored file. Clients get a signed link when they open it.'}
+                  {isLink(draft.fileOrUrl)
+                    ? 'External link. Whoever hosts it controls who can open it.'
+                    : 'Stored file. Clients get a signed link when they open it.'}
                 </p>
               )}
             </div>

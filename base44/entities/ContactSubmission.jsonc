@@ -1,3 +1,8 @@
+// Enquiries from the contact form.
+//
+// Anyone may send one, which is the point of the form. Nobody but an admin may
+// read them back: these carry a name, a way to reach the person, and whatever
+// they chose to tell us.
 {
   "name": "ContactSubmission",
   "type": "object",
@@ -16,5 +21,11 @@
     "name",
     "contact",
     "message"
-  ]
+  ],
+  "rls": {
+    "create": true,
+    "read": { "user_condition": { "role": "admin" } },
+    "update": { "user_condition": { "role": "admin" } },
+    "delete": { "user_condition": { "role": "admin" } }
+  }
 }

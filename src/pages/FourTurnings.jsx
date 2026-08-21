@@ -8,8 +8,6 @@ import SeasonGlyph from '@/components/SeasonGlyph';
 import SeasonBand from '@/components/SeasonBand';
 import { base44 } from '@/api/base44Client';
 import { issuesFrom } from '@/data/turnings';
-import LockIcon from '@/components/LockIcon';
-import { useNavigate } from 'react-router-dom';
 
 const LABEL = { spring: 'Spring', summer: 'Summer', fall: 'Fall', winter: 'Winter' };
 const ACCENT = { spring: '#5E7C5A', summer: '#3E6B57', fall: '#9A6B3F', winter: '#3C6E80' };
@@ -17,13 +15,12 @@ const FILTERS = ['all', 'spring', 'summer', 'fall', 'winter'];
 
 export default function FourTurnings() {
   const [rows, setRows] = useState(null);
-  const [authed, setAuthed] = useState(false);
-  const navigate = useNavigate();
   const [filter, setFilter] = useState('all');
 
+  // The letter is public: no sign-in is read here, and none is needed to open
+  // an issue. It is how the firm is met by people who are not clients yet.
   useEffect(() => {
     let active = true;
-    base44.auth.isAuthenticated().then((ok) => { if (active) setAuthed(ok); }).catch(() => {});
     base44.entities.Turning.filter({}, '-publishedAt', 50)
       .then((r) => { if (active) setRows(r || []); })
       .catch(() => { if (active) setRows([]); });
@@ -81,16 +78,11 @@ export default function FourTurnings() {
                 )}
 
                 <div className="nlw-actions">
-                  {featured.pdfUrl && (authed ? (
+                  {featured.pdfUrl && (
                     <a className="nlw-btn" href={featured.pdfUrl} target="_blank" rel="noreferrer">
                       Read the issue
                     </a>
-                  ) : (
-                    <button type="button" className="nlw-btn"
-                      onClick={() => navigate('/login?returnTo=%2Fthe-four-turnings')}>
-                      <LockIcon className="nlw-icon" /> Sign in to read
-                    </button>
-                  ))}
+                  )}
                   {featured.webUrl && (
                     <a className="nlw-link-more" href={featured.webUrl} target="_blank" rel="noreferrer">
                       Open the web version <span className="arw">→</span>
@@ -142,13 +134,11 @@ export default function FourTurnings() {
                         <h3>{i.title}</h3>
                         {i.dek && <p>{i.dek}</p>}
                         <div className="nlw-issue-links">
-                          {i.pdfUrl && (authed ? (
+                          {i.pdfUrl && (
                             <a href={i.pdfUrl} target="_blank" rel="noreferrer" className="nlw-link-more">
                               Read the issue <span className="arw">→</span>
                             </a>
-                          ) : (
-                            <span className="nlw-issue-locked"><LockIcon className="nlw-icon" /> Clients only</span>
-                          ))}
+                          )}
                           {i.webUrl && (
                             <a href={i.webUrl} target="_blank" rel="noreferrer" className="nlw-link-more">
                               Web version <span className="arw">→</span>

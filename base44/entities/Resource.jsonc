@@ -1,3 +1,9 @@
+// The client library.
+//
+// Read is for signed-in people only: there is no anonymous role, so a visitor
+// who has not signed in matches neither arm of the $or and the rows are never
+// served. The gate is here rather than in the page, so hiding the list in the
+// UI is not what keeps it private.
 {
   "name": "Resource",
   "type": "object",
@@ -26,5 +32,16 @@
   "required": [
     "title",
     "category"
-  ]
+  ],
+  "rls": {
+    "create": { "user_condition": { "role": "admin" } },
+    "read": {
+      "$or": [
+        { "user_condition": { "role": "admin" } },
+        { "user_condition": { "role": "user" } }
+      ]
+    },
+    "update": { "user_condition": { "role": "admin" } },
+    "delete": { "user_condition": { "role": "admin" } }
+  }
 }

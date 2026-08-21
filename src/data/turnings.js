@@ -7,11 +7,10 @@
 // These four ship with the site. Anything NLW publishes from here goes into the
 // Turning entity through /admin, and entity rows take precedence over this list.
 //
-// NOT YET GATED. The issues are shown only inside the client area, but these
-// files sit in the site's public folder, so the URLs below answer to anyone who
-// has them. To close that, re-upload each issue through /admin with "clients
-// only" ticked: those go to private storage and are served through a signed
-// link. Then delete public/four-turnings and this list.
+// PUBLIC BY DESIGN. These files sit in the site's public folder and the URLs
+// below answer to anyone, which is what is wanted: the letter is how the firm
+// is met by people who are not clients yet. The client library is the private
+// half, and it is a different entity with its own rule.
 //
 // Standfirsts are the issues' own opening lines.
 const PDF = '/four-turnings';

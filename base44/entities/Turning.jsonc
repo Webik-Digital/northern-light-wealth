@@ -1,3 +1,7 @@
+// The Four Turnings issues.
+//
+// These are published: the letter is how the firm is met by people who are not
+// clients yet, so anyone may read one. Only an admin may write.
 {
   "name": "Turning",
   "type": "object",
@@ -53,5 +57,11 @@
     "season",
     "year",
     "slug"
-  ]
+  ],
+  "rls": {
+    "create": { "user_condition": { "role": "admin" } },
+    "read": true,
+    "update": { "user_condition": { "role": "admin" } },
+    "delete": { "user_condition": { "role": "admin" } }
+  }
 }
