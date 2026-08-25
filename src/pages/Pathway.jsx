@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import SeasonalTree from '@/components/SeasonalTree';
 import Header from '@/components/Header';
@@ -8,11 +8,29 @@ import SeasonGlyph from '@/components/SeasonGlyph';
 import ClosingCTA from '@/components/ClosingCTA';
 import PageNotFound from '@/lib/PageNotFound';
 import { getPathway } from '@/data/pathways';
+import { base44 } from '@/api/base44Client';
 import TestimonialScroller from '@/components/TestimonialScroller';
 import { testimonialsFor } from '@/data/testimonials';
 
 export default function Pathway({ id }) {
   const p = getPathway(id);
+
+  // What the brochure covers. Only published outlines are served — the entity
+  // refuses a draft to anyone but an admin — so whatever arrives here is
+  // already cleared to be public.
+  const [outline, setOutline] = useState(null);
+  useEffect(() => {
+    let active = true;
+    if (!id) return undefined;
+    base44.entities.BrochureOutline.filter({ pathway: id, isPublished: true }, '-updated_date', 1)
+      .then((rows) => {
+        const row = (rows || [])[0];
+        if (active && row && (row.sections || []).length) setOutline(row);
+      })
+      .catch(() => {});
+    return () => { active = false; };
+  }, [id]);
+
   if (!p) return <PageNotFound />;
 
   // this pathway's quotes first, topped up to a full row
@@ -86,6 +104,37 @@ export default function Pathway({ id }) {
             )}
           </div>
         </section>
+
+        {/* What the brochure covers — the document's shape, not its contents */}
+        {outline && (
+          <section className="nlw-section nlw-section-tight">
+            <div className="nlw-wrap">
+              <Reveal className="nlw-feature">
+                <p className="nlw-eyebrow">What the brochure covers</p>
+                <h2 className="nlw-h2">{outline.brochureTitle || `The ${p.name} brochure`}</h2>
+                {outline.blurb && <p className="nlw-lead stand">{outline.blurb}</p>}
+
+                <ol className="nlw-issue-contents">
+                  {outline.sections.map((c, i) => (
+                    <li key={i}>
+                      <span className="no">{String(i + 1).padStart(2, '0')}</span>
+                      <span className="sec">{c.section}</span>
+                      <span className="ttl">{c.title}</span>
+                    </li>
+                  ))}
+                </ol>
+
+                <div className="nlw-actions">
+                  <Link to="/resources" className="nlw-btn">Request access to the brochure</Link>
+                  <Link to="/contact" className="nlw-link-more">Speak with us <span className="arw">→</span></Link>
+                </div>
+                <p className="meta">
+                  {outline.pages ? `${outline.pages} pages · kept in the client library` : 'Kept in the client library'}
+                </p>
+              </Reveal>
+            </div>
+          </section>
+        )}
 
         {/* Testimonials — the homepage treatment, narrowed to this pathway */}
         <TestimonialScroller

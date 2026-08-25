@@ -14,7 +14,7 @@ let libPromise = null;
 // pdf.worker.mjs makes it spawn a classic worker, which cannot parse the ESM
 // inside; it retries, gets nowhere, and the render never settles. Vite's
 // ?worker import gives us a constructor that carries the right type.
-async function getLib() {
+export async function getLib() {
   if (!libPromise) {
     libPromise = (async () => {
       const [pdfjs, workerMod] = await Promise.all([

@@ -866,6 +866,27 @@ textarea.nlw-input { min-height: 140px; resize: vertical; }
   .nlw-cover { width: 68px; }
 }
 
+/* the outline editor: rows of part + heading, ordered and pruned by hand */
+.nlw-admin-sections { margin-top: 4px; }
+.nlw-admin-sections .head { display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; padding-bottom: 8px; border-bottom: .5px solid var(--rule); }
+.nlw-admin-sections .head span { font-size: 13px; color: var(--ink-soft); }
+.nlw-admin-sections ol { list-style: none; margin: 0; padding: 0; }
+.nlw-admin-sections li { display: grid; grid-template-columns: 26px minmax(0, 1fr) minmax(0, 1.5fr) auto;
+  gap: 10px; align-items: center; padding: 10px 0; border-bottom: .5px solid var(--rule); }
+.nlw-admin-sections .no { font-size: 11px; font-weight: 500; letter-spacing: .1em; color: var(--muted); }
+.nlw-admin-sections .nlw-input { padding: 8px 10px; font-size: 14px; }
+.nlw-admin-sections .acts { display: flex; gap: 2px; }
+.nlw-admin-sections .acts button { background: none; border: 0; cursor: pointer; color: var(--muted);
+  font-size: 13px; line-height: 1; padding: 8px 7px; border-radius: 4px; transition: color .3s var(--ease), background .3s var(--ease); }
+.nlw-admin-sections .acts button:hover:not(:disabled) { color: var(--plum); background: rgba(51, 26, 56, .06); }
+.nlw-admin-sections .acts button:disabled { opacity: .3; cursor: default; }
+
+@media (max-width: 900px) {
+  .nlw-admin-sections li { grid-template-columns: 22px minmax(0, 1fr) auto; row-gap: 6px; }
+  .nlw-admin-sections li .nlw-input:nth-of-type(2) { grid-column: 2 / -1; }
+}
+
 /* the cover control in the admin, shown at the shape the card will use */
 .nlw-admin-cover { display: flex; gap: 16px; align-items: flex-start; margin-top: 12px; }
 .nlw-admin-cover .shot { flex: none; width: 88px; aspect-ratio: 1 / 1.294; border-radius: 3px;

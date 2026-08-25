@@ -1,0 +1,73 @@
+// What a stewardship brochure covers, said in public.
+//
+// This is deliberately not a field on Resource. A brochure is private and its
+// row is refused to anyone not signed in, so an outline living there could
+// never be read by the pathway pages, which are open to everyone. The outline
+// is a different thing from the document: a published summary of it.
+//
+// Read is public, but only for rows that have been published. A draft is not
+// visible to the world while it is still being worked on or waiting on
+// compliance — and that is the server's rule, not a filter in the page, so it
+// holds whether or not the site remembers to apply it.
+{
+  "name": "BrochureOutline",
+  "type": "object",
+  "properties": {
+    "pathway": {
+      "type": "string",
+      "description": "Which stewardship page this belongs under",
+      "enum": [
+        "estate-ready",
+        "sale-ready",
+        "harvest-share"
+      ]
+    },
+    "brochureTitle": {
+      "type": "string",
+      "description": "The brochure being described, as it is named in the library"
+    },
+    "blurb": {
+      "type": "string",
+      "description": "One line above the list, in NLW's own words"
+    },
+    "sections": {
+      "type": "array",
+      "description": "The brochure's standing sections, in order",
+      "items": {
+        "type": "object",
+        "properties": {
+          "section": {
+            "type": "string",
+            "description": "The part it belongs to, e.g. 'Preparation'"
+          },
+          "title": {
+            "type": "string",
+            "description": "The section's own heading"
+          }
+        }
+      }
+    },
+    "pages": {
+      "type": "number",
+      "description": "Length of the brochure, shown as a note"
+    },
+    "isPublished": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "pathway"
+  ],
+  "rls": {
+    "create": { "user_condition": { "role": "admin" } },
+    "read": {
+      "$or": [
+        { "data.isPublished": true },
+        { "user_condition": { "role": "admin" } }
+      ]
+    },
+    "update": { "user_condition": { "role": "admin" } },
+    "delete": { "user_condition": { "role": "admin" } }
+  }
+}

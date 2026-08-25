@@ -3,12 +3,14 @@ import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import IssueAdmin from '@/components/admin/IssueAdmin';
 import LibraryAdmin from '@/components/admin/LibraryAdmin';
+import OutlineAdmin from '@/components/admin/OutlineAdmin';
 import PeopleAdmin from '@/components/admin/PeopleAdmin';
 import logo from '@/assets/nlw-logo.png';
 
 const TABS = [
   { id: 'issues', label: 'The Four Turnings' },
   { id: 'library', label: 'Resource library' },
+  { id: 'outlines', label: 'Brochure outlines' },
   { id: 'people', label: 'People' },
 ];
 
@@ -79,6 +81,7 @@ export default function Admin() {
       <main className="nlw-admin-main">
         {tab === 'issues' && <IssueAdmin />}
         {tab === 'library' && <LibraryAdmin />}
+        {tab === 'outlines' && <OutlineAdmin />}
         {tab === 'people' && <PeopleAdmin />}
       </main>
     </div>
