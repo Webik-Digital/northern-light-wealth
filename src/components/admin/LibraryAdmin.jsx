@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
+import { coverFromFile, coverFromUrl, isPdf } from '@/lib/pdf-cover';
 
 // Everything in the library is for clients. The Resource entity refuses a read
 // to anyone not signed in, so there is no such thing as an open item here and
@@ -10,6 +11,7 @@ const blank = () => ({
   category: '',
   description: '',
   fileOrUrl: '',
+  thumbnailUrl: '',
   order: 0,
 });
 
@@ -23,6 +25,7 @@ export default function LibraryAdmin() {
   const [uploading, setUploading] = useState(false);
   const [msg, setMsg] = useState('');
   const [err, setErr] = useState('');
+  const [coverPreview, setCoverPreview] = useState('');
 
   const load = () => {
     setLoading(true);
@@ -36,6 +39,22 @@ export default function LibraryAdmin() {
 
   const set = (k, v) => setDraft((d) => ({ ...d, [k]: v }));
 
+  // Covers live in private storage like everything else here, so showing one
+  // back to the admin needs a signed link of its own.
+  const coverUri = draft ? draft.thumbnailUrl : '';
+  useEffect(() => {
+    let active = true;
+    if (!coverUri) { setCoverPreview(''); return undefined; }
+    if (isLink(coverUri)) { setCoverPreview(coverUri); return undefined; }
+    base44.integrations.Core.CreateFileSignedUrl({ file_uri: coverUri })
+      .then(({ signed_url }) => { if (active) setCoverPreview(signed_url); })
+      .catch(() => { if (active) setCoverPreview(''); });
+    return () => { active = false; };
+  }, [coverUri]);
+
+  // Picking a document does both jobs: the file goes up, and if it is a PDF its
+  // first page becomes the card's cover. A cover that fails to draw is not worth
+  // failing the upload over, so it is reported and the document still saves.
   const onFile = async (e) => {
     const file = e.target.files && e.target.files[0];
     if (!file) return;
@@ -43,12 +62,66 @@ export default function LibraryAdmin() {
     try {
       const { file_uri } = await base44.integrations.Core.UploadPrivateFile({ file });
       set('fileOrUrl', file_uri);
-      setMsg(`Uploaded ${file.name}.`);
+
+      if (isPdf(file.name)) {
+        setMsg(`Uploaded ${file.name}. Drawing the cover…`);
+        try {
+          const cover = await coverFromFile(file);
+          const up = await base44.integrations.Core.UploadPrivateFile({ file: cover });
+          set('thumbnailUrl', up.file_uri);
+          setMsg(`Uploaded ${file.name}, and took the cover from its first page.`);
+        } catch (e3) {
+          setMsg(`Uploaded ${file.name}. The cover could not be drawn from it — add one below.`);
+        }
+      } else {
+        setMsg(`Uploaded ${file.name}.`);
+      }
     } catch (e2) {
       setErr('The upload failed. Please try again.');
     } finally {
       setUploading(false);
       e.target.value = '';
+    }
+  };
+
+  // A cover picked by hand: for a link, a scan, or when the first page is not
+  // the face the item should show.
+  const onCover = async (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    setUploading(true); setErr(''); setMsg('');
+    try {
+      const source = isPdf(file.name) ? await coverFromFile(file) : file;
+      const { file_uri } = await base44.integrations.Core.UploadPrivateFile({ file: source });
+      set('thumbnailUrl', file_uri);
+      setMsg('Cover set.');
+    } catch (e2) {
+      setErr('That cover could not be used. An image or a PDF works best.');
+    } finally {
+      setUploading(false);
+      e.target.value = '';
+    }
+  };
+
+  // For items added before covers existed. Reading a stored file back is the
+  // storage host's call, so this is offered rather than promised.
+  const coverFromStored = async () => {
+    if (!draft.fileOrUrl) return;
+    setUploading(true); setErr(''); setMsg('');
+    try {
+      let url = draft.fileOrUrl;
+      if (!isLink(url)) {
+        const { signed_url } = await base44.integrations.Core.CreateFileSignedUrl({ file_uri: draft.fileOrUrl });
+        url = signed_url;
+      }
+      const cover = await coverFromUrl(url, draft.title || 'cover');
+      const { file_uri } = await base44.integrations.Core.UploadPrivateFile({ file: cover });
+      set('thumbnailUrl', file_uri);
+      setMsg('Took the cover from the first page.');
+    } catch (e2) {
+      setErr('The stored file could not be read back. Pick the PDF again above and the cover is made for you.');
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -61,6 +134,7 @@ export default function LibraryAdmin() {
       category: draft.category.trim(),
       description: draft.description.trim(),
       fileOrUrl: draft.fileOrUrl.trim(),
+      thumbnailUrl: (draft.thumbnailUrl || '').trim(),
       isGated: true,
       order: Number(draft.order) || 0,
     };
@@ -174,6 +248,37 @@ export default function LibraryAdmin() {
                     : 'Stored file. Clients get a signed link when they open it.'}
                 </p>
               )}
+            </div>
+
+            <div className="nlw-admin-file">
+              <p className="nlw-admin-muted">
+                Cover. The card shows this beside the title. A PDF uploaded above brings
+                its own first page; set one here to use a different face, or for an item
+                that is a link.
+              </p>
+
+              <div className="nlw-admin-cover">
+                <span className="shot">
+                  {coverPreview ? (
+                    <img src={coverPreview} alt="" />
+                  ) : (
+                    <em>No cover yet</em>
+                  )}
+                </span>
+                <span className="acts">
+                  <input type="file" accept="image/*,application/pdf" onChange={onCover} disabled={uploading} />
+                  {draft.fileOrUrl && (
+                    <button type="button" className="nlw-admin-ghost" disabled={uploading} onClick={coverFromStored}>
+                      Take it from the document
+                    </button>
+                  )}
+                  {draft.thumbnailUrl && (
+                    <button type="button" className="nlw-admin-ghost" disabled={uploading} onClick={() => set('thumbnailUrl', '')}>
+                      Remove cover
+                    </button>
+                  )}
+                </span>
+              </div>
             </div>
 
             {err && <p className="nlw-admin-err">{err}</p>}

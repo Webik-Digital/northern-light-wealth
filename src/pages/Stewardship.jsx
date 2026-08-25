@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import SeasonalTree from '@/components/SeasonalTree';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';

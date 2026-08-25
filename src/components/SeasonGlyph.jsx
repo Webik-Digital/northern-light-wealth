@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import spring from '@/assets/seasons/spring.png';
 import summer from '@/assets/seasons/summer.png';
 import autumn from '@/assets/seasons/autumn.png';

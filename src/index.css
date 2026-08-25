@@ -834,10 +834,45 @@ textarea.nlw-input { min-height: 140px; resize: vertical; }
   align-items: flex-start; }
 .nlw-lib.is-plain li:hover { transform: none; box-shadow: none; }
 
+/* A library item shows its own cover. The document is the thing being offered,
+   so the card leads with what it actually looks like: the first page, held at
+   a page's proportions and standing slightly off the card like a sheet set
+   down on it. The words keep their column to the right of it. */
+.nlw-lib.has-covers li { gap: clamp(16px, 1.6vw, 22px); align-items: stretch; }
+/* the words take the rest of the card, so every description wraps at the same
+   measure instead of at whatever width its own text happened to need */
+.nlw-lib.has-covers li > div { flex: 1 1 auto; min-width: 0; }
+.nlw-cover { flex: none; width: clamp(74px, 8vw, 104px); align-self: flex-start; }
+.nlw-cover img, .nlw-cover .sheet { display: block; width: 100%; aspect-ratio: 1 / 1.294;
+  border-radius: 3px; border: .5px solid var(--rule);
+  box-shadow: 0 10px 22px -16px rgba(22, 15, 26, .5); }
+.nlw-cover img { height: 100%; object-fit: cover; object-position: 50% 0; background: #FFF; }
+/* the stand-in sheet: paper, a rule near the top, and the title's initial */
+.nlw-cover .sheet { position: relative; background: linear-gradient(160deg, #FFF 0%, #F4F2EF 100%);
+  display: grid; place-items: center; }
+.nlw-cover .sheet::before { content: ''; position: absolute; left: 16%; right: 16%; top: 17%;
+  border-top: .5px solid var(--rule); }
+.nlw-cover .ltr { font-family: 'Lexend Deca', sans-serif; font-weight: 400;
+  font-size: clamp(22px, 2.4vw, 30px); color: var(--plum); opacity: .34; }
+.nlw-lib.has-covers li:hover .nlw-cover img { transform: none; }
+
 /* one card per row once two would be too narrow to hold a band or a sentence */
 @media (max-width: 900px) {
   .nlw-lib { grid-template-columns: 1fr; }
 }
+
+/* the cover holds its proportions on a phone; only the words reflow */
+@media (max-width: 560px) {
+  .nlw-cover { width: 68px; }
+}
+
+/* the cover control in the admin, shown at the shape the card will use */
+.nlw-admin-cover { display: flex; gap: 16px; align-items: flex-start; margin-top: 12px; }
+.nlw-admin-cover .shot { flex: none; width: 88px; aspect-ratio: 1 / 1.294; border-radius: 3px;
+  border: .5px solid var(--rule); background: #FBFAF9; overflow: hidden; display: grid; place-items: center; }
+.nlw-admin-cover .shot img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; }
+.nlw-admin-cover .shot em { font-style: normal; font-size: 11px; color: var(--muted); text-align: center; padding: 0 8px; }
+.nlw-admin-cover .acts { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
 .nlw-helpline { margin-top: 44px; font-size: 15px; color: var(--ink-soft); }
 .nlw-helpline .nlw-link-more { margin-top: 12px; }
 

@@ -7,6 +7,7 @@ import Reveal from '@/components/Reveal';
 import SubscribePanel from '@/components/SubscribePanel';
 import SeasonGlyph from '@/components/SeasonGlyph';
 import LockIcon from '@/components/LockIcon';
+import ResourceCover from '@/components/ResourceCover';
 import { base44 } from '@/api/base44Client';
 import { ISSUES } from '@/data/turnings';
 import ResourceSearch from '@/components/ResourceSearch';
@@ -36,15 +37,22 @@ export default function Resources() {
       const rows = await base44.entities.Resource.filter({}, 'order', 50);
       // items uploaded to private storage are stored as a file_uri, not a URL,
       // so they need a signed link before a client can open them
+      const sign = async (uri) => {
+        if (!uri) return '';
+        if (/^https?:\/\//i.test(uri)) return uri;
+        try {
+          const { signed_url } = await base44.integrations.Core.CreateFileSignedUrl({ file_uri: uri });
+          return signed_url;
+        } catch (e) {
+          return '';
+        }
+      };
       const resolved = await Promise.all(
         (rows || []).map(async (r) => {
-          if (!r.fileOrUrl || /^https?:\/\//i.test(r.fileOrUrl)) return r;
-          try {
-            const { signed_url } = await base44.integrations.Core.CreateFileSignedUrl({ file_uri: r.fileOrUrl });
-            return { ...r, href: signed_url };
-          } catch (e) {
-            return { ...r, href: '' };
-          }
+          // the document and its cover are both private files, so each needs
+          // its own signed link before a client can see it
+          const [href, cover] = await Promise.all([sign(r.fileOrUrl), sign(r.thumbnailUrl)]);
+          return { ...r, href, cover };
         })
       );
       if (active) setItems(resolved);
@@ -191,9 +199,10 @@ export default function Resources() {
                 ))}
               </ul>
             ) : (
-              <ul className="nlw-lib is-plain">
+              <ul className="nlw-lib has-covers">
                 {items.map((r) => (
                   <li key={r.id}>
+                    <ResourceCover src={r.cover} title={r.title} />
                     <div>
                       {r.category && <span className="cat">{r.category}</span>}
                       <h3>{r.title}</h3>

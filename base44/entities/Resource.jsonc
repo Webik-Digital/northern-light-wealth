@@ -20,6 +20,10 @@
     "fileOrUrl": {
       "type": "string"
     },
+    "thumbnailUrl": {
+      "type": "string",
+      "description": "Cover image for the card, usually the first page of the document"
+    },
     "isGated": {
       "type": "boolean",
       "default": true
