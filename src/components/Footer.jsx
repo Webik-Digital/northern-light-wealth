@@ -1,6 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import logoReverse from '@/assets/nlw-logo-reverse.png';
+// The brand's own horizontal reverse lockup. It carries NLW's two near-white
+// tones rather than the flat white the raster had, so the wordmark keeps the
+// separation it is drawn with against the plum.
+import logoReverse from '@/assets/nlw-logo-horizontal-reverse.svg';
 
 export default function Footer() {
   return (
