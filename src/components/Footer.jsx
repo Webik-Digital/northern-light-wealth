@@ -12,7 +12,16 @@ export default function Footer() {
         <div className="nlw-foot-mark">
           <img src={logoReverse} alt="Northern Light Wealth" />
           <p className="nlw-foot-tag">Seasonal perspective. Daily discipline.</p>
-          <p className="nlw-foot-addr">Street address<br />City, Province<br />hello@placeholder.ca</p>
+          {/* Each line is its own row rather than <br>-separated: on a phone the
+              number and the address are tapped, and a link sitting inside a
+              wrapped paragraph cannot be given a target without its hit area
+              running into the line above it. */}
+          <address className="nlw-foot-addr">
+            <span>#310, 5010 Richard Road SW</span>
+            <span>Calgary, AB&nbsp;&nbsp;T3E 6L1</span>
+            <a href="tel:+14039914331">403-991-4331</a>
+            <a href="mailto:info@nlwealth.ca">info@nlwealth.ca</a>
+          </address>
         </div>
         <div className="nlw-foot-col">
           <h4>Firm</h4>

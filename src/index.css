@@ -224,7 +224,12 @@ button { font-family: inherit; }
   grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 30px 40px; align-items: start; }
 .nlw-foot-mark img { height: 23px; width: auto; display: block; }
 .nlw-foot-tag { font-family: 'Lexend Deca', sans-serif; font-size: 14.5px; color: #B9A9C0; margin-top: 12px; line-height: 1.5; max-width: 26ch; }
-.nlw-foot-addr { font-size: 13px; color: #9C90A2; margin-top: 14px; line-height: 1.65; }
+.nlw-foot-addr { font-size: 13px; color: #9C90A2; margin-top: 14px; line-height: 1.65; font-style: normal; }
+/* the phone and the email are the two things a visitor comes to the footer for,
+   so they are lit slightly against the rest of the block rather than blending */
+.nlw-foot-addr span, .nlw-foot-addr a { display: block; }
+.nlw-foot-addr a { color: #B9A9C0; width: fit-content; transition: color .35s var(--ease); }
+.nlw-foot-addr a:hover { color: #F3EEF4; }
 .nlw-foot-col h4 { font-size: 11px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: #8F8296; margin-bottom: 12px; }
 .nlw-foot-col a { display: block; font-size: 13.5px; color: #D9D2DC; margin-bottom: 7px; transition: color .3s; }
 .nlw-foot-col a:hover { color: #fff; }
@@ -956,6 +961,8 @@ textarea.nlw-input { min-height: 140px; resize: vertical; }
     min-width: 44px; min-height: 44px; padding: 0 10px; margin-right: -10px; }
   .nlw-portal { min-height: 44px; padding: 9px 13px; }
   .nlw-btn, .nlw-filter { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
+  /* the number and the email are what a footer is opened for on a phone */
+  .nlw-foot-addr a { padding: 7px 0; }
 
   /* The dots keep their 8px mark and hand the hit area to the button around it.
      The control floats over the page, so only the dots take taps: the season

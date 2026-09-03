@@ -105,12 +105,19 @@ export default function Contact() {
                 <Reveal className="nlw-direct">
                   <div className="item">
                     <p className="k">Write to us</p>
-                    <p className="v"><a href="mailto:hello@placeholder.ca">hello@placeholder.ca</a></p>
+                    <p className="v"><a href="mailto:info@nlwealth.ca">info@nlwealth.ca</a></p>
                   </div>
                   <div className="item">
                     <p className="k">Call</p>
-                    <p className="v">+1 000 000 0000</p>
-                    <p className="sub">Weekdays, local hours.</p>
+                    <p className="v"><a href="tel:+14039914331">403-991-4331</a></p>
+                    <p className="sub">Weekdays, Mountain Time.</p>
+                  </div>
+                  <div className="item">
+                    <p className="k">Find us</p>
+                    <address className="v" style={{ fontStyle: 'normal' }}>
+                      #310, 5010 Richard Road SW<br />
+                      Calgary, AB&nbsp;&nbsp;T3E 6L1
+                    </address>
                   </div>
                   <div className="item">
                     <p className="k">Book a time</p>
@@ -122,7 +129,7 @@ export default function Contact() {
                     </p>
                   </div>
                 </Reveal>
-                <Reveal as="p" className="nlw-note">Contact details and the booking link are placeholders, to be provided by NLW.</Reveal>
+                <Reveal as="p" className="nlw-note">The booking link is still to be provided by NLW.</Reveal>
               </div>
             </div>
           </div>
