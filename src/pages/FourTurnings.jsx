@@ -9,7 +9,7 @@ import SeasonBand from '@/components/SeasonBand';
 import { base44 } from '@/api/base44Client';
 import { issuesFrom } from '@/data/turnings';
 
-const LABEL = { spring: 'Spring', summer: 'Summer', fall: 'Fall', winter: 'Winter' };
+const LABEL = { spring: 'Spring', summer: 'Summer', fall: 'Autumn', winter: 'Winter' };
 const ACCENT = { spring: '#5E7C5A', summer: '#3E6B57', fall: '#9A6B3F', winter: '#3C6E80' };
 const FILTERS = ['all', 'spring', 'summer', 'fall', 'winter'];
 

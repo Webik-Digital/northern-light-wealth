@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 
 const SEASONS = ['spring', 'summer', 'fall', 'winter'];
-const LABEL = { spring: 'Spring', summer: 'Summer', fall: 'Fall', winter: 'Winter' };
+const LABEL = { spring: 'Spring', summer: 'Summer', fall: 'Autumn', winter: 'Winter' };
 const MARKER = { spring: 'Spring Equinox', summer: 'Summer Solstice', fall: 'Autumn Equinox', winter: 'Winter Solstice' };
 
 const slugify = (s) =>

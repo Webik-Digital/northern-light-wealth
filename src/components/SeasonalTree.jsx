@@ -9,7 +9,7 @@ const WASH = {
   fall: 'rgba(154,107,63,.17)',
   winter: 'rgba(60,110,128,.16)',
 };
-const LABEL = { spring: 'Spring', summer: 'Summer', fall: 'Fall', winter: 'Winter' };
+const LABEL = { spring: 'Spring', summer: 'Summer', fall: 'Autumn', winter: 'Winter' };
 
 const TREES = {
   winter: 'https://media.base44.com/images/public/6a70610b0eb9bb2f777d7afd/e410f210c_tree-winter.jpg',
@@ -31,7 +31,10 @@ function currentSeason() {
 //                through the year, with the manual season control.
 // mode 'hero'  — inner pages: the tree sits behind the page hero only and then
 //                dissolves into canvas, held at the true current season.
-export default function SeasonalTree({ mode = 'page' }) {
+// `fixed` holds one season and stops the scroll cycling. A pathway page is
+// about one season, so the tree, the wash and the glyph should agree with its
+// painting rather than washing through the whole year underneath it.
+export default function SeasonalTree({ mode = 'page', fixed = null }) {
   const heroOnly = mode === 'hero';
   const reduce = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const [season, setSeason] = useState(() => currentSeason());
@@ -76,6 +79,11 @@ export default function SeasonalTree({ mode = 'page' }) {
 
   // Mount once: paint the true current season, then wire scroll listener.
   useEffect(() => {
+    if (fixed) {
+      // held: no listener at all, so nothing can move it off this season
+      paint(fixed);
+      return undefined;
+    }
     paint(currentSeason());
 
     const onScroll = () => {
@@ -92,7 +100,7 @@ export default function SeasonalTree({ mode = 'page' }) {
     scrollSeason();
     return () => window.removeEventListener('scroll', onScroll);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [reduce, heroOnly]);
+  }, [reduce, heroOnly, fixed]);
 
   const onDot = (s) => {
     manual.current = s;

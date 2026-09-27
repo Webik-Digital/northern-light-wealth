@@ -1,17 +1,21 @@
 // Advisors, taken from nlwealth.ca/about-us and the individual bio pages.
 // Bios are NLW's own words, reproduced verbatim.
 //
-// Photos are still served from the existing WordPress site. Before launch they
-// should be re-uploaded to this app's media so the new site does not depend on
-// the old one staying up.
-const PHOTO = 'https://nlwealth.ca/wp-content/uploads/';
+// Photos are held in this repository. They used to be hotlinked from the
+// WordPress site at nlwealth.ca, which would have broken both portraits the
+// moment that domain was pointed here.
+//
+// `linkedin` is optional: the link only appears once a URL is supplied.
+import devanPhoto from '@/assets/team/devan.jpg';
+import garthPhoto from '@/assets/team/garth.jpg';
 
 export const TEAM = [
   {
     name: 'Devan Legare',
     role: 'Co-Founder',
     designations: ['CPA', 'CMA', 'CIM', 'CFP (CAN)'],
-    photo: `${PHOTO}2025/02/devan.jpg`,
+    photo: devanPhoto,
+    linkedin: '',
     bio: [
       'Devan is the co-founder of Northern Light Wealth and works with affluent families and business owners to enhance and protect their wealth.',
       'Devan was chosen as the recipient of the "Top 40 under 40" award by the Investment Industry Association of Canada (IIAC) in 2019 at the age of 34. He was also selected as a member of the 2019 "Top 20 Under 35" Financial Advisors in Canada by Wealth Professional Magazine. He received the "Early Achievement Award" from CPA Alberta in 2020.',
@@ -23,7 +27,8 @@ export const TEAM = [
     name: 'Garth D McIntosh',
     role: 'Co-Founder',
     designations: ['CIM'],
-    photo: `${PHOTO}2025/03/garth.jpg`,
+    photo: garthPhoto,
+    linkedin: '',
     bio: [
       'With twenty-seven years of experience, Garth is a second-generation Investment Professional known for his expertise and innovative perspectives. As co-founder of Northern Light Wealth, Garth works closely with affluent families and business owners to strategically enhance and protect their wealth.',
       'Garth’s career began in 1998 under the mentorship of his father at Merrill Lynch Canada. After the acquisition by CIBC Wood Gundy, he graduated top of his national rookie class. His work with both private client families and institutions has given him a comprehensive understanding of Canada’s evolving investment landscape, enabling him to design thoughtful, adaptive strategies.',

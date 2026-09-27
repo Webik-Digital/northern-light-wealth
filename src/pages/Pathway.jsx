@@ -7,10 +7,8 @@ import Reveal from '@/components/Reveal';
 import SeasonGlyph from '@/components/SeasonGlyph';
 import ClosingCTA from '@/components/ClosingCTA';
 import PageNotFound from '@/lib/PageNotFound';
-import { getPathway } from '@/data/pathways';
+import { getPathway, PATHWAY_SEASON } from '@/data/pathways';
 import { base44 } from '@/api/base44Client';
-import TestimonialScroller from '@/components/TestimonialScroller';
-import { testimonialsFor } from '@/data/testimonials';
 
 export default function Pathway({ id }) {
   const p = getPathway(id);
@@ -33,17 +31,15 @@ export default function Pathway({ id }) {
 
   if (!p) return <PageNotFound />;
 
-  // this pathway's quotes first, topped up to a full row
-  const quotes = testimonialsFor(p.name);
 
   return (
     <>
-      <SeasonalTree mode="hero" />
+      <SeasonalTree mode="hero" fixed={PATHWAY_SEASON[id]} />
       <Header />
 
       <main className="nlw-main nlw-inner">
         <section className="nlw-page-hero">
-          <SeasonGlyph variant="watermark" />
+          <SeasonGlyph variant="watermark" season={PATHWAY_SEASON[id]} />
           <div className="nlw-wrap">
             <Reveal as="p" className="nlw-eyebrow">{p.tag}</Reveal>
             <Reveal as="h1" className="nlw-h1">{p.name}</Reveal>
@@ -135,13 +131,6 @@ export default function Pathway({ id }) {
             </div>
           </section>
         )}
-
-        {/* Testimonials — the homepage treatment, narrowed to this pathway */}
-        <TestimonialScroller
-          items={quotes}
-          eyebrow="In their words"
-          heading="Clients who came through this door."
-        />
 
         {/* Closing */}
         <ClosingCTA heading="Wherever your season begins, a conversation is the same first step." tight />

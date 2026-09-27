@@ -2,7 +2,7 @@ import React from 'react';
 import { Image } from '@/components/ui/image';
 import Reveal from './Reveal';
 
-import winterScene from '@/assets/seasons/winter-scene.jpg';
+import springScene from '@/assets/seasons/spring-scene.jpg';
 import autumnScene from '@/assets/seasons/autumn-scene.jpg';
 import summerScene from '@/assets/seasons/summer-scene.jpg';
 
@@ -10,8 +10,8 @@ import summerScene from '@/assets/seasons/summer-scene.jpg';
 // winter, transition as autumn, and giving as the harvest. These replace the
 // stock photographs, so nothing here loads from a third party.
 const PHOTOS = {
-  estate: winterScene,
-  sale: autumnScene,
+  estate: autumnScene,
+  sale: springScene,
   harvest: summerScene,
 };
 

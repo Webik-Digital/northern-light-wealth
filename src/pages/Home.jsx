@@ -6,13 +6,11 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Reveal from '@/components/Reveal';
 import StewardshipCard from '@/components/StewardshipCard';
-import TestimonialScroller from '@/components/TestimonialScroller';
 import ClosingCTA from '@/components/ClosingCTA';
 import { AWARDS, PRESS } from '@/data/recognition';
 import { issuesFrom } from '@/data/turnings';
-import { TESTIMONIALS } from '@/data/testimonials';
 
-const SEASON_LABEL = { spring: 'Spring', summer: 'Summer', fall: 'Fall', winter: 'Winter' };
+const SEASON_LABEL = { spring: 'Spring', summer: 'Summer', fall: 'Autumn', winter: 'Winter' };
 
 function currentSeason() {
   const m = new Date().getMonth();
@@ -125,10 +123,6 @@ export default function Home() {
             <Reveal as="p" className="meta">Published at each solstice and equinox, for clients and invited guests.</Reveal>
           </div>
         </section>
-
-        {/* 6. Client testimonials */}
-        <TestimonialScroller items={TESTIMONIALS} />
-
         {/* 7. Recognition and press */}
         <section className="nlw-section nlw-section-tight">
           <div className="nlw-wrap wide">

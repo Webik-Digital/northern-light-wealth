@@ -2,14 +2,23 @@
 // Descriptions are NLW's approved copy. `evidence` and `testimonials` are
 // deliberately empty: references and client quotes must come from NLW, they
 // are not written here.
-import winterScene from '@/assets/seasons/winter-scene.jpg';
+import springScene from '@/assets/seasons/spring-scene.jpg';
 import autumnScene from '@/assets/seasons/autumn-scene.jpg';
 import summerScene from '@/assets/seasons/summer-scene.jpg';
 
+// NLW's placement: continuity reads as autumn, transition as spring, giving as
+// the harvest. Each pathway page is held to this season throughout — the tree,
+// the wash and the watermark follow the painting.
 const PHOTO = {
-  estate: winterScene,
-  sale: autumnScene,
+  estate: autumnScene,
+  sale: springScene,
   harvest: summerScene,
+};
+
+export const PATHWAY_SEASON = {
+  'estate-ready': 'fall',
+  'sale-ready': 'spring',
+  'harvest-share': 'summer',
 };
 
 export const PATHWAYS = [

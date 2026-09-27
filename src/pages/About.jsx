@@ -132,6 +132,13 @@ export default function About() {
                           {p.designations.map((d) => <li key={d}>{d}</li>)}
                         </ul>
                       )}
+                      {/* shown only once NLW supplies the URL */}
+                      {p.linkedin && (
+                        <a className="nlw-advisor-link" href={p.linkedin}
+                           target="_blank" rel="noreferrer noopener">
+                          LinkedIn <span className="arw">&rarr;</span>
+                        </a>
+                      )}
                     </div>
                   </div>
                   <div className="body">
