@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { listAllIssues, saveIssue, deleteIssue, uploadTo, storagePath } from '@/api/admin';
 
 const SEASONS = ['spring', 'summer', 'fall', 'winter'];
 const LABEL = { spring: 'Spring', summer: 'Summer', fall: 'Autumn', winter: 'Winter' };
@@ -16,10 +16,10 @@ const blank = () => ({
   slug: '',
   dek: '',
   body: '',
-  pdfUrl: '',
-  webUrl: '',
-  isFeatured: false,
-  publishedAt: null,
+  pdf_path: '',
+  html_path: '',
+  is_featured: false,
+  published_at: null,
 });
 
 export default function IssueAdmin() {
@@ -33,7 +33,7 @@ export default function IssueAdmin() {
 
   const load = () => {
     setLoading(true);
-    base44.entities.Turning.filter({}, '-publishedAt', 100)
+    listAllIssues()
       .then((r) => setRows(r || []))
       .catch(() => setErr('Could not load the issues.'))
       .finally(() => setLoading(false));
@@ -49,8 +49,10 @@ export default function IssueAdmin() {
     if (!file) return;
     setUploading(field); setErr(''); setMsg('');
     try {
-      const { file_url } = await base44.integrations.Core.UploadFile({ file });
-      set(field, file_url);
+      // the letter is public, so the document goes in the public bucket and
+      // keeps a permanent address rather than an expiring one
+      const path = await uploadTo('issues', storagePath('', file.name), file);
+      set(field, path);
       setMsg(`Uploaded ${file.name}.`);
     } catch (e2) {
       setErr(`Could not upload ${file.name}. ${accept} files only, and check the size.`);
@@ -63,7 +65,7 @@ export default function IssueAdmin() {
   const validate = () => {
     if (!draft.title.trim()) return 'Give the issue a title, for example "The Season of Connection".';
     if (!draft.year || String(draft.year).length !== 4) return 'Give the year as four digits.';
-    if (!draft.pdfUrl.trim() && !draft.webUrl.trim()) return 'An issue needs a PDF or a web version before it can be published.';
+    if (!(draft.pdf_path || '').trim()) return 'An issue needs its PDF before it can be published.';
     return '';
   };
 
@@ -80,28 +82,20 @@ export default function IssueAdmin() {
       slug: (draft.slug || slugify(`${draft.season}-${draft.year}`)).trim(),
       dek: draft.dek.trim(),
       body: (draft.body || '').trim(),
-      pdfUrl: draft.pdfUrl.trim(),
-      webUrl: draft.webUrl.trim(),
-      isFeatured: !!draft.isFeatured,
-      publishedAt: publish === true
-        ? (draft.publishedAt || new Date().toISOString())
+      pdf_path: (draft.pdf_path || '').trim(),
+      html_path: (draft.html_path || '').trim(),
+      is_featured: !!draft.is_featured,
+      published_at: publish === true
+        ? (draft.published_at || new Date().toISOString())
         : publish === false
           ? null
-          : draft.publishedAt || null,
+          : draft.published_at || null,
     };
 
     try {
-      // only one issue is the current one
-      if (payload.isFeatured) {
-        const others = rows.filter((r) => r.isFeatured && r.id !== draft.id);
-        for (const o of others) await base44.entities.Turning.update(o.id, { isFeatured: false });
-      }
-      if (draft.id) {
-        await base44.entities.Turning.update(draft.id, payload);
-      } else {
-        const created = await base44.entities.Turning.create(payload);
-        setDraft({ ...created });
-      }
+      // saveIssue clears is_featured on the others in the same breath
+      const saved = await saveIssue({ ...draft, ...payload });
+      setDraft({ ...saved });
       setMsg(publish === true ? 'Published.' : publish === false ? 'Moved back to draft.' : 'Saved.');
       load();
     } catch (e) {
@@ -115,7 +109,7 @@ export default function IssueAdmin() {
     if (!window.confirm(`Remove "${row.title}" (${LABEL[row.season]} ${row.year})? This cannot be undone.`)) return;
     setBusy(true);
     try {
-      await base44.entities.Turning.delete(row.id);
+      await deleteIssue(row.id);
       if (draft && draft.id === row.id) setDraft(null);
       load();
     } catch (e) {
@@ -150,9 +144,9 @@ export default function IssueAdmin() {
                   <span className="t">{r.title}</span>
                   <span className="m">
                     {LABEL[r.season]} {r.year}
-                    {r.isFeatured && <em className="flag">Current issue</em>}
-                    <em className={`state ${r.publishedAt ? 'live' : 'draft'}`}>
-                      {r.publishedAt ? 'Published' : 'Draft'}
+                    {r.is_featured && <em className="flag">Current issue</em>}
+                    <em className={`state ${r.published_at ? 'live' : 'draft'}`}>
+                      {r.published_at ? 'Published' : 'Draft'}
                     </em>
                   </span>
                 </button>
@@ -203,25 +197,28 @@ export default function IssueAdmin() {
             {/* the issue itself */}
             <div className="nlw-admin-file">
               <p className="nlw-admin-muted">
-                The issue as published. The PDF is what most readers will open; add a web version
-                too if there is one.
+                The issue as published. Upload the PDF: it goes to public storage, so the
+                address is permanent and anyone may open it.
               </p>
 
               <label className="nlw-label" style={{ marginTop: 14 }}>
                 <span>PDF</span>
-                <input type="file" accept="application/pdf" onChange={onFile('pdfUrl', 'PDF')} disabled={!!uploading} />
+                <input type="file" accept="application/pdf" onChange={onFile('pdf_path', 'PDF')} disabled={!!uploading} />
               </label>
-              {uploading === 'pdfUrl' && <p className="nlw-admin-muted">Uploading the PDF…</p>}
-              <input className="nlw-input" value={draft.pdfUrl} placeholder="or paste a link to the PDF"
-                onChange={(e) => set('pdfUrl', e.target.value)} style={{ marginTop: 8 }} />
+              {uploading === 'pdf_path' && <p className="nlw-admin-muted">Uploading the PDF…</p>}
+              <input className="nlw-input" value={draft.pdf_path} placeholder="or paste a link to the PDF"
+                onChange={(e) => set('pdf_path', e.target.value)} style={{ marginTop: 8 }} />
 
+              {/* No HTML upload. Storage serves any .html as text/plain with nosniff —
+                  it will not host arbitrary HTML, which is how buckets become phishing
+                  pages — so a reader following such a link is shown source code. A web
+                  version hosted somewhere that does serve it can still be linked. */}
               <label className="nlw-label" style={{ marginTop: 18 }}>
-                <span>Web version (optional)</span>
-                <input type="file" accept="text/html,.html" onChange={onFile('webUrl', 'HTML')} disabled={!!uploading} />
+                <span>Web version elsewhere (optional)</span>
+                <input className="nlw-input" value={draft.html_path}
+                  placeholder="https://… a page hosted somewhere that serves HTML"
+                  onChange={(e) => set('html_path', e.target.value)} />
               </label>
-              {uploading === 'webUrl' && <p className="nlw-admin-muted">Uploading the web version…</p>}
-              <input className="nlw-input" value={draft.webUrl} placeholder="or paste a link to the web version"
-                onChange={(e) => set('webUrl', e.target.value)} style={{ marginTop: 8 }} />
             </div>
 
             <label className="nlw-label">
@@ -231,7 +228,7 @@ export default function IssueAdmin() {
             </label>
 
             <label className="nlw-admin-check">
-              <input type="checkbox" checked={!!draft.isFeatured} onChange={(e) => set('isFeatured', e.target.checked)} />
+              <input type="checkbox" checked={!!draft.is_featured} onChange={(e) => set('is_featured', e.target.checked)} />
               <span>Show as the current issue on the homepage and at the top of The Four Turnings</span>
             </label>
 
@@ -240,12 +237,12 @@ export default function IssueAdmin() {
 
             <div className="nlw-admin-actions">
               <button type="button" className="nlw-btn" disabled={busy || !!uploading} onClick={() => save({ publish: true })}>
-                {draft.publishedAt ? 'Save and keep published' : 'Publish'}
+                {draft.published_at ? 'Save and keep published' : 'Publish'}
               </button>
               <button type="button" className="nlw-admin-ghost" disabled={busy || !!uploading} onClick={() => save({})}>
                 Save draft
               </button>
-              {draft.publishedAt && (
+              {draft.published_at && (
                 <button type="button" className="nlw-admin-ghost" disabled={busy} onClick={() => save({ publish: false })}>
                   Unpublish
                 </button>
@@ -253,8 +250,8 @@ export default function IssueAdmin() {
               <button type="button" className="nlw-admin-ghost" disabled={busy} onClick={() => setDraft(null)}>Close</button>
             </div>
             <p className="nlw-admin-muted">
-              {draft.publishedAt
-                ? `Published ${new Date(draft.publishedAt).toLocaleDateString()}. Visible on the site.`
+              {draft.published_at
+                ? `Published ${new Date(draft.published_at).toLocaleDateString()}. Visible on the site.`
                 : 'Draft. Nothing appears on the site until you publish.'}
             </p>
           </>

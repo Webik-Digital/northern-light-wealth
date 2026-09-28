@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { listAllResources, saveResource, deleteResource, uploadTo, storagePath } from '@/api/admin';
+import { signedUrl } from '@/api/content';
 import { coverFromFile, coverFromUrl, isPdf } from '@/lib/pdf-cover';
 
 // Everything in the library is for clients. The Resource entity refuses a read
@@ -10,9 +11,9 @@ const blank = () => ({
   title: '',
   category: '',
   description: '',
-  fileOrUrl: '',
-  thumbnailUrl: '',
-  order: 0,
+  pdf_path: '',
+  thumbnail_path: '',
+  sort_order: 0,
 });
 
 const isLink = (v) => /^https?:\/\//i.test(v || '');
@@ -29,7 +30,7 @@ export default function LibraryAdmin() {
 
   const load = () => {
     setLoading(true);
-    base44.entities.Resource.filter({}, 'order', 100)
+    listAllResources()
       .then((r) => setRows(r || []))
       .catch(() => setErr('Could not load the library.'))
       .finally(() => setLoading(false));
@@ -41,13 +42,13 @@ export default function LibraryAdmin() {
 
   // Covers live in private storage like everything else here, so showing one
   // back to the admin needs a signed link of its own.
-  const coverUri = draft ? draft.thumbnailUrl : '';
+  const coverUri = draft ? draft.thumbnail_path : '';
   useEffect(() => {
     let active = true;
     if (!coverUri) { setCoverPreview(''); return undefined; }
     if (isLink(coverUri)) { setCoverPreview(coverUri); return undefined; }
-    base44.integrations.Core.CreateFileSignedUrl({ file_uri: coverUri })
-      .then(({ signed_url }) => { if (active) setCoverPreview(signed_url); })
+    signedUrl(coverUri)
+      .then((u) => { if (active) setCoverPreview(u); })
       .catch(() => { if (active) setCoverPreview(''); });
     return () => { active = false; };
   }, [coverUri]);
@@ -60,15 +61,15 @@ export default function LibraryAdmin() {
     if (!file) return;
     setUploading(true); setErr(''); setMsg('');
     try {
-      const { file_uri } = await base44.integrations.Core.UploadPrivateFile({ file });
-      set('fileOrUrl', file_uri);
+      const path = await uploadTo('resources', storagePath('brochures', file.name), file);
+      set('pdf_path', path);
 
       if (isPdf(file.name)) {
         setMsg(`Uploaded ${file.name}. Drawing the cover…`);
         try {
           const cover = await coverFromFile(file);
-          const up = await base44.integrations.Core.UploadPrivateFile({ file: cover });
-          set('thumbnailUrl', up.file_uri);
+          const coverPath = await uploadTo('resources', storagePath('brochures', cover.name), cover);
+          set('thumbnail_path', coverPath);
           setMsg(`Uploaded ${file.name}, and took the cover from its first page.`);
         } catch (e3) {
           setMsg(`Uploaded ${file.name}. The cover could not be drawn from it — add one below.`);
@@ -92,8 +93,8 @@ export default function LibraryAdmin() {
     setUploading(true); setErr(''); setMsg('');
     try {
       const source = isPdf(file.name) ? await coverFromFile(file) : file;
-      const { file_uri } = await base44.integrations.Core.UploadPrivateFile({ file: source });
-      set('thumbnailUrl', file_uri);
+      const path = await uploadTo('resources', storagePath('brochures', source.name), source);
+      set('thumbnail_path', path);
       setMsg('Cover set.');
     } catch (e2) {
       setErr('That cover could not be used. An image or a PDF works best.');
@@ -106,17 +107,16 @@ export default function LibraryAdmin() {
   // For items added before covers existed. Reading a stored file back is the
   // storage host's call, so this is offered rather than promised.
   const coverFromStored = async () => {
-    if (!draft.fileOrUrl) return;
+    if (!draft.pdf_path) return;
     setUploading(true); setErr(''); setMsg('');
     try {
-      let url = draft.fileOrUrl;
+      let url = draft.pdf_path;
       if (!isLink(url)) {
-        const { signed_url } = await base44.integrations.Core.CreateFileSignedUrl({ file_uri: draft.fileOrUrl });
-        url = signed_url;
+        url = await signedUrl(draft.pdf_path);
       }
       const cover = await coverFromUrl(url, draft.title || 'cover');
-      const { file_uri } = await base44.integrations.Core.UploadPrivateFile({ file: cover });
-      set('thumbnailUrl', file_uri);
+      const path = await uploadTo('resources', storagePath('brochures', cover.name), cover);
+      set('thumbnail_path', path);
       setMsg('Took the cover from the first page.');
     } catch (e2) {
       setErr('The stored file could not be read back. Pick the PDF again above and the cover is made for you.');
@@ -133,17 +133,13 @@ export default function LibraryAdmin() {
       title: draft.title.trim(),
       category: draft.category.trim(),
       description: draft.description.trim(),
-      fileOrUrl: draft.fileOrUrl.trim(),
-      thumbnailUrl: (draft.thumbnailUrl || '').trim(),
-      isGated: true,
-      order: Number(draft.order) || 0,
+      pdf_path: draft.pdf_path.trim(),
+      thumbnail_path: (draft.thumbnail_path || '').trim(),
+          sort_order: Number(draft.sort_order) || 0,
     };
     try {
-      if (draft.id) await base44.entities.Resource.update(draft.id, payload);
-      else {
-        const created = await base44.entities.Resource.create(payload);
-        setDraft({ ...created });
-      }
+      const saved = await saveResource({ ...draft, ...payload });
+      setDraft({ ...saved });
       setMsg('Saved.');
       load();
     } catch (e) {
@@ -157,7 +153,7 @@ export default function LibraryAdmin() {
     if (!window.confirm(`Remove "${row.title}" from the library?`)) return;
     setBusy(true);
     try {
-      await base44.entities.Resource.delete(row.id);
+      await deleteResource(row.id);
       if (draft && draft.id === row.id) setDraft(null);
       load();
     } catch (e) {
@@ -217,7 +213,7 @@ export default function LibraryAdmin() {
               </label>
               <label className="nlw-label">
                 <span>Order</span>
-                <input className="nlw-input" type="number" value={draft.order} onChange={(e) => set('order', e.target.value)} />
+                <input className="nlw-input" type="number" value={draft.sort_order} onChange={(e) => set('sort_order', e.target.value)} />
               </label>
             </div>
 
@@ -238,12 +234,12 @@ export default function LibraryAdmin() {
               {uploading && <p className="nlw-admin-muted">Uploading…</p>}
               <label className="nlw-label" style={{ marginTop: 12 }}>
                 <span>File reference or link</span>
-                <input className="nlw-input" value={draft.fileOrUrl} placeholder="https://…"
-                  onChange={(e) => set('fileOrUrl', e.target.value)} />
+                <input className="nlw-input" value={draft.pdf_path} placeholder="https://…"
+                  onChange={(e) => set('pdf_path', e.target.value)} />
               </label>
-              {draft.fileOrUrl && (
+              {draft.pdf_path && (
                 <p className="nlw-admin-muted">
-                  {isLink(draft.fileOrUrl)
+                  {isLink(draft.pdf_path)
                     ? 'External link. Whoever hosts it controls who can open it.'
                     : 'Stored file. Clients get a signed link when they open it.'}
                 </p>
@@ -267,13 +263,13 @@ export default function LibraryAdmin() {
                 </span>
                 <span className="acts">
                   <input type="file" accept="image/*,application/pdf" onChange={onCover} disabled={uploading} />
-                  {draft.fileOrUrl && (
+                  {draft.pdf_path && (
                     <button type="button" className="nlw-admin-ghost" disabled={uploading} onClick={coverFromStored}>
                       Take it from the document
                     </button>
                   )}
-                  {draft.thumbnailUrl && (
-                    <button type="button" className="nlw-admin-ghost" disabled={uploading} onClick={() => set('thumbnailUrl', '')}>
+                  {draft.thumbnail_path && (
+                    <button type="button" className="nlw-admin-ghost" disabled={uploading} onClick={() => set('thumbnail_path', '')}>
                       Remove cover
                     </button>
                   )}
