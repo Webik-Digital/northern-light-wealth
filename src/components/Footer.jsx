@@ -39,12 +39,17 @@ export default function Footer() {
         </div>
         <div className="nlw-foot-col">
           <h4>Legal</h4>
-          <a href="#" onClick={(e) => e.preventDefault()}>Compliance &amp; Privacy</a>
-          <a href="#" onClick={(e) => e.preventDefault()}>Terms</a>
-          <a href="#" onClick={(e) => e.preventDefault()}>Accessibility</a>
+          <Link to="/privacy">Privacy Policy</Link>
+          <Link to="/terms">Terms of Use</Link>
         </div>
       </div>
-      <div className="nlw-foot-base">© 2026 Northern Light Wealth. Compliance and disclosure wording placeholder, to be provided by NLW.</div>
+      {/* Approved standing wording, Disclosure Library 9.4.9. Used exactly: the
+          implementation note is explicit that it is not paraphrased, shortened or
+          merged, and that a Privacy Policy link is required alongside it. */}
+      <div className="nlw-foot-base">
+        Northern Light Wealth Inc. is registered as a Portfolio Manager in Alberta, British
+        Columbia and Saskatchewan. © 2026 Northern Light Wealth Inc. All rights reserved.
+      </div>
     </footer>
   );
 }

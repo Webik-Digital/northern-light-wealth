@@ -875,6 +875,27 @@ textarea.nlw-input { min-height: 140px; resize: vertical; }
   .nlw-cover { width: 68px; }
 }
 
+/* ---------- the legal pages ---------- */
+/* NLW's implementation note lists, among the things that must not happen,
+   "disclosure rendered illegible by small type, poor contrast, cropping or
+   placement". So this is set at reading size and full contrast: the same body
+   type as the rest of the site, not grey small print in a scroll box. */
+.nlw-legal { max-width: 68ch; }
+.nlw-legal-section + .nlw-legal-section { margin-top: 44px; }
+.nlw-legal-section > .nlw-h3 { padding-bottom: 12px; border-bottom: .5px solid var(--rule); }
+.nlw-legal-block { margin-top: 20px; }
+.nlw-legal-block h3 { font-family: 'Lexend Deca', sans-serif; font-weight: 400; font-size: 16px;
+  color: var(--plum); margin-bottom: 8px; }
+.nlw-legal-block p { font-size: 16px; line-height: 1.78; color: var(--ink-soft); }
+.nlw-legal-block p + p { margin-top: 14px; }
+.nlw-legal-list { margin: 12px 0 0; padding-left: 20px; }
+.nlw-legal-list li { font-size: 16px; line-height: 1.78; color: var(--ink-soft); margin-bottom: 8px; }
+.nlw-legal a { color: var(--teal); text-decoration: underline; text-underline-offset: 3px; }
+
+@media (max-width: 560px) {
+  .nlw-legal-block p, .nlw-legal-list li { font-size: 15.5px; }
+}
+
 /* the outline editor: rows of part + heading, ordered and pruned by hand */
 .nlw-admin-sections { margin-top: 4px; }
 .nlw-admin-sections .head { display: flex; align-items: center; justify-content: space-between;
