@@ -1,3 +1,7 @@
+import treeWinter from '@/assets/trees/tree-winter.jpg';
+import treeSpring from '@/assets/trees/tree-spring.jpg';
+import treeSummer from '@/assets/trees/tree-summer.jpg';
+import treeFall from '@/assets/trees/tree-fall.jpg';
 import React, { useEffect, useRef, useState } from 'react';
 import SeasonGlyph from './SeasonGlyph';
 
@@ -11,11 +15,14 @@ const WASH = {
 };
 const LABEL = { spring: 'Spring', summer: 'Summer', fall: 'Autumn', winter: 'Winter' };
 
+// The four trees, held in this repository. They were hotlinked from
+// media.base44.com, which would have taken the site's signature image off every
+// page the moment it left that platform.
 const TREES = {
-  winter: 'https://media.base44.com/images/public/6a70610b0eb9bb2f777d7afd/e410f210c_tree-winter.jpg',
-  spring: 'https://media.base44.com/images/public/6a70610b0eb9bb2f777d7afd/292a405ad_tree-spring.jpg',
-  summer: 'https://media.base44.com/images/public/6a70610b0eb9bb2f777d7afd/1e1115c7a_tree-summer.jpg',
-  fall: 'https://media.base44.com/images/public/6a70610b0eb9bb2f777d7afd/2aa49d740_tree-fall.jpg',
+  winter: treeWinter,
+  spring: treeSpring,
+  summer: treeSummer,
+  fall: treeFall,
 };
 
 // True current season from today's date (Northern Hemisphere).

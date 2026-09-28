@@ -16,7 +16,6 @@ import Admin from '@/pages/Admin';
 import Login from '@/pages/Login';
 import Activate from '@/pages/Activate';
 import ForgotPassword from '@/pages/ForgotPassword';
-import ResetPassword from '@/pages/ResetPassword';
 import Resources from '@/pages/Resources';
 import Contact from '@/pages/Contact';
 // Add page imports here
@@ -63,7 +62,10 @@ const AuthenticatedApp = () => {
       <Route path="/register" element={<Activate />} />
       <Route path="/login" element={<Login />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/reset-password" element={<ResetPassword />} />
+      {/* Arriving from an emailed link is one situation, whether the account is
+          new or the password was forgotten: a session comes in on the URL and a
+          password is chosen. Activate is that page; these are all doors to it. */}
+      <Route path="/reset-password" element={<Activate />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

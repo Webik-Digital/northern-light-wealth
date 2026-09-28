@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { base44 } from '@/api/base44Client';
+import { me, signOut } from '@/api/auth';
 import IssueAdmin from '@/components/admin/IssueAdmin';
 import LibraryAdmin from '@/components/admin/LibraryAdmin';
 import OutlineAdmin from '@/components/admin/OutlineAdmin';
@@ -20,7 +20,7 @@ export default function Admin() {
 
   useEffect(() => {
     let active = true;
-    base44.auth.me()
+    me()
       .then((u) => { if (active) setUser(u || null); })
       .catch(() => { if (active) setUser(null); });
     return () => { active = false; };
@@ -74,7 +74,7 @@ export default function Admin() {
         </nav>
         <div className="nlw-admin-who">
           <span>{user.email}</span>
-          <button type="button" onClick={() => base44.auth.logout('/')}>Sign out</button>
+          <button type="button" onClick={async () => { await signOut(); window.location.href = '/'; }}>Sign out</button>
         </div>
       </header>
 

@@ -1,205 +1,127 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { base44 } from "@/api/base44Client";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Mail, Lock, Loader2 } from "lucide-react";
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
+import { Lock, Loader2 } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
-import { toast } from "@/components/ui/use-toast";
-import { safeReturnTo } from "@/lib/authReturnTo";
+import { setPassword as savePassword } from "@/api/auth";
+import { getSession } from "@/api/auth";
 
+// Choosing a password, for someone arriving from an emailed link.
+//
+// This used to ask for an email, register an account, then verify a six-digit
+// code. None of that applies now, and losing it is the point: an account is not
+// created here. It already exists, because an admin made it, and the link in the
+// email carries a session that proves the person opening it reads that mailbox.
+// So the only thing left to ask for is the password.
+//
+// The session is recovered from the URL by the Supabase client on load, which is
+// why there is nothing here that reads a token by hand.
 export default function Activate() {
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [showOtp, setShowOtp] = useState(false);
-  const [otpCode, setOtpCode] = useState("");
+  const [ready, setReady] = useState(null); // null while we look for the session
+  const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  useEffect(() => {
+    let active = true;
+    // Give the client a moment to pick the session out of the URL fragment.
+    const timer = setTimeout(async () => {
+      const session = await getSession();
+      if (active) setReady(Boolean(session));
+    }, 400);
+    return () => { active = false; clearTimeout(timer); };
+  }, []);
+
+  const submit = async (e) => {
     e.preventDefault();
     setError("");
-    if (password !== confirmPassword) {
-      setError("Passwords do not match");
+
+    if (password.length < 8) {
+      setError("Use at least eight characters.");
       return;
     }
+    if (password !== confirmPassword) {
+      setError("Those two passwords are not the same.");
+      return;
+    }
+
     setLoading(true);
     try {
-      await base44.auth.register({ email, password });
-      setShowOtp(true);
+      await savePassword(password);
+      navigate("/resources");
     } catch (err) {
-      setError(err.message || "Registration failed");
+      setError(err.message || "That password could not be saved.");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleVerify = async () => {
-    setError("");
-    setLoading(true);
-    try {
-      const result = await base44.auth.verifyOtp({ email, otpCode });
-      if (result?.access_token) {
-        base44.auth.setToken(result.access_token);
-      }
-      window.location.href = safeReturnTo();
-    } catch (err) {
-      setError(err.message || "Invalid verification code");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleResend = async () => {
-    setError("");
-    try {
-      await base44.auth.resendOtp(email);
-      toast({
-        title: "Code sent",
-        description: "Check your email for the new code.",
-      });
-    } catch (err) {
-      setError(err.message || "Failed to resend code");
-    }
-  };
-
-  if (showOtp) {
+  // An expired or already-used link is the common case here, and saying so
+  // plainly is more use than a generic failure once they have typed a password.
+  if (ready === false) {
     return (
       <AuthLayout
-        title="Verify your email"
-        subtitle={`We sent a code to ${email}`}
+        title="This link has expired"
+        subtitle="Invitation and reset links can only be used once, and not indefinitely."
       >
-        {error && (
-          <div className="mb-4 p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
-            {error}
-          </div>
-        )}
-        <div className="flex justify-center mb-6">
-          <InputOTP
-            maxLength={6}
-            value={otpCode}
-            onChange={setOtpCode}
-            autoFocus
-            autoComplete="one-time-code"
-          >
-            <InputOTPGroup>
-              <InputOTPSlot index={0} />
-              <InputOTPSlot index={1} />
-              <InputOTPSlot index={2} />
-              <InputOTPSlot index={3} />
-              <InputOTPSlot index={4} />
-              <InputOTPSlot index={5} />
-            </InputOTPGroup>
-          </InputOTP>
-        </div>
-        <Button
-          className="w-full h-12 font-medium"
-          onClick={handleVerify}
-          disabled={loading || otpCode.length < 6}
-        >
-          {loading ? (
-            <>
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              Verifying...
-            </>
-          ) : (
-            "Verify"
-          )}
-        </Button>
-        <p className="text-center text-sm text-muted-foreground mt-4">
-          Didn't receive the code?{" "}
-          <button onClick={handleResend} className="text-primary font-medium hover:underline">
-            Resend
-          </button>
+        <p style={{ fontSize: 14, lineHeight: 1.7, color: "var(--ink-soft)" }}>
+          Ask us for a fresh one, or request it yourself and we will send another.
         </p>
+        <div style={{ marginTop: 20, display: "flex", gap: 14, alignItems: "center" }}>
+          <Link to="/forgot-password"><Button type="button">Send me a new link</Button></Link>
+          <Link to="/login" style={{ fontSize: 14 }}>Back to sign in</Link>
+        </div>
       </AuthLayout>
     );
   }
 
   return (
     <AuthLayout
-      title="Set your password"
-      subtitle="For people Northern Light Wealth has invited. Use the email your invitation was sent to."
-      footer={
-        <>
-          Already set up?{" "}
-          <Link
-            to={"/login" + (safeReturnTo() !== "/" ? "?returnTo=" + encodeURIComponent(safeReturnTo()) : "")}
-            className="text-primary font-medium hover:underline"
-          >
-            Sign in
-          </Link>
-        </>
-      }
+      title="Choose your password"
+      subtitle="This is the password you will use to open the client library."
     >
-      {error && (
-        <div className="mb-4 p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
-          {error}
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
-          <div className="relative">
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" aria-hidden="true" />
-            <Input
-              id="email"
-              type="email"
-              autoComplete="email"
-              autoFocus
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="pl-10 h-12"
-              required
-            />
-          </div>
-        </div>
+      <form onSubmit={submit} className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="password">Password</Label>
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" aria-hidden="true" />
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 opacity-50" />
             <Input
               id="password"
               type="password"
+              className="pl-9"
               autoComplete="new-password"
-              placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="pl-10 h-12"
+              placeholder="At least eight characters"
               required
             />
           </div>
         </div>
+
         <div className="space-y-2">
-          <Label htmlFor="confirm">Confirm Password</Label>
+          <Label htmlFor="confirmPassword">Confirm password</Label>
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" aria-hidden="true" />
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 opacity-50" />
             <Input
-              id="confirm"
+              id="confirmPassword"
               type="password"
+              className="pl-9"
               autoComplete="new-password"
-              placeholder="••••••••"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="pl-10 h-12"
               required
             />
           </div>
         </div>
-        <Button type="submit" className="w-full h-12 font-medium" disabled={loading}>
-          {loading ? (
-            <>
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              Setting password…
-            </>
-          ) : (
-            "Set password"
-          )}
+
+        {error && <p style={{ fontSize: 14, color: "var(--plum)" }}>{error}</p>}
+
+        <Button type="submit" className="w-full" disabled={loading || ready === null}>
+          {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save password and continue"}
         </Button>
       </form>
     </AuthLayout>

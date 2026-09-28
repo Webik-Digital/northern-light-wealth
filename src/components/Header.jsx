@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { base44 } from '@/api/base44Client';
+import { isAuthenticated, signOut } from '@/api/auth';
 import LockIcon from './LockIcon';
 import logo from '@/assets/nlw-logo-stacked.svg';
 import logoReverse from '@/assets/nlw-logo-stacked-reverse.svg';
@@ -32,7 +32,7 @@ export default function Header() {
 
   useEffect(() => {
     let active = true;
-    base44.auth.isAuthenticated().then((ok) => { if (active) setAuthed(ok); }).catch(() => {});
+    isAuthenticated().then((ok) => { if (active) setAuthed(ok); }).catch(() => {});
     return () => { active = false; };
   }, []);
 
@@ -48,7 +48,8 @@ export default function Header() {
   };
 
   const handleLogout = async () => {
-    await base44.auth.logout('/');
+    await signOut();
+    navigate('/');
   };
 
   const close = () => setMenuOpen(false);

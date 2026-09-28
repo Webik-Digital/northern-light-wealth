@@ -1,42 +1,45 @@
-import React, { useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import React, { useEffect, useState } from 'react';
+import { listPeople, setRole } from '@/api/admin';
 
-// Invites someone to the app. Base44 sends them the email; they choose their own
-// password from it, or via "Forgot password" later. No password is ever set or
-// seen from here, which is how it should stay.
+// Who can open the client library.
+//
+// There is no "invite" button here any more, and its absence is deliberate.
+// Creating an account needs the service-role key, and that key would have to be
+// shipped inside the browser bundle for a button on this page to use it — which
+// would hand the whole database to anyone who viewed source. So accounts are
+// made by Webik, which is also how the arrangement with NLW is written: they
+// manage client logins so the system stays predictable.
+//
+// What an admin can do from here is see who has access and take it away, which
+// is the part that is ever urgent.
+
+const ROLES = {
+  admin: 'Can publish, upload and manage people',
+  user: 'Can open the client library',
+};
+
 export default function PeopleAdmin() {
-  const [email, setEmail] = useState('');
-  const [role, setRole] = useState('user');
-  const [busy, setBusy] = useState(false);
-  const [msg, setMsg] = useState('');
+  const [rows, setRows] = useState(null);
+  const [busy, setBusy] = useState('');
   const [err, setErr] = useState('');
-  const [sent, setSent] = useState([]);
 
-  const invite = async (e) => {
-    e.preventDefault();
-    setErr(''); setMsg('');
-    const value = email.trim();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-      setErr('That does not look like an email address.');
-      return;
-    }
-    setBusy(true);
+  const load = () => {
+    listPeople()
+      .then(setRows)
+      .catch(() => { setRows([]); setErr('Could not load the list of people.'); });
+  };
+
+  useEffect(load, []);
+
+  const change = async (person, role) => {
+    setBusy(person.id); setErr('');
     try {
-      await base44.auth.inviteUser(value, role);
-      setSent((s) => [{ email: value, role, at: new Date() }, ...s]);
-      setMsg(`Invitation sent to ${value}. They set their own password from the email.`);
-      setEmail('');
-    } catch (e2) {
-      const status = e2 && e2.status;
-      setErr(
-        status === 403
-          ? 'Your account cannot invite people. An owner or editor has to do it.'
-          : status === 400
-            ? 'Base44 rejected that address or role. Check the address and try again.'
-            : 'Could not send that invitation. Please try again.'
-      );
+      await setRole(person.id, role);
+      load();
+    } catch (e) {
+      setErr(`Could not change the role for ${person.email}.`);
     } finally {
-      setBusy(false);
+      setBusy('');
     }
   };
 
@@ -47,66 +50,61 @@ export default function PeopleAdmin() {
           <h2>People</h2>
         </div>
         <p className="nlw-admin-muted">
-          Invite a client or a colleague. They receive an email, choose their own password, and
-          can reset it any time from the sign-in page. Nobody here sets or sees it.
-        </p>
-        <p className="nlw-admin-muted" style={{ marginTop: 14 }}>
-          <strong>Client</strong> opens the library. <strong>Admin</strong> also opens this area,
-          so give it only to staff who publish.
+          Everyone who can sign in. A client sees the library; an admin can also publish,
+          upload, and change what is on this page.
         </p>
 
-        {sent.length > 0 && (
-          <ul style={{ marginTop: 20 }}>
-            {sent.map((s, i) => (
-              <li key={i}>
+        {rows === null ? (
+          <p className="nlw-admin-muted">Loading…</p>
+        ) : rows.length === 0 ? (
+          <p className="nlw-admin-muted">Nobody has an account yet.</p>
+        ) : (
+          <ul>
+            {rows.map((p) => (
+              <li key={p.id}>
                 <span className="row" style={{ cursor: 'default' }}>
-                  <span className="t">{s.email}</span>
+                  <span className="t">{p.full_name || p.email}</span>
                   <span className="m">
-                    {s.role === 'admin' ? 'Admin' : 'Client'}
-                    <em className="state live">Invited</em>
+                    {p.full_name ? p.email : ROLES[p.role]}
+                    <em className={`state ${p.role === 'admin' ? 'live' : 'draft'}`}>
+                      {p.role === 'admin' ? 'Admin' : 'Client'}
+                    </em>
                   </span>
                 </span>
+                <button
+                  type="button"
+                  className="del"
+                  disabled={busy === p.id}
+                  onClick={() => change(p, p.role === 'admin' ? 'user' : 'admin')}
+                >
+                  {p.role === 'admin' ? 'Make client' : 'Make admin'}
+                </button>
               </li>
             ))}
           </ul>
         )}
+
+        {err && <p className="nlw-admin-err">{err}</p>}
       </section>
 
       <section className="nlw-admin-form">
-        <form onSubmit={invite} style={{ display: 'contents' }}>
-          <label className="nlw-label">
-            <span>Email address</span>
-            <input
-              className="nlw-input"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="name@example.com"
-              autoComplete="off"
-            />
-          </label>
-
-          <label className="nlw-label">
-            <span>Access</span>
-            <select className="nlw-input" value={role} onChange={(e) => setRole(e.target.value)}>
-              <option value="user">Client — the resource library</option>
-              <option value="admin">Admin — the library and this area</option>
-            </select>
-          </label>
-
-          {err && <p className="nlw-admin-err">{err}</p>}
-          {msg && <p className="nlw-admin-ok">{msg}</p>}
-
-          <div className="nlw-admin-actions">
-            <button type="submit" className="nlw-btn" disabled={busy}>
-              {busy ? 'Sending…' : 'Send invitation'}
-            </button>
-          </div>
-        </form>
-
+        <h3 style={{ fontSize: 16, marginBottom: 10 }}>Adding someone</h3>
         <p className="nlw-admin-muted">
-          If an invitation does not arrive, the person can still get in: ask them to use
-          “Forgot password” on the sign-in page with the address you invited.
+          New accounts are created by Webik rather than from this page. Send the person&rsquo;s
+          name and email address and the account is issued, along with the email that lets
+          them choose their own password. Nobody at Webik or Northern Light Wealth ever sees
+          or sets that password.
+        </p>
+        <p className="nlw-admin-muted" style={{ marginTop: 14 }}>
+          There is no public sign-up on this site and no sign-in through Google or any other
+          service, so an invitation is the only way in.
+        </p>
+
+        <h3 style={{ fontSize: 16, margin: '22px 0 10px' }}>Removing someone</h3>
+        <p className="nlw-admin-muted">
+          Making a person a client rather than an admin takes away publishing straight away.
+          To remove their access to the library entirely, ask Webik to delete the account —
+          treated as urgent and actioned the same working day.
         </p>
       </section>
     </div>

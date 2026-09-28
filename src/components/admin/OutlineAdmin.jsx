@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { listOutlines } from '@/api/content';
+import { saveOutline, deleteOutline } from '@/api/admin';
 
 // What a brochure covers, written for the public stewardship pages.
 //
@@ -38,7 +39,7 @@ export default function OutlineAdmin() {
 
   const load = () => {
     setLoading(true);
-    base44.entities.BrochureOutline.filter({}, 'pathway', 50)
+    listOutlines()
       .then((r) => setRows(r || []))
       .catch(() => setErr('Could not load the outlines.'))
       .finally(() => setLoading(false));
@@ -126,11 +127,9 @@ export default function OutlineAdmin() {
       isPublished: !!draft.isPublished,
     };
     try {
-      if (draft.id) await base44.entities.BrochureOutline.update(draft.id, payload);
-      else {
-        const created = await base44.entities.BrochureOutline.create(payload);
-        setDraft({ ...created, sections: created.sections || [] });
-      }
+      const saved = await saveOutline({ ...draft, ...payload });
+      setDraft({ ...saved, sections: saved.sections || [], brochureTitle: saved.brochure_title || '',
+        isPublished: saved.is_published });
       setMsg(payload.isPublished ? 'Saved and published.' : 'Saved as a draft. It is not on the site yet.');
       load();
     } catch (e2) {
@@ -145,7 +144,7 @@ export default function OutlineAdmin() {
     if (!window.confirm('Remove this outline? The brochure itself is not touched.')) return;
     setBusy(true);
     try {
-      await base44.entities.BrochureOutline.delete(draft.id);
+      await deleteOutline(draft.id);
       setDraft(null);
       load();
     } catch (e2) {
