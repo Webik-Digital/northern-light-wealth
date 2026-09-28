@@ -8,8 +8,9 @@ import SubscribePanel from '@/components/SubscribePanel';
 import SeasonGlyph from '@/components/SeasonGlyph';
 import LockIcon from '@/components/LockIcon';
 import ResourceCover from '@/components/ResourceCover';
-import { base44 } from '@/api/base44Client';
-import { ISSUES } from '@/data/turnings';
+import { listIssues, listResources } from '@/api/content';
+import { isAuthenticated } from '@/api/auth';
+import { issuesFrom } from '@/data/turnings';
 import ResourceSearch from '@/components/ResourceSearch';
 import SeasonBand from '@/components/SeasonBand';
 
@@ -24,48 +25,34 @@ const SHAPE = [
 export default function Resources() {
   const [authed, setAuthed] = useState(false);
   const [items, setItems] = useState([]);
+  const [issues, setIssues] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     let active = true;
 
-    // The library is read only for someone signed in. The entity refuses it to
-    // anyone else, so this is not what keeps it private; it just avoids firing
-    // a request on every public page view that could only come back refused.
-    const loadLibrary = async () => {
-      const rows = await base44.entities.Resource.filter({}, 'order', 50);
-      // items uploaded to private storage are stored as a file_uri, not a URL,
-      // so they need a signed link before a client can open them
-      const sign = async (uri) => {
-        if (!uri) return '';
-        if (/^https?:\/\//i.test(uri)) return uri;
-        try {
-          const { signed_url } = await base44.integrations.Core.CreateFileSignedUrl({ file_uri: uri });
-          return signed_url;
-        } catch (e) {
-          return '';
-        }
-      };
-      const resolved = await Promise.all(
-        (rows || []).map(async (r) => {
-          // the document and its cover are both private files, so each needs
-          // its own signed link before a client can see it
-          const [href, cover] = await Promise.all([sign(r.fileOrUrl), sign(r.thumbnailUrl)]);
-          return { ...r, href, cover };
-        })
-      );
-      if (active) setItems(resolved);
-    };
-
     (async () => {
+      // The letter is public, so it is fetched either way. The library is not:
+      // the database returns nothing to anyone signed out, so this is not what
+      // keeps it private — it only avoids a request that could not succeed.
       try {
-        const ok = await base44.auth.isAuthenticated();
+        const published = issuesFrom(await listIssues(20));
+        if (active) setIssues(published);
+      } catch (e) {
+        // the letter simply does not list
+      }
+
+      try {
+        const ok = await isAuthenticated();
         if (!active) return;
         setAuthed(ok);
-        if (ok) await loadLibrary();
+        if (ok) {
+          const rows = await listResources(50);
+          if (active) setItems(rows);
+        }
       } catch (e) {
-        // signed out, or the library declined: the page simply stays locked
+        // signed out: the page stays locked, which is the correct outcome
       } finally {
         if (active) setLoading(false);
       }
@@ -94,7 +81,7 @@ export default function Resources() {
             <Reveal as="h1" className="nlw-h1">Stewardship Resources</Reveal>
             <Reveal as="p" className="nlw-lead">A reserved area for clients and invited guests. Access here is given, not sold.</Reveal>
             <Reveal>
-              <ResourceSearch libraryItems={items} authed={authed} />
+              <ResourceSearch libraryItems={items} issues={issues} authed={authed} />
             </Reveal>
           </div>
         </section>
@@ -137,14 +124,14 @@ export default function Resources() {
             </Reveal>
 
             <ul className="nlw-lib">
-              {ISSUES.map((i) => (
+              {issues.map((i) => (
                 <li key={i.id} className="has-band">
                   <div>
                     <span className="cat">{i.marker} {i.year}</span>
                     <h3>{i.title}</h3>
                     <p>{i.dek}</p>
-                    {i.pdfUrl && (
-                      <a href={i.pdfUrl} target="_blank" rel="noreferrer" className="nlw-link-more" style={{ marginTop: 12 }}>
+                    {i.href && (
+                      <a href={i.href} target="_blank" rel="noreferrer" className="nlw-link-more" style={{ marginTop: 12 }}>
                         Read the issue <span className="arw">→</span>
                       </a>
                     )}

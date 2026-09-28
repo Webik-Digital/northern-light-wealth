@@ -8,7 +8,7 @@ import SeasonGlyph from '@/components/SeasonGlyph';
 import ClosingCTA from '@/components/ClosingCTA';
 import PageNotFound from '@/lib/PageNotFound';
 import { getPathway, PATHWAY_SEASON } from '@/data/pathways';
-import { base44 } from '@/api/base44Client';
+import { getOutline } from '@/api/content';
 
 export default function Pathway({ id }) {
   const p = getPathway(id);
@@ -20,11 +20,8 @@ export default function Pathway({ id }) {
   useEffect(() => {
     let active = true;
     if (!id) return undefined;
-    base44.entities.BrochureOutline.filter({ pathway: id, isPublished: true }, '-updated_date', 1)
-      .then((rows) => {
-        const row = (rows || [])[0];
-        if (active && row && (row.sections || []).length) setOutline(row);
-      })
+    getOutline(id)
+      .then((row) => { if (active && row) setOutline(row); })
       .catch(() => {});
     return () => { active = false; };
   }, [id]);

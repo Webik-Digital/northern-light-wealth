@@ -1,6 +1,5 @@
 import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ISSUES } from '@/data/turnings';
 
 // Searches what a visitor might actually be looking for: the issues, the pages
 // themselves, and — once signed in — the client library. Small enough to match
@@ -18,7 +17,7 @@ const PAGES = [
 
 const norm = (s) => (s || '').toLowerCase();
 
-export default function ResourceSearch({ libraryItems = [], authed = false }) {
+export default function ResourceSearch({ libraryItems = [], issues = [], authed = false }) {
   const [q, setQ] = useState('');
   const query = q.trim();
 
@@ -27,7 +26,7 @@ export default function ResourceSearch({ libraryItems = [], authed = false }) {
     const needle = norm(query);
     const hits = [];
 
-    ISSUES.forEach((i) => {
+    issues.forEach((i) => {
       const hay = norm(`${i.title} ${i.dek} ${i.marker} ${i.year} ${(i.contents || []).map((c) => `${c.section} ${c.title}`).join(' ')}`);
       if (hay.includes(needle)) {
         hits.push({
@@ -37,7 +36,7 @@ export default function ResourceSearch({ libraryItems = [], authed = false }) {
           meta: `${i.marker} ${i.year}`,
           body: i.dek,
           // the letter is public: the issue opens straight from the result
-          href: i.pdfUrl,
+          href: i.href,
         });
       }
     });
@@ -67,7 +66,7 @@ export default function ResourceSearch({ libraryItems = [], authed = false }) {
     });
 
     return hits;
-  }, [query, libraryItems, authed]);
+  }, [query, libraryItems, issues, authed]);
 
   return (
     <div className="nlw-search">

@@ -4,7 +4,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Reveal from '@/components/Reveal';
 import SeasonGlyph from '@/components/SeasonGlyph';
-import { base44 } from '@/api/base44Client';
+import { submitEnquiry } from '@/api/content';
 
 export default function Contact() {
   const [name, setName] = useState('');
@@ -23,11 +23,7 @@ export default function Contact() {
     }
     setBusy(true);
     try {
-      await base44.entities.ContactSubmission.create({
-        name: name.trim(),
-        contact: contact.trim(),
-        message: message.trim(),
-      });
+      await submitEnquiry({ name, contact, message, source: 'contact' });
       setSubmitted(true);
     } catch (err) {
       setError('Something went wrong sending your note. Please try again.');

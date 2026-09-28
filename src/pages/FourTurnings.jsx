@@ -6,7 +6,7 @@ import Reveal from '@/components/Reveal';
 import SubscribePanel from '@/components/SubscribePanel';
 import SeasonGlyph from '@/components/SeasonGlyph';
 import SeasonBand from '@/components/SeasonBand';
-import { base44 } from '@/api/base44Client';
+import { listIssues } from '@/api/content';
 import { issuesFrom } from '@/data/turnings';
 
 const LABEL = { spring: 'Spring', summer: 'Summer', fall: 'Autumn', winter: 'Winter' };
@@ -21,8 +21,8 @@ export default function FourTurnings() {
   // an issue. It is how the firm is met by people who are not clients yet.
   useEffect(() => {
     let active = true;
-    base44.entities.Turning.filter({}, '-publishedAt', 50)
-      .then((r) => { if (active) setRows(r || []); })
+    listIssues(50)
+      .then((r) => { if (active) setRows(r); })
       .catch(() => { if (active) setRows([]); });
     return () => { active = false; };
   }, []);
@@ -78,19 +78,14 @@ export default function FourTurnings() {
                 )}
 
                 <div className="nlw-actions">
-                  {featured.pdfUrl && (
-                    <a className="nlw-btn" href={featured.pdfUrl} target="_blank" rel="noreferrer">
+                  {featured.href && (
+                    <a className="nlw-btn" href={featured.href} target="_blank" rel="noreferrer">
                       Read the issue
-                    </a>
-                  )}
-                  {featured.webUrl && (
-                    <a className="nlw-link-more" href={featured.webUrl} target="_blank" rel="noreferrer">
-                      Open the web version <span className="arw">→</span>
                     </a>
                   )}
                 </div>
                 <p className="meta">
-                  {featured.pages ? `${featured.pages} pages · PDF` : 'PDF'}
+                  PDF
                 </p>
               </Reveal>
             </div>
@@ -134,14 +129,9 @@ export default function FourTurnings() {
                         <h3>{i.title}</h3>
                         {i.dek && <p>{i.dek}</p>}
                         <div className="nlw-issue-links">
-                          {i.pdfUrl && (
-                            <a href={i.pdfUrl} target="_blank" rel="noreferrer" className="nlw-link-more">
+                          {i.href && (
+                            <a href={i.href} target="_blank" rel="noreferrer" className="nlw-link-more">
                               Read the issue <span className="arw">→</span>
-                            </a>
-                          )}
-                          {i.webUrl && (
-                            <a href={i.webUrl} target="_blank" rel="noreferrer" className="nlw-link-more">
-                              Web version <span className="arw">→</span>
                             </a>
                           )}
                         </div>

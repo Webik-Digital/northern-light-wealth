@@ -76,7 +76,12 @@ export async function listIssues(limit = 50) {
     .order('published_at', { ascending: false })
     .limit(limit);
   if (error) return [];
-  return (data || []).map(rowToIssue);
+  // The document lives in the public bucket, so the address is permanent and
+  // needs no signing: the letter is meant to be read by anyone.
+  return (data || []).map((r) => {
+    const issue = rowToIssue(r);
+    return { ...issue, href: publicUrl(issue.pdfPath) };
+  });
 }
 
 // ---------------------------------------------------------------------------

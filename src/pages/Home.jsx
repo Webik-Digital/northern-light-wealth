@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { base44 } from '@/api/base44Client';
+import { listIssues } from '@/api/content';
 import SeasonalTree from '@/components/SeasonalTree';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -24,9 +24,7 @@ export default function Home() {
   const [rows, setRows] = useState(null);
 
   useEffect(() => {
-    base44.entities.Turning.filter({}, '-publishedAt', 20)
-      .then((r) => setRows(r || []))
-      .catch(() => setRows([]));
+    listIssues(20).then(setRows).catch(() => setRows([]));
   }, []);
 
   // same rule as The Four Turnings page: published, not future-dated, and an

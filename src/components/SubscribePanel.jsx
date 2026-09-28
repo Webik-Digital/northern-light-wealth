@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Reveal from './Reveal';
-import { base44 } from '@/api/base44Client';
+import { subscribe } from '@/api/content';
 import spring from '@/assets/seasons/spring-scene.jpg';
 import summer from '@/assets/seasons/summer-scene.jpg';
 import autumn from '@/assets/seasons/autumn-scene.jpg';
@@ -29,7 +29,7 @@ export default function SubscribePanel() {
     }
     setBusy(true);
     try {
-      await base44.entities.Subscriber.create({ email: value, source: 'the-four-turnings' });
+      await subscribe(value);
       setSubscribed(true);
       setEmail('');
     } catch (err) {
