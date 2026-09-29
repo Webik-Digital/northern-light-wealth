@@ -43,8 +43,15 @@ export default function IssueAdmin() {
 
   const set = (k, v) => setDraft((d) => ({ ...d, [k]: v }));
 
-  // an issue is a document: upload it and keep the address it lands at
-  const onFile = async (field, accept) => async (e) => {
+  // an issue is a document: upload it and keep the address it lands at.
+  //
+  // The outer function must NOT be async. onFile('pdf_path','PDF') is called in
+  // the markup to build the handler, so an async outer returns a Promise, React
+  // is handed a Promise where it expects a function, and the upload never runs.
+  // The file input still shows the chosen filename — that is the browser, not
+  // us — so it looks like it worked and the publish check then refuses because
+  // no path was ever recorded. That was this bug for the life of this panel.
+  const onFile = (field, accept) => async (e) => {
     const file = e.target.files && e.target.files[0];
     if (!file) return;
     setUploading(field); setErr(''); setMsg('');
@@ -55,7 +62,8 @@ export default function IssueAdmin() {
       set(field, path);
       setMsg(`Uploaded ${file.name}.`);
     } catch (e2) {
-      setErr(`Could not upload ${file.name}. ${accept} files only, and check the size.`);
+      set(field, '');
+      setErr(`Could not upload ${file.name}: ${e2.message || 'the upload was refused.'}`);
     } finally {
       setUploading('');
       e.target.value = '';
