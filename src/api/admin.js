@@ -33,9 +33,15 @@ async function requireLiveSession() {
 
 export async function uploadTo(bucket, path, file, contentType) {
   await requireLiveSession();
+  // Not an upsert. An upsert is an insert-or-update, so the database has to read
+  // the row first to know which it is — and reading storage.objects is governed
+  // by a SELECT policy of its own. The public bucket had none, because a public
+  // bucket's downloads bypass RLS and it looked as though reads were covered, so
+  // every upload from the admin was refused while a plain insert of the same
+  // file succeeded. Paths carry a timestamp and cannot collide, so there is
+  // nothing for an upsert to do here anyway.
   const { error } = await supabase.storage.from(bucket).upload(path, file, {
     contentType: contentType || file.type || 'application/octet-stream',
-    upsert: true,
   });
   if (error) {
     // The other way this reads as a policy violation is a signed-in person who
