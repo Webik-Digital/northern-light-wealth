@@ -13,6 +13,9 @@ export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  // A field nobody can see and nobody fills in. Automated submitters fill in
+  // everything they find, which is what gives them away.
+  const [website, setWebsite] = useState('');
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -23,7 +26,7 @@ export default function Contact() {
     }
     setBusy(true);
     try {
-      await submitEnquiry({ name, contact, message, source: 'contact' });
+      await submitEnquiry({ name, contact, message, source: 'contact', website });
       setSubmitted(true);
     } catch (err) {
       setError('Something went wrong sending your note. Please try again.');
@@ -60,6 +63,16 @@ export default function Contact() {
                 ) : (
                   <Reveal>
                     <form className="nlw-form" onSubmit={onSubmit}>
+                      <input
+                        type="text"
+                        name="website"
+                        tabIndex={-1}
+                        autoComplete="off"
+                        aria-hidden="true"
+                        value={website}
+                        onChange={(e) => setWebsite(e.target.value)}
+                        style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }}
+                      />
                       <label className="nlw-label">
                         <span>Your name</span>
                         <input

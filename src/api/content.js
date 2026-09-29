@@ -143,14 +143,21 @@ export async function listOutlines() {
 // `source` records which form this came from, so a request from the SaleReady
 // page is distinguishable from a general enquiry.
 
-export async function submitEnquiry({ name, contact, message, source = 'contact' }) {
-  const { error } = await supabase.from('contact_submissions').insert({
-    name: (name || '').trim(),
-    contact: (contact || '').trim(),
-    message: (message || '').trim() || null,
-    source,
+// Goes through the server rather than straight to the database, because the
+// point is not only to record the enquiry but to tell somebody about it, and the
+// mail provider's key cannot live in a browser. The endpoint writes the row too,
+// so there is one path and one place that decides what a valid enquiry is.
+export async function submitEnquiry({ name, contact, message, source = 'contact', website = '' }) {
+  const res = await fetch('/api/enquiry', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, contact, message, source, website }),
   });
-  if (error) throw error;
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.error || 'Could not send your note.');
+  }
+  return res.json().catch(() => ({ ok: true }));
 }
 
 export async function subscribe(email, source = 'the-four-turnings') {
