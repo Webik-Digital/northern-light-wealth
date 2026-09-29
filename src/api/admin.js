@@ -13,8 +13,11 @@ export function explain(error, what = 'that') {
 
   if (error.code === '23505' || /duplicate key/i.test(msg)) {
     if (/slug/.test(msg)) {
-      return 'An issue with that web address already exists. Change the web address field — ' +
-             'it defaults to season-year, and this season and year are already used.';
+      // Should no longer be reachable: saveIssue picks a free slug before it
+      // writes. If it ever is, do not send anyone looking for a field to edit —
+      // there has never been one on the form.
+      return 'An issue for that season and year already exists. Edit that one, ' +
+             'or change the season or year.';
     }
     if (/pathway/.test(msg)) return 'That pathway already has an outline. Edit the existing one instead.';
     if (/email/.test(msg)) return 'That email address is already on the list.';
@@ -116,13 +119,29 @@ export async function listAllIssues() {
   return data || [];
 }
 
+// The slug is the row's own identity and nothing else: there is one route for
+// the letter and no per-issue pages, so it is never in an address a reader sees.
+// It used to be a field on the form, which asked an editor to invent a value
+// they had no way to reason about and then refused the save when it collided
+// with an issue from a previous year. It is generated here instead.
+async function freeSlug(base, ignoreId) {
+  const { data } = await supabase.from('turnings').select('id, slug').ilike('slug', `${base}%`);
+  const taken = new Set((data || []).filter((r) => r.id !== ignoreId).map((r) => r.slug));
+  if (!taken.has(base)) return base;
+  for (let n = 2; n < 50; n += 1) {
+    if (!taken.has(`${base}-${n}`)) return `${base}-${n}`;
+  }
+  return `${base}-${Date.now().toString(36)}`;
+}
+
 export async function saveIssue(row) {
+  const base = `${row.season}-${Number(row.year) || new Date().getFullYear()}`;
   const payload = {
     title: row.title,
     season: row.season,
     year: Number(row.year) || new Date().getFullYear(),
     marker: row.marker || null,
-    slug: row.slug,
+    slug: row.slug || (await freeSlug(base, row.id)),
     dek: row.dek || null,
     body: row.body || null,
     pdf_path: row.pdf_path || null,
@@ -131,16 +150,16 @@ export async function saveIssue(row) {
     is_featured: Boolean(row.is_featured),
   };
 
-  // Only one issue is the current one. Clearing the others here keeps that true
-  // even if two people are editing, because it happens in the same breath.
-  if (payload.is_featured) {
-    await supabase.from('turnings').update({ is_featured: false }).neq('slug', payload.slug);
-  }
-
   const { data, error } = row.id
     ? await supabase.from('turnings').update(payload).eq('id', row.id).select().single()
     : await supabase.from('turnings').insert(payload).select().single();
   if (error) throw error;
+
+  // Only one issue is the current one. Cleared after the write and by id, so it
+  // works for a new issue too, which has no id until the moment it exists.
+  if (payload.is_featured && data) {
+    await supabase.from('turnings').update({ is_featured: false }).neq('id', data.id);
+  }
   return data;
 }
 

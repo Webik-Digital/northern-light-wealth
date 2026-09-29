@@ -5,15 +5,11 @@ const SEASONS = ['spring', 'summer', 'fall', 'winter'];
 const LABEL = { spring: 'Spring', summer: 'Summer', fall: 'Autumn', winter: 'Winter' };
 const MARKER = { spring: 'Spring Equinox', summer: 'Summer Solstice', fall: 'Autumn Equinox', winter: 'Winter Solstice' };
 
-const slugify = (s) =>
-  s.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').slice(0, 70);
-
 const blank = () => ({
   title: '',
   season: 'spring',
   year: new Date().getFullYear(),
   marker: MARKER.spring,
-  slug: '',
   dek: '',
   body: '',
   pdf_path: '',
@@ -87,7 +83,6 @@ export default function IssueAdmin() {
       season: draft.season,
       year: Number(draft.year),
       marker: (draft.marker || MARKER[draft.season]).trim(),
-      slug: (draft.slug || slugify(`${draft.season}-${draft.year}`)).trim(),
       dek: draft.dek.trim(),
       body: (draft.body || '').trim(),
       pdf_path: (draft.pdf_path || '').trim(),
