@@ -1,5 +1,38 @@
 import { supabase } from './supabase';
 
+// Turns a database error into something a person can act on.
+//
+// Postgres is precise and unreadable: "duplicate key value violates unique
+// constraint turnings_slug_key" is exactly right and tells an editor nothing.
+// Worse is what the panels used to do with it, which was swallow it and say
+// "Please try again" — advice that cannot work, because the second attempt fails
+// in the same way as the first.
+export function explain(error, what = 'that') {
+  if (!error) return `Could not save ${what}.`;
+  const msg = error.message || '';
+
+  if (error.code === '23505' || /duplicate key/i.test(msg)) {
+    if (/slug/.test(msg)) {
+      return 'An issue with that web address already exists. Change the web address field — ' +
+             'it defaults to season-year, and this season and year are already used.';
+    }
+    if (/pathway/.test(msg)) return 'That pathway already has an outline. Edit the existing one instead.';
+    if (/email/.test(msg)) return 'That email address is already on the list.';
+    return 'Something with that name already exists.';
+  }
+  if (error.code === '23502' || /null value in column/i.test(msg)) {
+    const field = (msg.match(/column "([^"]+)"/) || [])[1];
+    return field ? `${field} cannot be empty.` : 'A required field is empty.';
+  }
+  if (error.code === '23514' || /check constraint/i.test(msg)) {
+    return 'One of the values is not allowed. Check the season and the year.';
+  }
+  if (error.code === '42501' || /row-level security/i.test(msg)) {
+    return 'That was refused. Either your session has expired, or this account is not an admin.';
+  }
+  return msg || `Could not save ${what}.`;
+}
+
 // Writes, for the admin portal.
 //
 // Nothing here carries a privileged key. Every call goes out with the signed-in

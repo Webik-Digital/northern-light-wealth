@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { listOutlines } from '@/api/content';
-import { saveOutline, deleteOutline } from '@/api/admin';
+import { saveOutline, deleteOutline, explain } from '@/api/admin';
 
 // What a brochure covers, written for the public stewardship pages.
 //
@@ -41,7 +41,7 @@ export default function OutlineAdmin() {
     setLoading(true);
     listOutlines()
       .then((r) => setRows(r || []))
-      .catch(() => setErr('Could not load the outlines.'))
+      .catch((e) => setErr(explain(e, 'the outlines')))
       .finally(() => setLoading(false));
   };
 
@@ -133,7 +133,7 @@ export default function OutlineAdmin() {
       setMsg(payload.isPublished ? 'Saved and published.' : 'Saved as a draft. It is not on the site yet.');
       load();
     } catch (e2) {
-      setErr('Could not save that outline.');
+      setErr(explain(e2, 'that outline'));
     } finally {
       setBusy(false);
     }
@@ -148,7 +148,7 @@ export default function OutlineAdmin() {
       setDraft(null);
       load();
     } catch (e2) {
-      setErr('Could not remove that outline.');
+      setErr(explain(e2, 'that outline'));
     } finally {
       setBusy(false);
     }

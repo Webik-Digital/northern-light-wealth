@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { listAllIssues, saveIssue, deleteIssue, uploadTo, storagePath } from '@/api/admin';
+import { listAllIssues, saveIssue, deleteIssue, uploadTo, storagePath, explain } from '@/api/admin';
 
 const SEASONS = ['spring', 'summer', 'fall', 'winter'];
 const LABEL = { spring: 'Spring', summer: 'Summer', fall: 'Autumn', winter: 'Winter' };
@@ -35,7 +35,7 @@ export default function IssueAdmin() {
     setLoading(true);
     listAllIssues()
       .then((r) => setRows(r || []))
-      .catch(() => setErr('Could not load the issues.'))
+      .catch((e) => setErr(explain(e, 'the issues')))
       .finally(() => setLoading(false));
   };
 
@@ -107,7 +107,7 @@ export default function IssueAdmin() {
       setMsg(publish === true ? 'Published.' : publish === false ? 'Moved back to draft.' : 'Saved.');
       load();
     } catch (e) {
-      setErr('Could not save. Please try again.');
+      setErr(explain(e, 'this issue'));
     } finally {
       setBusy(false);
     }
@@ -121,7 +121,7 @@ export default function IssueAdmin() {
       if (draft && draft.id === row.id) setDraft(null);
       load();
     } catch (e) {
-      setErr('Could not remove that issue.');
+      setErr(explain(e, 'that issue'));
     } finally {
       setBusy(false);
     }

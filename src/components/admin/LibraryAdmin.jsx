@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { listAllResources, saveResource, deleteResource, uploadTo, storagePath } from '@/api/admin';
+import { listAllResources, saveResource, deleteResource, uploadTo, storagePath, explain } from '@/api/admin';
 import { signedUrl } from '@/api/content';
 import { coverFromFile, coverFromUrl, isPdf } from '@/lib/pdf-cover';
 
@@ -32,7 +32,7 @@ export default function LibraryAdmin() {
     setLoading(true);
     listAllResources()
       .then((r) => setRows(r || []))
-      .catch(() => setErr('Could not load the library.'))
+      .catch((e) => setErr(explain(e, 'the library')))
       .finally(() => setLoading(false));
   };
 
@@ -143,7 +143,7 @@ export default function LibraryAdmin() {
       setMsg('Saved.');
       load();
     } catch (e) {
-      setErr('Could not save that item.');
+      setErr(explain(e, 'that item'));
     } finally {
       setBusy(false);
     }
@@ -157,7 +157,7 @@ export default function LibraryAdmin() {
       if (draft && draft.id === row.id) setDraft(null);
       load();
     } catch (e) {
-      setErr('Could not remove that item.');
+      setErr(explain(e, 'that item'));
     } finally {
       setBusy(false);
     }
