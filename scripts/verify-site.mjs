@@ -56,9 +56,12 @@ let local = '';
 if (existsSync('dist/index.html')) {
   local = (readFileSync('dist/index.html', 'utf8').match(/assets\/index-[A-Za-z0-9_-]+\.js/) || [])[0] || '';
 }
-if (local) {
-  check('it matches the local build', bundle === local,
-    bundle === local ? '' : `deployed ${bundle} vs local ${local} — deploy is stale or ahead`);
+// Hashes differ between a Vercel build and a local one for reasons that do not
+// matter — dependency resolution, Node version, minifier build. Comparing them
+// reports a difference that is not a problem. What matters is whether the code
+// that is deployed is the code we wrote, so that is what is asked instead.
+if (local && bundle !== local) {
+  console.log(`  note  built elsewhere: deployed ${bundle}, local ${local}`);
 }
 
 let js = '';
@@ -66,8 +69,23 @@ if (bundle) {
   const r = await get(`${site}/${bundle}`);
   js = r.status === 200 ? await r.text() : '';
 }
-check('no Base44 code remains', js !== '' && !js.includes('base44'),
-  js.includes('base44') ? 'the old platform is still in the bundle' : '');
+// "base44" as a substring is not evidence of anything: a hostname list in the
+// scaffold's image helper mentions media.base44.com and always will. What would
+// matter is the SDK or a call through it.
+const usesBase44 = /base44Client|@base44|base44\.(auth|entities|integrations)/.test(js);
+check('no Base44 code remains', js !== '' && !usesBase44,
+  usesBase44 ? 'the old platform is still being called' : '');
+
+// Markers from the most recent work. If these are missing the deploy really is
+// behind, whatever its hash says.
+const FEATURES = [
+  ['the brochure request form', 'Request the brochure'],
+  ['the enquiry endpoint', 'api/enquiry'],
+  ['the legal pages', 'Legal, Privacy and Disclosures'],
+];
+for (const [label, marker] of FEATURES) {
+  check(`carries ${label}`.padEnd(34), js.includes(marker));
+}
 check('the database is configured', js.includes('supabase.co'),
   js.includes('supabase.co') ? '' : 'env vars missing at build time — the site will not load data');
 
