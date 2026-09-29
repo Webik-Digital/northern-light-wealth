@@ -13,12 +13,41 @@ import { supabase } from './supabase';
 // files
 // ---------------------------------------------------------------------------
 
+// Checked before the upload rather than after it fails, because the failure a
+// dead session produces is "new row violates row-level security policy" — which
+// is true, and tells the person nothing they can act on. An access token lasts
+// about an hour; a tab left open overnight still renders the admin from state it
+// loaded while signed in, so the page looks fine right up until it writes.
+async function requireLiveSession() {
+  const { data, error } = await supabase.auth.getSession();
+  const session = data ? data.session : null;
+  if (error || !session) {
+    throw new Error('Your session has expired. Sign in again and retry — nothing was lost.');
+  }
+  // getSession refreshes when it can; if it could not, the token is already dead
+  if (session.expires_at && session.expires_at * 1000 < Date.now()) {
+    throw new Error('Your session has expired. Sign in again and retry — nothing was lost.');
+  }
+  return session;
+}
+
 export async function uploadTo(bucket, path, file, contentType) {
+  await requireLiveSession();
   const { error } = await supabase.storage.from(bucket).upload(path, file, {
     contentType: contentType || file.type || 'application/octet-stream',
     upsert: true,
   });
-  if (error) throw error;
+  if (error) {
+    // The other way this reads as a policy violation is a signed-in person who
+    // is not an admin, which is a different sentence entirely.
+    if (/row-level security/i.test(error.message)) {
+      throw new Error(
+        'The upload was refused. Either your session has expired, or this account is not an admin. ' +
+        'Signing out and back in fixes the first.'
+      );
+    }
+    throw error;
+  }
   return path;
 }
 
