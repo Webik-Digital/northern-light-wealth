@@ -6,6 +6,7 @@ import Footer from '@/components/Footer';
 import Reveal from '@/components/Reveal';
 import SeasonGlyph from '@/components/SeasonGlyph';
 import ClosingCTA from '@/components/ClosingCTA';
+import RequestBrochure from '@/components/RequestBrochure';
 import PageNotFound from '@/lib/PageNotFound';
 import { getPathway, PATHWAY_SEASON } from '@/data/pathways';
 import { getOutline } from '@/api/content';
@@ -128,6 +129,17 @@ export default function Pathway({ id }) {
             </div>
           </section>
         )}
+
+        {/* Asking for the brochure, placed straight after the outline: the moment
+            someone has read what is inside it is when they want it. */}
+        <section className="nlw-section nlw-section-tight">
+          <div className="nlw-wrap">
+            <RequestBrochure
+              pathway={id}
+              brochureName={outline && outline.brochureTitle ? outline.brochureTitle : `${p.name} brochure`}
+            />
+          </div>
+        </section>
 
         {/* Closing */}
         <ClosingCTA heading="Wherever your season begins, a conversation is the same first step." tight />
