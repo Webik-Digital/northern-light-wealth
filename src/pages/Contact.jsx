@@ -128,17 +128,7 @@ export default function Contact() {
                       Calgary, AB&nbsp;&nbsp;T3E 6L1
                     </address>
                   </div>
-                  <div className="item">
-                    <p className="k">Book a time</p>
-                    <p className="sub">A short introductory call at a time that suits you.</p>
-                    <p className="v" style={{ marginTop: 10 }}>
-                      <span className="nlw-link-more" style={{ color: 'var(--muted)', cursor: 'default' }}>
-                        Find a time <span className="arw">→</span>
-                      </span>
-                    </p>
-                  </div>
                 </Reveal>
-                <Reveal as="p" className="nlw-note">The booking link is still to be provided by NLW.</Reveal>
               </div>
             </div>
           </div>

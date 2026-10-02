@@ -56,17 +56,9 @@ export default function About() {
           </div>
         </section>
 
-        {/* Indigenous ownership and community responsibility */}
-        <section className="nlw-section nlw-section-tight">
-          <div className="nlw-wrap">
-            <Reveal as="p" className="nlw-eyebrow">Ownership and responsibility</Reveal>
-            <Reveal className="nlw-panel">
-              <h3 className="nlw-h3">Indigenous ownership and community responsibility</h3>
-              <p>Written and approved by Northern Light Wealth, in the firm's own words. This section states the firm's Indigenous ownership and its commitments to community.</p>
-              <p className="nlw-note">Placeholder. This section is authored and approved by NLW and is not written on the firm's behalf.</p>
-            </Reveal>
-          </div>
-        </section>
+        {/* The Indigenous ownership and community section belongs here. It is
+            NLW's to write about themselves, and a paragraph describing the
+            paragraph they will write is worse than its absence. */}
 
         {/* How it works */}
         <section className="nlw-section nlw-section-tight">

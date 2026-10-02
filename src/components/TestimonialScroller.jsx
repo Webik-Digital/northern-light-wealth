@@ -118,7 +118,7 @@ export default function TestimonialScroller({
                 key={i}
                 className={`nlw-tcard${i === active && pinned ? ' is-center' : ''}`}
               >
-                {t.placeholder && <span className="flag">Placeholder</span>}
+
                 <blockquote>{t.quote}</blockquote>
                 <figcaption>
                   <span className="who">{t.who}</span>

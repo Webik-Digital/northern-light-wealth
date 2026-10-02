@@ -67,37 +67,34 @@ export default function Pathway({ id }) {
           </div>
         </section>
 
-        {/* Why it matters — references supplied by NLW */}
+        {/* Why it matters. Shown only once there are sources: a heading promising
+            "the research behind the need" over an apology for having none reads
+            worse than not raising it. */}
+        {p.evidence.length > 0 && (
         <section className="nlw-section nlw-section-tight">
           <div className="nlw-wrap wide">
             <Reveal className="nlw-head">
               <p className="nlw-eyebrow">Why it matters</p>
               <h2 className="nlw-h2">The research behind the need.</h2>
             </Reveal>
-            {p.evidence.length === 0 ? (
-              <Reveal as="p" className="nlw-note">
-                Academic references to be supplied by NLW. Nothing is cited here until the sources
-                are provided, so that no claim on this page is unsupported.
-              </Reveal>
-            ) : (
-              <ol className="nlw-evidence">
-                {p.evidence.map((e, i) => (
-                  <li key={i}>
-                    <Reveal className="row">
-                      <p className="claim">{e.claim}</p>
-                      <p className="cite">
-                        {e.source}
-                        {e.url && (
-                          <> · <a href={e.url} target="_blank" rel="noreferrer">Read the source</a></>
-                        )}
-                      </p>
-                    </Reveal>
-                  </li>
-                ))}
-              </ol>
-            )}
+            <ol className="nlw-evidence">
+              {p.evidence.map((e, i) => (
+                <li key={i}>
+                  <Reveal className="row">
+                    <p className="claim">{e.claim}</p>
+                    <p className="cite">
+                      {e.source}
+                      {e.url && (
+                        <> · <a href={e.url} target="_blank" rel="noreferrer">Read the source</a></>
+                      )}
+                    </p>
+                  </Reveal>
+                </li>
+              ))}
+            </ol>
           </div>
         </section>
+        )}
 
         {/* What the brochure covers — the document's shape, not its contents */}
         {outline && (
