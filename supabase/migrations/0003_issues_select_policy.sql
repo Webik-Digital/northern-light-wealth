@@ -8,10 +8,10 @@
 -- decide which, so every admin upload failed while a plain insert of the same
 -- file into the same bucket succeeded.
 --
--- The client no longer upserts, so this is not what unblocks uploading. It is
--- here because a bucket that refuses to let a signed-in admin read its own
--- contents is wrong on its own terms, and the next thing that needs to read
--- one — a listing in the admin, a move, a rename — would hit it again.
+-- NOT REQUIRED TODAY. Nothing reads this bucket: the public address is built
+-- as a string without a database call, and the upload no longer upserts, which
+-- was the only thing that needed a read. Run it if something later needs to
+-- list, move or rename a file in there; until then it changes nothing.
 --
 -- Nothing is exposed by this: the bucket is public, so its contents are already
 -- readable by anyone with the address.
