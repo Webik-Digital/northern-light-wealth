@@ -7,6 +7,7 @@ import Footer from '@/components/Footer';
 import Reveal from '@/components/Reveal';
 import StewardshipCard from '@/components/StewardshipCard';
 import ClosingCTA from '@/components/ClosingCTA';
+import RecognitionMark from '@/components/RecognitionMark';
 import { AWARDS, PRESS } from '@/data/recognition';
 import { issuesFrom } from '@/data/turnings';
 
@@ -131,9 +132,7 @@ export default function Home() {
 
             <Reveal className="nlw-logos">
               {AWARDS.map((a) => (
-                <div key={a.name} className="nlw-logo" title={a.name}>
-                  <img src={a.src} alt={a.name} loading="lazy" />
-                </div>
+                <RecognitionMark key={a.name} name={a.name} src={a.src} />
               ))}
             </Reveal>
 
@@ -141,9 +140,7 @@ export default function Home() {
               <p className="nlw-eyebrow">As seen in</p>
               <div className="nlw-logos is-press">
                 {PRESS.map((p) => (
-                  <div key={p.name} className="nlw-logo" title={p.name}>
-                    <img src={p.src} alt={p.name} loading="lazy" />
-                  </div>
+                  <RecognitionMark key={p.name} name={p.name} src={p.src} />
                 ))}
               </div>
             </Reveal>
