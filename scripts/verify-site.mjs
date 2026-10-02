@@ -162,10 +162,22 @@ for (const [host, dest] of [
   ['harvestsharewealth.ca', '/harvest-share'],
   ['harvestsharewealth.com', '/harvest-share'],
 ]) {
-  const r = await get(`https://${host}/`);
-  const loc = r.headers && r.headers.get ? r.headers.get('location') || '' : '';
-  const ok = [301, 308].includes(r.status) && loc.includes(dest);
-  check(`${host} -> ${dest}`.padEnd(34), ok, ok ? '' : `HTTP ${r.status} ${loc || '(not pointed here yet)'}`);
+  // Follow the whole chain. Vercel sends an apex to its www first, so the first
+  // hop is often www rather than the destination; what matters is where a person
+  // ends up, not how many steps it took.
+  let url = `https://${host}/`;
+  let r = await get(url);
+  let hops = 0;
+  while ([301, 302, 307, 308].includes(r.status) && hops < 5) {
+    const loc = r.headers.get('location');
+    if (!loc) break;
+    url = new URL(loc, url).toString();
+    r = await get(url);
+    hops += 1;
+  }
+  const ok = url.includes(dest);
+  check(`${host} -> ${dest}`.padEnd(38), ok,
+    ok ? `(${hops} hop${hops === 1 ? '' : 's'})` : (hops ? `ends at ${url}` : '(not pointed here yet)'));
 }
 
 console.log(`\n${failures === 0 ? 'Everything checked out.' : failures + ' check(s) failed — see FAIL above.'}`);
