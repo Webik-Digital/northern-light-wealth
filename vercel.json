@@ -31,13 +31,13 @@
     },
     {
       "source": "/(.*)",
-      "has": [{ "type": "host", "value": "harvestshare.ca" }],
+      "has": [{ "type": "host", "value": "harvestsharewealth.ca" }],
       "destination": "https://nlwealth.ca/harvest-share",
       "permanent": true
     },
     {
       "source": "/(.*)",
-      "has": [{ "type": "host", "value": "www.harvestshare.ca" }],
+      "has": [{ "type": "host", "value": "www.harvestsharewealth.ca" }],
       "destination": "https://nlwealth.ca/harvest-share",
       "permanent": true
     }

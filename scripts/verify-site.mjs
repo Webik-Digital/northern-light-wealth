@@ -156,7 +156,7 @@ if (hdr && hdr.get) {
   check('HSTS', Boolean(hdr.get('strict-transport-security')));
   check('referrer policy', Boolean(hdr.get('referrer-policy')));
 }
-for (const [host, dest] of [['estateready.ca', '/estate-ready'], ['saleready.ca', '/sale-ready'], ['harvestshare.ca', '/harvest-share']]) {
+for (const [host, dest] of [['estateready.ca', '/estate-ready'], ['saleready.ca', '/sale-ready'], ['harvestsharewealth.ca', '/harvest-share']]) {
   const r = await get(`https://${host}/`);
   const loc = r.headers && r.headers.get ? r.headers.get('location') || '' : '';
   const ok = [301, 308].includes(r.status) && loc.includes(dest);
