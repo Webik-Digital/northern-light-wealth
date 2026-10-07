@@ -113,6 +113,41 @@
       ],
       "destination": "https://nlwealth.ca/harvest-share",
       "permanent": true
+    },
+    {
+      "source": "/estateready",
+      "destination": "/estate-ready",
+      "permanent": true
+    },
+    {
+      "source": "/EstateReady",
+      "destination": "/estate-ready",
+      "permanent": true
+    },
+    {
+      "source": "/saleready",
+      "destination": "/sale-ready",
+      "permanent": true
+    },
+    {
+      "source": "/SaleReady",
+      "destination": "/sale-ready",
+      "permanent": true
+    },
+    {
+      "source": "/harvestshare",
+      "destination": "/harvest-share",
+      "permanent": true
+    },
+    {
+      "source": "/HarvestShare",
+      "destination": "/harvest-share",
+      "permanent": true
+    },
+    {
+      "source": "/Harvest-Share",
+      "destination": "/harvest-share",
+      "permanent": true
     }
   ],
   "rewrites": [

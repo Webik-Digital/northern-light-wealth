@@ -207,5 +207,24 @@ for (const [host, dest] of [
     ok ? `(${hops} hop${hops === 1 ? '' : 's'})` : (hops ? `ends at ${url}` : '(not pointed here yet)'));
 }
 
+// The programme names are written as one word, so the unhyphenated address is
+// the one people type — and the one NLW's own brochure bundles linked to. These
+// must be a real redirect: left to the SPA they are answered by the not-found
+// page under a 200, which tells a visitor it is a dead end and a crawler that
+// the page is fine.
+for (const [alias, dest] of [
+  ['/estateready', '/estate-ready'],
+  ['/saleready', '/sale-ready'],
+  ['/harvestshare', '/harvest-share'],
+  ['/SaleReady', '/sale-ready'],
+  ['/HarvestShare', '/harvest-share'],
+]) {
+  const r = await get(site + alias);
+  const loc = r.headers.get('location') || '';
+  const ok = [301, 302, 307, 308].includes(r.status) && loc.includes(dest);
+  check(`${alias} -> ${dest}`.padEnd(38), ok,
+    ok ? `(${r.status})` : `HTTP ${r.status}${loc ? ' to ' + loc : ' — answered by the app, not redirected'}`);
+}
+
 console.log(`\n${failures === 0 ? 'Everything checked out.' : failures + ' check(s) failed — see FAIL above.'}`);
 process.exit(failures === 0 ? 0 : 1);
