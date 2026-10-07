@@ -6,7 +6,7 @@ import Footer from '@/components/Footer';
 import Reveal from '@/components/Reveal';
 import SeasonGlyph from '@/components/SeasonGlyph';
 import ClosingCTA from '@/components/ClosingCTA';
-import RequestBrochure from '@/components/RequestBrochure';
+import RequestLibraryAccess from '@/components/RequestLibraryAccess';
 import PageNotFound from '@/lib/PageNotFound';
 import { getPathway, PATHWAY_SEASON } from '@/data/pathways';
 import { getOutline } from '@/api/content';
@@ -96,15 +96,25 @@ export default function Pathway({ id }) {
         </section>
         )}
 
-        {/* What the brochure covers — the document's shape, not its contents */}
-        {outline && (
-          <section className="nlw-section nlw-section-tight">
-            <div className="nlw-wrap">
-              <Reveal className="nlw-feature">
-                <p className="nlw-eyebrow">What the brochure covers</p>
-                <h2 className="nlw-h2">{outline.brochureTitle || `The ${p.name} brochure`}</h2>
-                {outline.blurb && <p className="nlw-lead stand">{outline.blurb}</p>}
+        {/* The brochure.
+            This section used to render only when an outline had been published
+            in the admin, because all it did was list what the brochure covered.
+            None of the three has ever been published, so the panel has never
+            appeared — which was survivable while the brochure was behind a form
+            and invisible either way. It is not survivable now: the brochure is
+            the thing this page is for. It exists for all three pathways as a
+            page and a PDF, so the panel renders either way and the contents
+            list is what is conditional. */}
+        <section className="nlw-section nlw-section-tight">
+          <div className="nlw-wrap">
+            <Reveal className="nlw-feature">
+              <p className="nlw-eyebrow">The brochure</p>
+              <h2 className="nlw-h2">
+                {(outline && outline.brochureTitle) || `The ${p.name} brochure`}
+              </h2>
+              {outline && outline.blurb && <p className="nlw-lead stand">{outline.blurb}</p>}
 
+              {outline && outline.sections && outline.sections.length > 0 && (
                 <ol className="nlw-issue-contents">
                   {outline.sections.map((c, i) => (
                     <li key={i}>
@@ -114,27 +124,29 @@ export default function Pathway({ id }) {
                     </li>
                   ))}
                 </ol>
+              )}
 
-                <div className="nlw-actions">
-                  <Link to="/resources" className="nlw-btn">Request access to the brochure</Link>
-                  <Link to="/contact" className="nlw-link-more">Speak with us <span className="arw">→</span></Link>
-                </div>
-                <p className="meta">
-                  {outline.pages ? `${outline.pages} pages · kept in the client library` : 'Kept in the client library'}
-                </p>
-              </Reveal>
-            </div>
-          </section>
-        )}
+              {/* Open. It is the firm's best argument for itself and it was
+                  sitting behind a form. */}
+              <div className="nlw-actions">
+                <a className="nlw-btn" href={`/brochures/${id}/`}>Read the brochure</a>
+                <a className="nlw-link-more" href={`/brochures/${id}.pdf`} download>
+                  Download the PDF <span className="arw">↓</span>
+                </a>
+                <Link to="/contact" className="nlw-link-more">Speak with us <span className="arw">→</span></Link>
+              </div>
+              <p className="meta">
+                {outline && outline.pages ? `${outline.pages} pages · free to read` : 'Free to read, nothing to fill in'}
+              </p>
+            </Reveal>
+          </div>
+        </section>
 
-        {/* Asking for the brochure, placed straight after the outline: the moment
-            someone has read what is inside it is when they want it. */}
+        {/* Asking for the library, placed straight after the brochure: someone who
+            has just read it is the person most likely to want what is behind it. */}
         <section className="nlw-section nlw-section-tight">
           <div className="nlw-wrap">
-            <RequestBrochure
-              pathway={id}
-              brochureName={outline && outline.brochureTitle ? outline.brochureTitle : `${p.name} brochure`}
-            />
+            <RequestLibraryAccess pathway={id} pathwayName={p.name} />
           </div>
         </section>
 

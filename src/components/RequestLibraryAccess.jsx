@@ -2,17 +2,20 @@ import React, { useState } from 'react';
 import Reveal from './Reveal';
 import { submitEnquiry } from '@/api/content';
 
-// Asking for a brochure.
+// Asking for the Stewardship Resource Library.
 //
-// Short on purpose. Every field costs completions, and the firm only needs
-// enough to reply: who, and where to reach them. Which brochure was asked for is
-// recorded automatically rather than being another thing to choose, so Garth can
-// see which of the three is drawing interest without anyone typing it.
+// This form used to ask for the brochure. The brochure is now on the site for
+// anyone to read, so gating it would have been asking people to fill in a form
+// for something already a click away — and the firm would have learned nothing
+// from a request it could not refuse. What is worth asking for is the library
+// behind it: the working documents, the templates, the issues of The Four
+// Turnings. So the form stayed and the thing it opens changed.
 //
-// It does not send the brochure. Those live in the client library, and handing a
-// document to anyone who types an address would undo the point of that. This
-// starts a conversation, which is what the pathway pages are for.
-export default function RequestBrochure({ pathway, brochureName }) {
+// Still short on purpose. Every field costs completions, and the firm only needs
+// enough to reply: who, and where to reach them. Which page the request came
+// from is recorded automatically rather than being another thing to choose, so
+// the firm can see which pathway is drawing interest without anyone typing it.
+export default function RequestLibraryAccess({ pathway, pathwayName }) {
   const [name, setName] = useState('');
   const [contact, setContact] = useState('');
   const [website, setWebsite] = useState(''); // the honeypot
@@ -34,8 +37,8 @@ export default function RequestBrochure({ pathway, brochureName }) {
       await submitEnquiry({
         name,
         contact,
-        message: `Requested the ${brochureName}.`,
-        source: `brochure:${pathway}`,
+        message: `Requested access to the Stewardship Resource Library from the ${pathwayName} page.`,
+        source: `library:${pathway}`,
         website,
       });
       setDone(true);
@@ -51,7 +54,7 @@ export default function RequestBrochure({ pathway, brochureName }) {
       <Reveal className="nlw-panel nlw-request is-done">
         <h3 className="nlw-h3">Thank you.</h3>
         <p>
-          We have your request for the {brochureName} and will be in touch shortly. If it is
+          We have your request and will be in touch shortly to set up your access. If it is
           easier, you can also reach us on <a href="tel:+14039914331">403-991-4331</a>.
         </p>
       </Reveal>
@@ -60,8 +63,12 @@ export default function RequestBrochure({ pathway, brochureName }) {
 
   return (
     <Reveal className="nlw-panel nlw-request">
-      <h3 className="nlw-h3">Ask us for the {brochureName}</h3>
-      <p>Tell us where to send it and a person will follow up. No newsletter, no list.</p>
+      <h3 className="nlw-h3">Ask for access to the Resource Library</h3>
+      <p>
+        The {pathwayName} brochure is yours to read above. The library is what sits behind
+        it — the working documents and seasonal letters we keep for clients and invited
+        guests. Tell us where to reach you and a person will follow up. No newsletter, no list.
+      </p>
 
       <form className="nlw-request-form" onSubmit={onSubmit}>
         <input
@@ -83,7 +90,7 @@ export default function RequestBrochure({ pathway, brochureName }) {
         </label>
 
         <button type="submit" className="nlw-btn" disabled={busy}>
-          {busy ? 'Sending…' : 'Request the brochure'}
+          {busy ? 'Sending…' : 'Request access'}
         </button>
       </form>
 

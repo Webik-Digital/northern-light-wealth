@@ -1,0 +1,200 @@
+/* Harvest Share — Northern Light Wealth. Adaptive HTML translation of the approved Harvest Share Client Brochure PDF.
+   Desktop (>=880px) reproduces the brochure page geometry; narrower viewports reflow. No JS. */
+@font-face{font-family:"Source Sans 3";src:url("../_assets/fonts/SourceSans3-Regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Lexend Deca";src:url("../_assets/fonts/LexendDeca-Regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Lexend Exa";src:url("../_assets/fonts/LexendExa-Regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Lexend Mega";src:url("../_assets/fonts/LexendMega-Regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+:root{
+--teal:#18525E;--plum:#36233F;--stone:#EDEAE8;--soft-white:#F5F5F5;
+--text:#000000;--text-2:#4A4A4A;--text-tech:#333333;
+--body-text:#2B2B2B;--callout-text:#383838;--hairline:#DAD6D2;
+--f-display:"Lexend Deca",Calibri,Helvetica,"Helvetica Neue",Arial,sans-serif;
+--f-body:"Source Sans 3",Calibri,Helvetica,"Helvetica Neue",Arial,sans-serif;
+--f-emph:"Lexend Exa",Calibri,Helvetica,"Helvetica Neue",Arial,sans-serif;
+--f-tech:"Lexend Mega",Calibri,Helvetica,"Helvetica Neue",Arial,sans-serif;
+--px:76px;
+--fs-body:13.5px;--fs-step:12.5px;--fs-emph:13.5px;--fs-run:8px;--fs-label:9.5px;--fs-notice:9px;
+--h2:42px;--h2-p6:30px;--quote:25px;--statement:17px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--soft-white);color:var(--text);font-family:var(--f-body);font-size:16px;line-height:1.62;text-wrap:pretty;-webkit-font-smoothing:antialiased}
+h1,h2,h3,p,ul,ol{margin:0;padding:0;font-weight:400}
+h1,h2{text-wrap:balance}
+img{display:block;max-width:100%;height:auto}
+a{color:inherit;text-decoration:none}
+a:hover{color:inherit}
+ul,ol{list-style:none}
+.hs{display:flex;flex-direction:column;align-items:center;gap:24px;padding:24px 0}
+.pg{position:relative;width:100%;max-width:816px;background:#fff;display:flex;flex-direction:column;overflow:hidden}
+
+/* Shared roles */
+.run{font-family:var(--f-tech);font-size:var(--fs-run);letter-spacing:.24em;text-transform:uppercase;color:var(--text-tech);line-height:1.62}
+.eyebrow{font-family:var(--f-tech);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--teal);line-height:1.62}
+.label{font-family:var(--f-tech);font-size:var(--fs-label);letter-spacing:.2em;text-transform:uppercase;line-height:1.5;color:var(--text-2)}
+.tagline{font-family:var(--f-tech);font-size:var(--fs-run);letter-spacing:.18em;line-height:1.62;color:var(--teal)}
+.h2{margin-top:26px;font-family:var(--f-display);font-size:var(--h2);letter-spacing:-.025em;line-height:1.08;color:var(--teal)}
+.statement{font-family:var(--f-emph);font-size:var(--statement);letter-spacing:.01em;line-height:1.6;color:var(--plum);max-width:602px}
+.body{font-size:var(--fs-body);line-height:1.7;color:var(--body-text)}
+.body+.body{margin-top:20px}
+.rule{border-top:1px solid var(--teal)}
+
+/* Interior header */
+.pg-hd{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;padding:45px var(--px) 0}
+.pg-hd .run{margin-top:7px}
+.badge{flex:none;width:74px}
+.hair{margin:5px var(--px) 0;border-top:1px solid var(--hairline)}
+.pg-in{padding:39px var(--px) 32px}
+.intro .statement{margin-top:32px}
+.band{margin-top:auto;background:var(--stone);padding:34px var(--px) 16px}
+.band p{font-family:var(--f-emph);font-size:var(--fs-emph);letter-spacing:.03em;line-height:1.75;color:var(--callout-text);max-width:620px}
+.band p+p{margin-top:20px}
+.band .tagline{margin-top:23px}
+
+/* 01 Cover */
+.cover-top{display:flex;flex-direction:column;padding:72px var(--px) 24px}
+.cover-logo{height:44px;width:auto;align-self:flex-start}
+.cover-main{margin-top:184px}
+.cover-eyebrow{font-family:var(--f-tech);font-size:9.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--text-2)}
+.cover-h1{margin-top:26px;font-family:var(--f-display);font-size:68px;letter-spacing:-.03em;line-height:1;color:var(--teal)}
+.cover-rule{margin:34px 0 30px}
+.cover-sub{font-family:var(--f-display);font-size:26px;line-height:1.32;letter-spacing:-.015em;color:var(--plum)}
+.cover-purpose{margin-top:115px;max-width:540px;font-family:var(--f-emph);font-size:var(--fs-emph);letter-spacing:.03em;line-height:1.8;color:var(--text-tech)}
+.cover-tagline{margin-top:29px;font-size:8.5px;letter-spacing:.2em}
+.cover-art img{width:100%}
+
+/* 02 The Idea */
+.cols{display:grid;grid-template-columns:repeat(2,minmax(0,300px));gap:0 64px;padding-top:24px}
+.quote{font-family:var(--f-emph);font-size:var(--quote);line-height:1.42;color:var(--teal);max-width:620px}
+
+/* 03 The Firm Participates */
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,200px));gap:0 32px}
+.step{border-top:1px solid var(--teal);padding-top:18px;color:var(--teal)}
+.step--plum{border-top-color:var(--plum);color:var(--plum)}
+.step-n{width:22px;height:22px;border:1px solid currentColor;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--f-tech);font-size:9px;line-height:1}
+.step-t{margin-top:14px;font-family:var(--f-tech);font-size:var(--fs-label);letter-spacing:.2em;text-transform:uppercase;line-height:1.5}
+.step .body{margin-top:12px;font-size:var(--fs-step);line-height:1.65}
+.summary{font-family:var(--f-emph);font-size:var(--fs-emph);letter-spacing:.01em;line-height:1.6;color:var(--plum);max-width:620px}
+
+/* 04 Your Share. Your Choice. */
+.choice{display:grid;grid-template-columns:minmax(0,424px) minmax(0,220px);gap:0 20px;padding-top:23px}
+.sub{font-family:var(--f-tech);font-size:11px;letter-spacing:.18em;text-transform:uppercase;line-height:1.5;color:var(--teal)}
+.sub+.body{margin-top:18px}
+.list{margin-top:18px}
+.list li,.qs li{border-top:1px solid var(--hairline);padding:9px 0;font-family:var(--f-display);font-size:13.5px;line-height:1.4;color:var(--teal)}
+.examples-note{margin-top:14px;font-size:9px}
+
+/* 05 Participation Can Teach */
+.p5 .intro .statement{margin-top:24px;font-size:var(--fs-emph);max-width:560px}
+.qs-wrap{padding-top:23px}
+.qs{margin-top:26px;display:grid;grid-template-columns:repeat(2,minmax(0,300px));gap:0 64px}
+.p5-para{max-width:620px}
+.over{margin-top:18px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
+.over li{border-top:1px solid var(--hairline);padding-top:12px;font-family:var(--f-display);font-size:12.5px;line-height:1.4;color:var(--text-tech)}
+.over li.o-teal{border-top-color:var(--teal);color:var(--teal)}
+.over li.o-plum{border-top-color:var(--plum);color:var(--plum)}
+
+/* 06 The Opportunity */
+.p6 .hair{margin-top:16px}
+.p6 .pg-in{padding-top:40px}
+.p6 .h2{font-size:var(--h2-p6);line-height:1.26}
+.p6-rule{margin:34px 0 24px}
+.p6-lead{font-family:var(--f-emph);font-size:var(--fs-emph);letter-spacing:.03em;line-height:1.8;color:var(--plum)}
+.p6-cols{margin-top:52px;padding-top:0}
+.label+.body{margin-top:18px}
+.url{display:inline-block;margin-top:16px;font-family:var(--f-display);font-size:12.5px;line-height:1.62;color:var(--plum)}
+.signoff{background:var(--stone);padding:30px var(--px) 18px}
+.signoff-row{display:flex;align-items:center;gap:96px}
+.signoff-logo{flex:none;width:104px}
+.people{display:flex;gap:96px}
+.person-n{font-family:var(--f-display);font-size:17px;line-height:1.62;color:var(--teal)}
+.person-r{margin-top:8px;font-size:13px;line-height:1.65;color:var(--text-2)}
+.signoff .tagline{margin-top:26px}
+.notice{padding:19px var(--px) 40px}
+.notice-h{font-size:9px}
+.notice-cols{margin-top:8px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:32px}
+.notice-cols p{font-size:var(--fs-notice);line-height:1.55;color:var(--text-2)}
+
+/* Desktop: brochure page geometry */
+@media (min-width:880px){
+.pg{min-height:1056px}
+.cover-top{min-height:740px}
+.intro{min-height:302px}
+.p5 .intro{min-height:232px}
+.p2-body .cols{min-height:310px}
+.p3-cols{min-height:146px}
+.steps{min-height:232px}
+.choice-a{min-height:204px}
+.qs-wrap{min-height:256px}
+.p5-para{min-height:124px}
+.p6-top{min-height:703px}
+.p6 .pg-hd,.p6 .hair{flex:none}
+.signoff{min-height:187px}
+.pg-in{padding-bottom:6px}
+.p6 .pg-in{padding-bottom:32px}
+.notice{padding-bottom:10px}
+}
+
+/* Tablet */
+@media (max-width:879px){
+.hs{gap:0;padding:0;background:#fff}
+body{background:#fff}
+:root{--px:48px;--fs-body:15px;--fs-step:14px;--fs-emph:14.5px;--fs-run:9px;--fs-label:10px;--fs-notice:10.5px;--h2:38px}
+.cover-main{margin-top:120px}
+.cover-purpose{margin-top:72px}
+.cover-tagline{font-size:9px}
+.pg-in{padding-bottom:56px}
+.p2-body .cols{margin-bottom:48px}
+.p3-cols,.steps{margin-bottom:40px}
+.choice-a{margin-bottom:32px}
+.qs-wrap{margin-bottom:32px}
+.p5-para{margin-bottom:32px}
+.choice{grid-template-columns:minmax(0,1.9fr) minmax(0,1fr);gap:0 32px}
+.signoff-row,.people{gap:clamp(32px,8vw,96px)}
+}
+
+/* Narrow tablet / large phone */
+@media (max-width:719px){
+:root{--fs-body:16px;--fs-step:16px;--fs-emph:15px;--fs-run:10px;--fs-label:11px;--fs-notice:12px;--h2:34px;--h2-p6:30px;--quote:22px;--statement:18px}
+.br{display:none}
+.cols,.qs,.p6-cols{grid-template-columns:minmax(0,1fr);gap:0}
+.cols>*+*{margin-top:20px}
+.p6-cols>*+*{margin-top:40px}
+.steps{grid-template-columns:minmax(0,1fr);gap:32px}
+.choice{grid-template-columns:minmax(0,1fr);gap:0}
+.choice-b{margin-top:8px}
+.list li,.qs li{font-size:16px;padding:12px 0}
+.examples-note{font-size:10px}
+.over{grid-template-columns:minmax(0,1fr);gap:0}
+.over li{font-size:16px;padding:12px 0}
+.over li+li{margin-top:0}
+.cover-h1{font-size:clamp(46px,12vw,68px)}
+.cover-sub{font-size:22px}
+.cover-eyebrow{font-size:10px;letter-spacing:.24em;line-height:1.8}
+.url{font-size:15px}
+.signoff{padding:32px var(--px) 18px}
+.signoff-row{flex-direction:column;align-items:flex-start;gap:28px}
+.people{flex-wrap:wrap;gap:24px 48px}
+.person-r{font-size:15px}
+.notice-cols{grid-template-columns:minmax(0,1fr);gap:16px}
+.notice-h{font-size:10px}
+}
+
+/* Phone */
+@media (max-width:599px){
+:root{--px:24px;--h2:clamp(28px,8.2vw,34px)}
+.pg-hd{padding-top:24px}
+.cover-top{padding-top:32px;padding-bottom:40px}
+.cover-logo{height:40px}
+.cover-main{margin-top:88px}
+.cover-rule{margin:28px 0 24px}
+.cover-purpose{margin-top:56px}
+.cover-tagline{margin-top:28px}
+.pg-in{padding-top:32px;padding-bottom:48px}
+.intro .statement{margin-top:24px}
+.p6 .pg-in{padding-top:32px}
+.p6-rule{margin:28px 0 20px}
+.p6-cols{margin-top:40px}
+.band{padding-top:28px}
+.notice{padding-top:24px;padding-bottom:32px}
+}
