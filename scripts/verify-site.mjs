@@ -79,7 +79,10 @@ check('no Base44 code remains', js !== '' && !usesBase44,
 // Markers from the most recent work. If these are missing the deploy really is
 // behind, whatever its hash says.
 const FEATURES = [
-  ['the library request form', 'Ask for access to the Resource Library'],
+  // A marker has to survive the build. The heading is JSX with a variable in
+  // it — "Request {pathwayName} Resources" — so it is three fragments in the
+  // bundle and never appears as written. This sentence is a plain literal.
+  ['the library request form', 'Resource Library is what'],
   ['the enquiry endpoint', 'api/enquiry'],
   ['the legal pages', 'Legal, Privacy and Disclosures'],
 ];

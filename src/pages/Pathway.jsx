@@ -7,6 +7,7 @@ import Reveal from '@/components/Reveal';
 import SeasonGlyph from '@/components/SeasonGlyph';
 import ClosingCTA from '@/components/ClosingCTA';
 import RequestLibraryAccess from '@/components/RequestLibraryAccess';
+import PromptCards from '@/components/PromptCards';
 import PageNotFound from '@/lib/PageNotFound';
 import { getPathway, PATHWAY_SEASON } from '@/data/pathways';
 import { getOutline } from '@/api/content';
@@ -42,12 +43,18 @@ export default function Pathway({ id }) {
             <Reveal as="p" className="nlw-eyebrow">{p.tag}</Reveal>
             <Reveal as="h1" className="nlw-h1">{p.name}</Reveal>
             <Reveal as="p" className="nlw-lead">{p.purpose}</Reveal>
-            {/* the library sits near the top of every pathway page */}
+            {/* Straight into the brochure. This used to point at the library,
+                which was shut, so the first invitation on the page led to a
+                locked door. */}
             <Reveal className="nlw-actions">
-              <Link to="/resources" className="nlw-link-more">Open the Stewardship Resources <span className="arw">→</span></Link>
+              <a href={`/brochures/${id}/`} className="nlw-link-more">
+                Explore {p.name} <span className="arw">→</span>
+              </a>
             </Reveal>
           </div>
         </section>
+
+        {p.prompts && <PromptCards eyebrow={p.prompts.eyebrow} cards={p.prompts.cards} />}
 
         {/* What it is */}
         <section className="nlw-section">
@@ -108,9 +115,9 @@ export default function Pathway({ id }) {
         <section className="nlw-section nlw-section-tight">
           <div className="nlw-wrap">
             <Reveal className="nlw-feature">
-              <p className="nlw-eyebrow">The brochure</p>
+              <p className="nlw-eyebrow">Explore {p.name}</p>
               <h2 className="nlw-h2">
-                {(outline && outline.brochureTitle) || `The ${p.name} brochure`}
+                {p.explore || (outline && outline.brochureTitle) || `The ${p.name} brochure`}
               </h2>
               {outline && outline.blurb && <p className="nlw-lead stand">{outline.blurb}</p>}
 
@@ -126,12 +133,15 @@ export default function Pathway({ id }) {
                 </ol>
               )}
 
-              {/* Open. It is the firm's best argument for itself and it was
-                  sitting behind a form. */}
+              {/* NLW asked for the PDF here, and the web version is already the
+                  invitation at the top of the page — so this is the printable
+                  one, with the online copy kept alongside rather than hidden. */}
               <div className="nlw-actions">
-                <a className="nlw-btn" href={`/brochures/${id}/`}>Read the brochure</a>
-                <a className="nlw-link-more" href={`/brochures/${id}.pdf`} download>
-                  Download the PDF <span className="arw">↓</span>
+                <a className="nlw-btn" href={`/brochures/${id}.pdf`}>
+                  View the {p.name} brochure <span className="arw">→</span>
+                </a>
+                <a className="nlw-link-more" href={`/brochures/${id}/`}>
+                  Read it in your browser <span className="arw">→</span>
                 </a>
                 <Link to="/contact" className="nlw-link-more">Speak with us <span className="arw">→</span></Link>
               </div>

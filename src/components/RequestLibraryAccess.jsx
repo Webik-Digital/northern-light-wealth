@@ -63,11 +63,12 @@ export default function RequestLibraryAccess({ pathway, pathwayName }) {
 
   return (
     <Reveal className="nlw-panel nlw-request">
-      <h3 className="nlw-h3">Ask for access to the Resource Library</h3>
+      <h3 className="nlw-h3">Request {pathwayName} Resources</h3>
       <p>
-        The {pathwayName} brochure is yours to read above. The library is what sits behind
-        it — the working documents and seasonal letters we keep for clients and invited
-        guests. Tell us where to reach you and a person will follow up. No newsletter, no list.
+        The {pathwayName} brochure is yours to read above. The Resource Library is what
+        sits behind it — the working documents and seasonal letters we keep for clients and
+        invited guests. Tell us where to reach you and a person will follow up. No
+        newsletter, no list.
       </p>
 
       <form className="nlw-request-form" onSubmit={onSubmit}>

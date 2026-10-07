@@ -774,6 +774,19 @@ button { font-family: inherit; }
 .nlw-person .role { font-size: 11px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin: 7px 0 12px; }
 .nlw-person p { font-size: 15px; line-height: 1.7; color: var(--ink-soft); }
 
+/* the two questions that open a pathway page */
+.nlw-prompts { display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(20px, 2.4vw, 32px); margin-top: 30px; }
+.nlw-prompt { background: var(--surface); border: .5px solid var(--rule); border-top: 3px solid var(--season-accent);
+  border-radius: 10px; padding: clamp(26px, 2.6vw, 34px); transition: border-color 1.4s var(--ease); }
+.nlw-prompt .nlw-h3 { font-size: clamp(19px, 1.7vw, 22px); line-height: 1.3; color: var(--plum); margin-bottom: 16px; max-width: 26ch; }
+.nlw-prompt .fact { font-size: 15.5px; line-height: 1.7; color: var(--ink-soft); }
+.nlw-prompt .fact + .fact { margin-top: 10px; }
+.nlw-prompt .src { font-size: 12px; letter-spacing: .03em; color: var(--muted); margin-top: 16px; }
+
+@media (max-width: 820px) {
+  .nlw-prompts { grid-template-columns: 1fr; }
+}
+
 /* featured turning, set like a printed page */
 .nlw-feature { background: var(--surface); border: .5px solid var(--rule); border-top: 3px solid var(--season-accent); border-radius: 10px; padding: clamp(32px, 4vw, 48px); transition: border-color 1.4s var(--ease); }
 .nlw-feature .nlw-eyebrow { color: var(--season-accent); transition: color 1.2s var(--ease); }
