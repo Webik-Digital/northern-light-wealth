@@ -117,6 +117,38 @@ SITE_LINKS = {
 }
 
 
+# Each brochure is the printed page reproduced exactly: 816px wide, which is US
+# Letter at 96dpi, centred and fixed. Below that width it reflows properly. Above
+# it, it stops — so on a 1440 or 1920 monitor the brochure sits as a narrow
+# column with a few hundred pixels of dead white either side, and the painting,
+# which runs the full page width, looks wider than the text beside it. NLW saw
+# this on their own screen and read it as something being off.
+#
+# Nothing is wrong with the design, it just stops using the screen. So the whole
+# page is scaled up proportionally, which is what a reader does to a PDF anyway.
+# `zoom` rather than `transform: scale()` because zoom participates in layout:
+# the document gets taller as it grows, where a transform would scale the pixels
+# and leave the page's height behind, scrolling into empty space.
+#
+# Proportional means the design is untouched — every measurement keeps its
+# relationship to every other. It also lifts the 8-10px type NLW set, which is
+# the hardest part of these pages to read.
+#
+# The media queries inside the brochure are viewport-based and sit far below
+# these widths, so they are unaffected. A browser without `zoom` renders exactly
+# what it renders today.
+WIDE_SCREEN_CSS = """
+
+/* Added on import. See scripts/build-brochures.py — the page is a fixed 816px,
+   so on a wide screen it is scaled up rather than left marooned in the middle. */
+@media (min-width: 1100px) { body { zoom: 1.15; } }
+@media (min-width: 1240px) { body { zoom: 1.3; } }
+@media (min-width: 1500px) { body { zoom: 1.45; } }
+@media (min-width: 1800px) { body { zoom: 1.6; } }
+@media print { body { zoom: 1; } }
+"""
+
+
 def apply_rewrites(text, table):
     """One pass, longest key first.
 
@@ -175,7 +207,8 @@ def build(d, html_name, logo_map, font_map):
     for name in os.listdir(d):
         if name.endswith('.css'):
             text = apply_rewrites(open(os.path.join(d, name), encoding='utf-8').read(), rewrites)
-            open(os.path.join(out, 'brochure.css'), 'w', encoding='utf-8', newline='\n').write(text)
+            open(os.path.join(out, 'brochure.css'), 'w', encoding='utf-8', newline='\n')\
+                .write(text + WIDE_SCREEN_CSS)
         elif name.endswith('.js'):
             shutil.copy2(os.path.join(d, name), os.path.join(out, 'brochure.js'))
 

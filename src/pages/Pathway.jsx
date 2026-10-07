@@ -47,7 +47,7 @@ export default function Pathway({ id }) {
                 which was shut, so the first invitation on the page led to a
                 locked door. */}
             <Reveal className="nlw-actions">
-              <a href={`/brochures/${id}/`} className="nlw-link-more">
+              <a href={`/brochures/${id}/`} className="nlw-btn">
                 Explore {p.name} <span className="arw">→</span>
               </a>
             </Reveal>
