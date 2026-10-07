@@ -10,6 +10,7 @@ import ClosingCTA from '@/components/ClosingCTA';
 import RecognitionMark from '@/components/RecognitionMark';
 import { AWARDS, PRESS } from '@/data/recognition';
 import { issuesFrom } from '@/data/turnings';
+import { PATHWAYS } from '@/data/pathways';
 
 const SEASON_LABEL = { spring: 'Spring', summer: 'Summer', fall: 'Autumn', winter: 'Winter' };
 
@@ -70,30 +71,23 @@ export default function Home() {
               <h2 className="nlw-h2">One doctrine, expressed three ways.</h2>
             </Reveal>
             <div className="nlw-cards">
-              <StewardshipCard
-                tag="Continuity"
-                name="EstateReady"
-                oneLiner="Readiness for the family and the estate, prepared long before it is ever needed."
-                detail="Family continuity, operational continuity before probate, and stewardship that carries on long after."
-                photo="estate"
-                to="/estate-ready"
-              />
-              <StewardshipCard
-                tag="Transition"
-                name="SaleReady"
-                oneLiner="Preparation for the owner, for the sale itself and for the life that follows it."
-                detail="Owner, family, tax, liquidity, and identity, all readied before and after the transaction."
-                photo="sale"
-                to="/sale-ready"
-              />
-              <StewardshipCard
-                tag="Giving"
-                name="Harvest Share"
-                oneLiner="Generosity built into the plan, with a portion of your giving returned to you in recognition."
-                detail="Grounded in participation and community, not cause marketing. Exact terms confirmed with you."
-                photo="harvest"
-                to="/harvest-share"
-              />
+              {/* Read from the one place the pathways are defined. These were
+                  three hand-written cards, and two of them still carried copy
+                  NLW replaced — including the giving line the compliance note
+                  was about. The closing sentence of each pathway is the line
+                  that belongs on a card. */}
+              {PATHWAYS.map((p) => (
+                <StewardshipCard
+                  key={p.id}
+                  tag={p.tag}
+                  name={p.name}
+                  oneLiner={p.purpose}
+                  detail={p.detail[p.detail.length - 1]}
+                  /* the card holds its own paintings, keyed estate|sale|harvest */
+                  photo={p.id.split('-')[0]}
+                  to={`/${p.id}`}
+                />
+              ))}
             </div>
             <Reveal className="sys">
               <Link to="/stewardship" className="nlw-link-more">See the full system <span className="arw">→</span></Link>

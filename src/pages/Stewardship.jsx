@@ -5,28 +5,16 @@ import Footer from '@/components/Footer';
 import Reveal from '@/components/Reveal';
 import SeasonGlyph from '@/components/SeasonGlyph';
 import ClosingCTA from '@/components/ClosingCTA';
+import { PATHWAYS } from '@/data/pathways';
 
-const PATHWAYS = [
-  {
-    name: 'EstateReady',
-    tag: 'Continuity',
-    purpose: 'Readiness for the family and the estate, prepared long before it is ever needed.',
-    detail: 'We ready the family and the estate together: the documents, the roles, the difficult conversations, and the plan for continuity before probate and long after it. When the moment comes, nothing is improvised.',
-  },
-  {
-    name: 'SaleReady',
-    tag: 'Transition',
-    purpose: 'Preparation for the owner, for the sale itself and for the life that follows it.',
-    detail: 'A business sale is a personal event, not only a transaction. We prepare the owner, the family, the tax position, and the liquidity ahead of time, and we stay through the change of identity that follows the cheque.',
-  },
-  {
-    name: 'Harvest Share',
-    tag: 'Giving',
-    purpose: 'Generosity built into the plan, with a portion of your giving returned to you in recognition.',
-    detail: 'Giving belongs in the plan, not after it. Harvest Share builds your generosity into the whole, grounded in participation and community rather than cause marketing. The exact structure, including any recognition returned to you, is confirmed with you directly.',
-    note: 'Wording to be finalised with NLW compliance. No terms or figures are stated here.',
-  },
-];
+// The same three pathways the pathway pages describe, read from the one place
+// they are defined. This page used to keep its own copy, and the two drifted the
+// moment NLW revised the pages: the overview went on promising "a portion of
+// your giving returned to you in recognition", under an internal note saying
+// the wording was not final, while /harvest-share already said something else.
+//
+// Only the opening paragraph is shown here. This is the overview; the whole of
+// it is a click away on each pathway's own page.
 
 const MOVEMENTS = [
   { num: '01', name: 'Understand', body: 'We learn the whole picture before we propose anything.' },
@@ -71,15 +59,14 @@ export default function Stewardship() {
             </Reveal>
             <div className="nlw-pathways">
               {PATHWAYS.map((p) => (
-                <Reveal key={p.name} className="nlw-pathway">
+                <Reveal key={p.id} className="nlw-pathway">
                   <div>
                     <span className="tag">{p.tag}</span>
                     <h3>{p.name}</h3>
                   </div>
                   <div>
                     <p className="purpose">{p.purpose}</p>
-                    <p className="detail">{p.detail}</p>
-                    {p.note && <p className="nlw-note">{p.note}</p>}
+                    <p className="detail">{p.detail[0]}</p>
                   </div>
                 </Reveal>
               ))}
