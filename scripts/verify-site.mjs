@@ -79,7 +79,7 @@ check('no Base44 code remains', js !== '' && !usesBase44,
 // Markers from the most recent work. If these are missing the deploy really is
 // behind, whatever its hash says.
 const FEATURES = [
-  ['the brochure request form', 'Request the brochure'],
+  ['the library request form', 'Ask for access to the Resource Library'],
   ['the enquiry endpoint', 'api/enquiry'],
   ['the legal pages', 'Legal, Privacy and Disclosures'],
 ];
@@ -100,6 +100,29 @@ for (const [path, label] of [
 ]) {
   const r = await get(site + path);
   check(label.padEnd(20), r.status === 200, r.status === 200 ? '' : `HTTP ${r.status}`);
+}
+
+// ----------------------------------------------------------- the brochures
+// Status alone proves nothing here. Every unmatched path on this site answers
+// 200 text/html, because the SPA rewrite hands back index.html — so a brochure
+// that was never deployed looks exactly like one that was, and a check written
+// on the status code passes before the files exist. These read the body.
+section('Are the brochures open?');
+for (const [slug, title] of [
+  ['estate-ready', 'EstateReady'],
+  ['sale-ready', 'SaleReady'],
+  ['harvest-share', 'Harvest Share'],
+]) {
+  const page = await get(`${site}/brochures/${slug}/`);
+  const html = page.status === 200 ? await page.text().catch(() => '') : '';
+  const own = html.includes(`<title>${title} —`);
+  check(`${slug} reads`.padEnd(26), own,
+    own ? '' : page.status !== 200 ? `HTTP ${page.status}` : 'served the app shell, not the brochure');
+
+  const pdf = await get(`${site}/brochures/${slug}.pdf`, { headers: { Range: 'bytes=0-3' } });
+  const type = pdf.headers.get('content-type') || '';
+  check(`${slug} PDF downloads`.padEnd(26), type.includes('pdf'),
+    type.includes('pdf') ? '' : `served ${type || 'nothing'}`);
 }
 
 // -------------------------------------------------------------- the letter
@@ -138,8 +161,11 @@ if (!url || !anon) {
   const mailRows = await mail.json().catch(() => null);
   check('a stranger cannot read enquiries', Array.isArray(mailRows) && mailRows.length === 0);
 
+  // The library bucket, not the brochures. The brochures are deliberately open
+  // now and are served from this app; what must stay shut is everything else in
+  // the library, which is why this asks the bucket rather than the site.
   const priv = await get(`${url}/storage/v1/object/public/resources/brochures/estate-ready.pdf`);
-  check('brochures are not publicly reachable', priv.status >= 400, `HTTP ${priv.status}`);
+  check('the library bucket stays shut', priv.status >= 400, `HTTP ${priv.status}`);
 
   const form = await get(`${url}/rest/v1/contact_submissions`, {
     method: 'POST', headers: { ...h, 'Content-Type': 'application/json' }, body: '{}',
@@ -161,6 +187,7 @@ for (const [host, dest] of [
   ['saleready.ca', '/sale-ready'],
   ['harvestsharewealth.ca', '/harvest-share'],
   ['harvestsharewealth.com', '/harvest-share'],
+  ['harvestshare.ca', '/harvest-share'],
 ]) {
   // Follow the whole chain. Vercel sends an apex to its www first, so the first
   // hop is often www rather than the destination; what matters is where a person
